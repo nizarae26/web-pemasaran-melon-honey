@@ -1,3 +1,5 @@
+import { Users, Map, CalendarDays, Leaf } from "lucide-react";
+
 export default function AboutSection() {
   return (
     <section className="py-20 px-4 bg-poktan-accent/20">
@@ -12,13 +14,13 @@ export default function AboutSection() {
           </h3>
           <div className="space-y-4 text-gray-600 leading-relaxed">
             <p>
-              Kelompok Tani Banyu Urip adalah kelompok tani yang berada di Desa Tanggumong, 
-              Kecamatan Sampang, Kabupaten Sampang, Madura. 
+              Kelompok Tani Banyu Urip adalah kelompok tani yang berada di Desa
+              Tanggumong, Kecamatan Sampang, Kabupaten Sampang, Madura.
             </p>
             <p>
-              Kami berkomitmen menghasilkan Melon Honey Globe berkualitas premium 
-              dengan dukungan teknologi pertanian modern dan kerja sama tim yang solid 
-              untuk menyejahterakan petani lokal.
+              Kami berkomitmen menghasilkan Melon Honey Globe berkualitas
+              premium dengan dukungan teknologi pertanian modern dan kerja sama
+              tim yang solid untuk menyejahterakan petani lokal.
             </p>
           </div>
           <button className="mt-8 border-2 border-poktan-green text-poktan-green px-6 py-2 rounded-lg font-bold hover:bg-poktan-green hover:text-white transition-all">
@@ -28,25 +30,56 @@ export default function AboutSection() {
 
         {/* Grid Statistik sesuai Mockup */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center">
-            <span className="text-2xl mb-2">👥</span>
-            <p className="text-3xl font-bold text-poktan-green">25+</p>
-            <p className="text-xs text-gray-500 font-medium">Anggota Aktif</p>
+          {/* 1. Anggota Aktif */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
+            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <Users size={24} strokeWidth={2.5} />
+            </div>
+            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+              25+
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
+              Anggota Aktif
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center">
-            <span className="text-2xl mb-2">🗺️</span>
-            <p className="text-3xl font-bold text-poktan-green">± 2 Ha</p>
-            <p className="text-xs text-gray-500 font-medium">Luas Lahan</p>
+
+          {/* 2. Luas Lahan */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
+            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <Map size={24} strokeWidth={2.5} />
+            </div>
+            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+              ± 2 Ha
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
+              Luas Lahan
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center">
-            <span className="text-2xl mb-2">📅</span>
-            <p className="text-3xl font-bold text-poktan-green">2018</p>
-            <p className="text-xs text-gray-500 font-medium">Tahun Berdiri</p>
+
+          {/* 3. Tahun Berdiri */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
+            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <CalendarDays size={24} strokeWidth={2.5} />
+            </div>
+            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+              2018
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
+              Tahun Berdiri
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center">
-            <span className="text-2xl mb-2">🍈</span>
-            <p className="text-3xl font-bold text-poktan-green">1</p>
-            <p className="text-xs text-gray-500 font-medium">Produk Unggulan</p>
+
+          {/* 4. Produk Unggulan */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
+            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <Leaf size={24} strokeWidth={2.5} />
+            </div>
+            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+              5
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
+              Produk Unggulan
+            </p>
           </div>
         </div>
       </div>
