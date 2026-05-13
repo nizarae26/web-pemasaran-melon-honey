@@ -5,6 +5,8 @@ import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import OlahanCard from "@/components/public/OlahanCard";
 import { MessageCircle, Leaf } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function Home() {
   // Data dummy untuk katalog sesuai mockup [cite: 19-24]
@@ -123,9 +125,15 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <button className="border-2 border-poktan-green text-poktan-green px-8 py-2 rounded-lg font-bold hover:bg-poktan-green hover:text-white transition">
-              Lihat Semua Katalog
-            </button>
+            <Link href="/katalog">
+              <button className="group border-2 border-[#10b981] text-[#10b981] px-10 py-3 rounded-xl font-bold hover:bg-[#10b981] hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-emerald-500/20">
+                <span>Lihat Semua Katalog</span>
+                <ArrowRight
+                  size={18}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </button>
+            </Link>
           </div>
         </div>
       </section>

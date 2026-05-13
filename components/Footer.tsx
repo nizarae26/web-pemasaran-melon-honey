@@ -10,18 +10,43 @@ import {
 
 // Komponen Ikon Manual (Anti-Error)
 const FacebookIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
 );
 
 const InstagramIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
 );
 
 export default function Footer() {
   return (
     <footer className="bg-poktan-green text-white pt-20 pb-10 px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-16">
-        
         {/* 1. Branding Section */}
         <div className="space-y-6">
           <Link href="/" className="flex items-center gap-3 group">
@@ -79,7 +104,10 @@ export default function Footer() {
                 >
                   <span className="group-hover:translate-x-1 transition-transform flex items-center gap-2">
                     {link.name}
-                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all" />
+                    <ArrowRight
+                      size={14}
+                      className="opacity-0 group-hover:opacity-100 transition-all"
+                    />
                   </span>
                 </Link>
               </li>
@@ -94,22 +122,27 @@ export default function Footer() {
             <span className="absolute -bottom-2 left-0 w-8 h-1 bg-poktan-leaf"></span>
           </h4>
           <ul className="space-y-6">
-            <li className="flex gap-4 group">
+            {/* Alamat: menggunakan items-start karena teksnya panjang */}
+            <li className="flex items-start gap-4 group">
               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
                 <MapPin size={20} />
               </div>
-              <span className="text-sm text-white/80 leading-relaxed">
+              <span className="text-sm text-white/80 leading-relaxed pt-2">
                 Desa Tanggumong, Kec. Sampang, Kabupaten Sampang, Madura, Jawa
                 Timur 69217
               </span>
             </li>
-            <li className="flex gap-4 group">
+
+            {/* Telepon: items-center agar sejajar tengah */}
+            <li className="flex items-center gap-4 group">
               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
                 <Phone size={20} />
               </div>
               <span className="text-sm text-white/80">0878-1234-5678</span>
             </li>
-            <li className="flex gap-4 group">
+
+            {/* Email: items-center agar sejajar tengah */}
+            <li className="flex items-center gap-4 group">
               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
                 <Mail size={20} />
               </div>
