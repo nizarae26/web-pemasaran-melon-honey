@@ -127,7 +127,7 @@ export default function Footer() {
               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
                 <MapPin size={20} />
               </div>
-              <span className="text-sm text-white/80 leading-relaxed pt-2">
+              <span className="text-sm text-white/80 leading-relaxed">
                 Desa Tanggumong, Kec. Sampang, Kabupaten Sampang, Madura, Jawa
                 Timur 69217
               </span>

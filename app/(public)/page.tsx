@@ -111,10 +111,11 @@ export default function Home() {
       <section className="py-14 px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-poktan-green">
-              Katalog Melon Honey Globe
+            <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2 tracking-tight inline-block relative">
+              Katalog Melon{" "}
+              <span className="text-[#10b981]">Honey Globe</span>
+              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-1 bg-[#10b981]"></span>
             </h2>
-            <div className="w-20 h-1 bg-poktan-leaf mx-auto mt-2"></div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -139,11 +140,11 @@ export default function Home() {
       </section>
 
       {/* Section Produk Olahan */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-5 bg-gray-50">
         <div className="max-w-6xl mx-auto px-8 md:px-20">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Produk Olahan <span className="text-poktan-green">Kreatif</span>
+              Produk Olahan <span className="text-[#10b981]">Kreatif</span>
             </h2>
             <p className="text-gray-500 max-w-xl">
               Selain buah segar, kami juga menghadirkan berbagai produk turunan
@@ -162,6 +163,18 @@ export default function Home() {
                 image={item.image}
               />
             ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/katalog">
+              <button className="group border-2 border-[#10b981] text-[#10b981] px-10 py-3 rounded-xl font-bold hover:bg-[#10b981] hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-emerald-500/20">
+                <span>Lihat Semua Olahan</span>
+                <ArrowRight
+                  size={18}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </button>
+            </Link>
           </div>
         </div>
       </section>

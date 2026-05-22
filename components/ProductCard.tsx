@@ -7,7 +7,7 @@ interface ProductProps {
   weight: string;
   status: "Tersedia" | "Pre-Order" | "Habis";
   promo?: "Hot" | "Terlaris" | "Diskon";
-  discountValue?: string; // <-- Tambahkan ini untuk menampung "30%", "50%", dll.
+  discountValue?: string; 
 }
 
 export default function ProductCard({

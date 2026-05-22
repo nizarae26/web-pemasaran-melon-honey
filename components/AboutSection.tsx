@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { Users, Map, CalendarDays, Leaf } from "lucide-react";
+
 
 export default function AboutSection() {
   return (
-    <section className="py-20 px-4 bg-poktan-accent/20">
+    <section className="py-17 px-4 bg-poktan-accent/20">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         {/* Konten Teks */}
         <div>

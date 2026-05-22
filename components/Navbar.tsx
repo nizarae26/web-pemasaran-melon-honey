@@ -15,6 +15,7 @@ export default function Navbar() {
     { name: "Profil", href: "/profil" },
     { name: "Katalog", href: "/katalog" },
     { name: "Galeri & Berita", href: "/galeri" },
+    { name: "Budidaya", href: "/budidaya" },
   ];
 
   return (
@@ -23,10 +24,10 @@ export default function Navbar() {
         
         {/* 1. Logo Section */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 relative z-[110]">
-          <div className="w-9 h-9 md:w-10 md:h-10 bg-[#10b981] rounded-lg flex items-center justify-center shadow-sm">
+          <div className="w-9 h-9 md:w-10 md:h-10 bg-poktan-green rounded-lg flex items-center justify-center shadow-sm">
             <Leaf size={20} className="text-white" />
           </div>
-          <span className="font-bold text-[#10b981] leading-tight text-[12px] md:text-base">
+          <span className="font-bold text-poktan-green leading-tight text-[12px] md:text-base">
             Kelompok Tani
             <br />
             Banyu Urip
@@ -43,7 +44,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`relative py-1 transition-colors duration-300 ${
-                  isActive ? "text-[#10b981]" : "text-gray-600 hover:text-[#10b981]"
+                  isActive ? "text-poktan-green" : "text-gray-600 hover:text-poktan-green"
                 }`}
               >
                 {link.name}
@@ -52,7 +53,7 @@ export default function Navbar() {
                 {isActive && (
                   <motion.div
                     layoutId="activeUnderline"
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#10b981]"
+                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-poktan-green"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -68,7 +69,7 @@ export default function Navbar() {
             className={`px-3 md:px-5 py-2 rounded-xl font-bold text-[10px] md:text-sm flex items-center gap-2 shadow-sm transition-all active:scale-95 ${
               pathname === "/monitoring"
                 ? "bg-[#059669] text-white"
-                : "bg-[#10b981] text-white hover:bg-opacity-90"
+                : "bg-poktan-green text-white hover:bg-opacity-90"
             }`}
           >
             <LayoutDashboard size={16} />
@@ -97,7 +98,7 @@ export default function Navbar() {
               href={link.href}
               onClick={() => setIsOpen(false)}
               className={`py-2 border-b border-gray-50 transition-colors ${
-                pathname === link.href ? "text-[#10b981]" : "text-gray-600"
+                pathname === link.href ? "text-poktan-green" : "text-gray-600"
               }`}
             >
               {link.name}
