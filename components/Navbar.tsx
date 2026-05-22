@@ -13,7 +13,6 @@ export default function Navbar() {
   const navLinks = [
     { name: "Beranda", href: "/" },
     { name: "Profil", href: "/profil" },
-    { name: "Budidaya", href: "/budidaya" },
     { name: "Katalog", href: "/katalog" },
     { name: "Galeri & Berita", href: "/galeri" },
   ];
