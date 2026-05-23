@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Menu, X, Leaf } from "lucide-react";
-import { motion } from "framer-motion"; // Import framer-motion
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +18,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-[100] w-full">
+    <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-[100] w-full">
       <div className="w-full px-4 md:px-12 py-4 flex items-center justify-between relative h-20">
         
         {/* 1. Logo Section */}
@@ -51,10 +50,8 @@ export default function Navbar() {
                 
                 {/* Garis Bawah yang Bergeser */}
                 {isActive && (
-                  <motion.div
-                    layoutId="activeUnderline"
+                  <div
                     className="absolute -bottom-1 left-0 right-0 h-[2px] bg-poktan-green"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
               </Link>
@@ -68,7 +65,7 @@ export default function Navbar() {
             href="/monitoring"
             className={`px-3 md:px-5 py-2 rounded-xl font-bold text-[10px] md:text-sm flex items-center gap-2 shadow-sm transition-all active:scale-95 ${
               pathname === "/monitoring"
-                ? "bg-[#059669] text-white"
+                ? "bg-poktan-leaf text-white"
                 : "bg-poktan-green text-white hover:bg-opacity-90"
             }`}
           >

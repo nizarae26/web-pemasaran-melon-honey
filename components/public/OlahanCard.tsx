@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { MessageCircle } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 interface OlahanProps {
   title: string;
@@ -25,6 +25,7 @@ export default function OlahanCard({
         <img
           src={image}
           alt={title}
+          loading="lazy"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-4 left-4">
@@ -56,17 +57,14 @@ export default function OlahanCard({
             </div>
           </div>
 
-          {/* Tombol Pemesanan Premium Eksternal */}
           <a
             href={waLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full"
+            className="block w-full bg-[#10b981] text-white py-3 rounded-xl font-bold text-xs hover:bg-[#059669] transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm shadow-emerald-500/10 text-center"
           >
-            <button className="w-full bg-[#10b981] text-white py-3 rounded-xl font-bold text-xs hover:bg-[#059669] transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm shadow-emerald-500/10">
-              <MessageCircle size={16} fill="currentColor" fillOpacity={0.2} />
-              <span>Pesan via WhatsApp</span>
-            </button>
+            <WhatsAppIcon size={16} />
+            <span>Pesan via WhatsApp</span>
           </a>
         </div>
       </div>

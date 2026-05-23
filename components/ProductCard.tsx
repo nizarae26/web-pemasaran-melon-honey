@@ -1,4 +1,5 @@
-import { MessageCircle, Clock, XCircle, Flame, Star, Tag } from "lucide-react";
+import { Clock, XCircle, Flame, Star, Tag } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 interface ProductProps {
   name: string;
@@ -24,11 +25,9 @@ export default function ProductCard({
       buttonColor: "bg-[#10b981]",
       badgeColor: "bg-emerald-500",
       icon: (
-        <MessageCircle
-          size={18}
-          strokeWidth={2.5}
-          fill="currentColor"
-          fillOpacity={0.2}
+        <WhatsAppIcon
+          size={14}
+          className="group-hover:translate-x-0.5 transition-transform"
         />
       ),
       label: "Pesan via WhatsApp",
@@ -68,6 +67,10 @@ export default function ProductCard({
 
   const current = statusConfig[status];
   const currentPromo = promo ? promoConfig[promo] : null;
+
+  // Format pesan WhatsApp
+  const waMessage = `Halo, saya tertarik untuk membeli/pre-order ${name} (Grade ${grade})`;
+  const waLink = `https://wa.me/6287812345678?text=${encodeURIComponent(waMessage)}`;
 
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition group">
@@ -111,14 +114,27 @@ export default function ProductCard({
           {price}
         </p>
 
-        <button
-          disabled={status === "Habis"}
-          className={`w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
-          transition-all shadow-lg active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed`}
-        >
-          {current.icon}
-          <span className="text-sm">{current.label}</span>
-        </button>
+        {status === "Habis" ? (
+          <button
+            disabled
+            className={`w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
+            transition-all shadow-lg active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed`}
+          >
+            {current.icon}
+            <span className="text-sm">{current.label}</span>
+          </button>
+        ) : (
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`block w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
+            transition-all shadow-lg hover:brightness-110 active:scale-95 text-center`}
+          >
+            {current.icon}
+            <span className="text-sm">{current.label}</span>
+          </a>
+        )}
       </div>
     </div>
   );

@@ -10,6 +10,7 @@
   --poktan-orange: #f0cc4b;  /* Status Pre-Order [cite: 24] */
   --poktan-red: #E74C3C;     /* Status Stok Habis [cite: 35] */
   --poktan-accent: #D6EFD8;  /* Background Ringan */
+  --poktan-emerald: #10b981; /* Hijau Terang / Highlight */
 }
 
 @theme inline {
@@ -22,6 +23,7 @@
   --color-poktan-orange: var(--poktan-orange);
   --color-poktan-red: var(--poktan-red);
   --color-poktan-accent: var(--poktan-accent);
+  --color-poktan-emerald: var(--poktan-emerald);
   
   --font-sans: var(--font-geist-sans);
 }

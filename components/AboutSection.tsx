@@ -34,10 +34,10 @@ export default function AboutSection() {
         <div className="grid grid-cols-2 gap-4">
           {/* 1. Anggota Aktif */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
-            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-poktan-emerald rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-poktan-emerald/20 group-hover:scale-110 transition-transform">
               <Users size={24} strokeWidth={2.5} />
             </div>
-            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+            <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
               25+
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
@@ -47,10 +47,10 @@ export default function AboutSection() {
 
           {/* 2. Luas Lahan */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
-            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-poktan-emerald rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-poktan-emerald/20 group-hover:scale-110 transition-transform">
               <Map size={24} strokeWidth={2.5} />
             </div>
-            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+            <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
               ± 2 Ha
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
@@ -60,10 +60,10 @@ export default function AboutSection() {
 
           {/* 3. Tahun Berdiri */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
-            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-poktan-emerald rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-poktan-emerald/20 group-hover:scale-110 transition-transform">
               <CalendarDays size={24} strokeWidth={2.5} />
             </div>
-            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+            <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
               2018
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
@@ -73,10 +73,10 @@ export default function AboutSection() {
 
           {/* 4. Produk Unggulan */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center group hover:shadow-md transition-all">
-            <div className="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-poktan-emerald rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-poktan-emerald/20 group-hover:scale-110 transition-transform">
               <Leaf size={24} strokeWidth={2.5} />
             </div>
-            <p className="text-2xl font-black text-[#10b981] tracking-tighter leading-none">
+            <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
               5
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">

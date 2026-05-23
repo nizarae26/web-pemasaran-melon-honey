@@ -20,7 +20,7 @@ export default function Hero() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
             Melon Honey Globe <br />
             Premium dari <br />
-            Petani <span className="text-[#10b981]">Tanggumong</span>
+            Petani <span className="text-poktan-emerald">Tanggumong</span>
           </h1>
           <p className="text-sm md:text-base mb-8 opacity-90 max-w-xl leading-relaxed">
             Dibudidayakan dengan sistem irigasi tetes pintar <br />
@@ -32,16 +32,15 @@ export default function Hero() {
               href="https://wa.me/(nomorwapetani)?text=halo%2C%20saya%20ingin%20bertanya%2Fmemesan%20melon%2Folahan%20..."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block"
+              className="inline-block bg-poktan-green px-6 py-3 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg active:scale-95 text-white flex items-center gap-2 text-center"
             >
-              <button className="bg-poktan-green px-6 py-3 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg active:scale-95 flex items-center gap-2">
-                <span>Beli Sekarang via WhatsApp</span>
-              </button>
+              <span>Beli Sekarang via WhatsApp</span>
             </a>
-            <Link href="/katalog">
-              <button className="bg-white text-poktan-green px-8 py-3 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg active:scale-95">
-                Cek Ketersediaan
-              </button>
+            <Link
+              href="/katalog"
+              className="bg-white text-poktan-green px-8 py-3 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg active:scale-95 text-center inline-block"
+            >
+              Cek Ketersediaan
             </Link>
           </div>
         </div>

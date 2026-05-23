@@ -1,12 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GaleriHero from "@/components/public/GaleriHero";
 import {
   Search,
   Calendar,
-  MessageCircle,
   Play,
   ArrowRight,
   Filter,
@@ -15,8 +15,12 @@ import {
   GraduationCap,
   Users,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function GaleriPage() {
+  // State untuk Filter Aktif
+  const [activeTab, setActiveTab] = useState("Semua");
+
   // Definisi data statistik media
   const stats = [
     { icon: <Camera size={22} />, label: "Dokumentasi", value: "120+" },
@@ -25,10 +29,67 @@ export default function GaleriPage() {
     { icon: <Users size={22} />, label: "Petani Terlibat", value: "25+" },
   ];
 
+  // Data Item Galeri Foto
+  const galleryItems = [
+    {
+      title: "Greenhouse Modern",
+      date: "12 Mei 2024",
+      cat: "Budidaya",
+      image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=600",
+    },
+    {
+      title: "Seleksi Bibit Unggul",
+      date: "10 Mei 2024",
+      cat: "Budidaya",
+      image: "https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?q=80&w=600",
+    },
+    {
+      title: "Pembekalan Petani",
+      date: "05 Mei 2024",
+      cat: "Pelatihan",
+      image: "https://images.unsplash.com/photo-1595275312780-3a1c0d5004e0?q=80&w=600",
+    },
+    {
+      title: "Pemanenan Terukur",
+      date: "15 Mei 2024",
+      cat: "Panen",
+      image: "https://images.unsplash.com/photo-1605001011156-cbf0b0f67a51?q=80&w=600",
+    },
+    {
+      title: "Monitoring IoT",
+      date: "13 Mei 2024",
+      cat: "Smart Farming",
+      image: "https://images.unsplash.com/photo-1563749372-1220038379c8?q=80&w=600",
+    },
+    {
+      title: "Pasca Panen",
+      date: "16 Mei 2024",
+      cat: "Panen",
+      image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=600",
+    },
+  ];
+
+  // Logika Filter
+  const showGallery =
+    activeTab === "Semua" ||
+    activeTab === "Galeri Foto" ||
+    activeTab === "Panen" ||
+    activeTab === "Pelatihan" ||
+    activeTab === "Smart Farming";
+
+  const showArticles = activeTab === "Semua" || activeTab === "Berita & Artikel";
+  const showVideos = activeTab === "Semua" || activeTab === "Galeri Foto";
+
+  const filteredGalleryItems = galleryItems.filter((item) => {
+    if (activeTab === "Semua" || activeTab === "Galeri Foto") return true;
+    return item.cat === activeTab;
+  });
+
   return (
-    <main className="min-h-screen bg-[#F8FAFC] w-full overflow-x-hidden">
+    <>
       <Navbar />
-      <GaleriHero />
+      <main className="min-h-screen bg-[#F8FAFC] w-full overflow-x-hidden">
+        <GaleriHero />
 
       {/* Konten Utama yang Menabrak Hero (z-20 dan -mt) */}
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 -mt-20 md:-mt-26">
@@ -60,22 +121,24 @@ export default function GaleriPage() {
           {/* 2. KONTEN BAWAH: Navigation Tab Bar (Pill Style Gandeng) */}
           <div className="p-4 px-6 md:px-8 flex flex-wrap items-center justify-center gap-2 w-full">
             {[
-              { label: "Semua", active: true },
-              { label: "Galeri Foto", active: false },
-              { label: "Berita & Artikel", active: false },
-              { label: "Panen", active: false },
-              { label: "Pelatihan", active: false },
-              { label: "Smart Farming", active: false },
-            ].map((tab, i) => (
+              "Semua",
+              "Galeri Foto",
+              "Berita & Artikel",
+              "Panen",
+              "Pelatihan",
+              "Smart Farming",
+            ].map((tab) => (
               <button
-                key={i}
-                className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${
-                  tab.active
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap cursor-pointer ${
+                  activeTab === tab
                     ? "bg-[#064e3b] text-white shadow-md shadow-emerald-900/10"
-                    : "text-gray-500 hover:bg-gray-50"
+                    : "text-gray-500 hover:bg-gray-50 bg-gray-50/50"
                 }`}
               >
-                {tab.label.toUpperCase()}
+                {tab.toUpperCase()}
               </button>
             ))}
           </div>
@@ -86,175 +149,175 @@ export default function GaleriPage() {
           {/* SISI KIRI: GRID KONTEN UTAMA (8 KOLOM) */}
           <div className="lg:col-span-8 space-y-20">
             {/* Sub-Section: Galeri Foto Kegiatan */}
-            <div className="space-y-8">
-              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                  Galeri Foto Kegiatan
-                </h3>
-                <button className="text-xs font-bold text-[#10b981] flex items-center gap-2 hover:gap-3 transition-all">
-                  <span>LIHAT SEMUA FOTO</span>
-                  <ArrowRight size={14} />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  {
-                    title: "Greenhouse Modern",
-                    date: "12 Mei 2024",
-                    cat: "Budidaya",
-                  },
-                  {
-                    title: "Seleksi Bibit Unggul",
-                    date: "10 Mei 2024",
-                    cat: "Budidaya",
-                  },
-                  {
-                    title: "Pembekalan Petani",
-                    date: "05 Mei 2024",
-                    cat: "Pelatihan",
-                  },
-                  {
-                    title: "Pemanenan Terukur",
-                    date: "15 Mei 2024",
-                    cat: "Panen",
-                  },
-                  {
-                    title: "Monitoring IoT",
-                    date: "13 Mei 2024",
-                    cat: "Smart Farming",
-                  },
-                  { title: "Pasca Panen", date: "16 Mei 2024", cat: "Panen" },
-                ].map((item, i) => (
-                  <div key={i} className="group cursor-pointer">
-                    <div className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-sm">
-                      <img
-                        src=""
-                        alt={`Dokumentasi kegiatan ${item.title}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute top-4 left-4">
-                        <span className="bg-white/90 backdrop-blur-md text-[9px] font-black px-2 py-1 rounded-md text-[#064e3b] uppercase">
-                          {item.cat}
-                        </span>
-                      </div>
-                    </div>
-                    <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-[#10b981] transition-colors">
-                      {item.title}
-                    </h4>
-                    <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">
-                      {item.date}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Sub-Section: Berita & Artikel Terbaru */}
-            <div className="space-y-8">
-              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                  Berita & Artikel Terbaru
-                </h3>
-                <div className="flex items-center gap-4">
-                  <div className="relative hidden md:block">
-                    <Search
-                      size={14}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Cari berita..."
-                      className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-[#10b981] w-48"
-                    />
-                  </div>
-                  <button className="p-1.5 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-[#10b981] transition-colors">
-                    <Filter size={14} />
+            {showGallery && (
+              <div className="space-y-8">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                    Galeri Foto Kegiatan
+                  </h3>
+                  <button className="text-xs font-bold text-[#10b981] flex items-center gap-2 hover:gap-3 transition-all">
+                    <span>LIHAT SEMUA FOTO</span>
+                    <ArrowRight size={14} />
                   </button>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {[1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
-                  >
-                    <div className="aspect-video bg-zinc-100 relative overflow-hidden">
-                      <img
-                        src=""
-                        alt="Thumbnail artikel berita seputar pertanian melon Tanggumong"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredGalleryItems.map((item, i) => (
+                    <div key={i} className="group cursor-pointer">
+                      <div className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-sm">
+                        <img
+                          src={item.image}
+                          alt={`Dokumentasi kegiatan ${item.title}`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <span className="bg-white/90 backdrop-blur-md text-[9px] font-black px-2 py-1 rounded-md text-[#064e3b] uppercase">
+                            {item.cat}
+                          </span>
+                        </div>
+                      </div>
+                      <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-[#10b981] transition-colors">
+                        {item.title}
+                      </h4>
+                      <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">
+                        {item.date}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sub-Section: Berita & Artikel Terbaru */}
+            {showArticles && (
+              <div className="space-y-8">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-gray-200 pb-4 gap-4 md:gap-0">
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                    Berita & Artikel Terbaru
+                  </h3>
+                  <div className="flex items-center gap-2 w-full md:w-auto">
+                    <div className="relative flex-1 md:w-48">
+                      <Search
+                        size={14}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Cari berita..."
+                        className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-[#10b981] w-full"
                       />
                     </div>
-                    <div className="p-6 space-y-4 flex flex-col flex-1">
-                      <div className="flex gap-2">
-                        <span className="text-[10px] font-black text-[#10b981] uppercase">
-                          Tips & Trik
-                        </span>
-                        <span className="text-[10px] font-bold text-gray-300">
-                          •
-                        </span>
-                        <span className="text-[10px] font-bold text-gray-400">
-                          15 April 2024
-                        </span>
-                      </div>
-                      <h4 className="text-lg font-black text-gray-900 leading-tight group-hover:text-[#10b981] transition-colors">
-                        Panen Raya Melon Honey Globe di Lahan Tanggumong
-                      </h4>
-                      <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
-                        Bagaimana cara menentukan waktu panen yang paling tepat
-                        agar melon mencapai kadar brix maksimal dan tekstur
-                        renyah sempurna...
-                      </p>
-                      <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 mt-auto pt-4 group-hover:gap-3 transition-all">
-                        <span>BACA SELENGKAPNYA</span>
-                        <ArrowRight size={14} className="text-[#10b981]" />
-                      </button>
-                    </div>
+                    <button className="p-1.5 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-[#10b981] transition-colors shrink-0">
+                      <Filter size={14} />
+                    </button>
                   </div>
-                ))}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {[
+                    {
+                      title: "Panen Raya Melon Honey Globe di Lahan Tanggumong",
+                      date: "15 April 2024",
+                      tag: "Tips & Trik",
+                      desc: "Bagaimana cara menentukan waktu panen yang paling tepat agar melon mencapai kadar brix maksimal dan tekstur renyah sempurna...",
+                      image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?q=80&w=600"
+                    },
+                    {
+                      title: "Penerapan Smart Farming IoT Kelompok Tani Banyu Urip",
+                      date: "10 April 2024",
+                      tag: "Teknologi",
+                      desc: "Sistem pengairan otomatis berbasis sensor kelembaban tanah membantu petani menghemat air hingga 40% sekaligus meningkatkan kemanisan melon...",
+                      image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600"
+                    }
+                  ].map((item, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                    >
+                      <div className="aspect-video bg-zinc-100 relative overflow-hidden">
+                        <img
+                          src={item.image}
+                          alt="Thumbnail artikel berita seputar pertanian melon Tanggumong"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                      <div className="p-6 space-y-4 flex flex-col flex-1">
+                        <div className="flex gap-2">
+                          <span className="text-[10px] font-black text-[#10b981] uppercase">
+                            {item.tag}
+                          </span>
+                          <span className="text-[10px] font-bold text-gray-300">
+                            •
+                          </span>
+                          <span className="text-[10px] font-bold text-gray-400">
+                            {item.date}
+                          </span>
+                        </div>
+                        <h4 className="text-lg font-black text-gray-900 leading-tight group-hover:text-[#10b981] transition-colors">
+                          {item.title}
+                        </h4>
+                        <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
+                          {item.desc}
+                        </p>
+                        <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 mt-auto pt-4 group-hover:gap-3 transition-all">
+                          <span>BACA SELENGKAPNYA</span>
+                          <ArrowRight size={14} className="text-[#10b981]" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Sub-Section: Video Dokumentasi */}
-            {/* Menambahkan mb-16 untuk memberikan margin bawah yang cukup dan proporsional */}
-            <div className="space-y-8 mb-16">
-              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                  Video Dokumentasi
-                </h3>
-                <button className="text-xs font-bold text-gray-400 flex items-center gap-2 hover:text-gray-600 transition-colors">
-                  <span>LIHAT CHANNEL YOUTUBE</span>
-                  <ArrowRight size={14} />
-                </button>
-              </div>
+            {showVideos && (
+              <div className="space-y-8 mb-16">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                    Video Dokumentasi
+                  </h3>
+                  <button className="text-xs font-bold text-gray-400 flex items-center gap-2 hover:text-gray-600 transition-colors">
+                    <span>LIHAT CHANNEL YOUTUBE</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="aspect-video bg-[#064e3b] rounded-[24px] overflow-hidden relative group cursor-pointer border-4 border-white shadow-lg"
-                  >
-                    <img
-                      src=""
-                      alt="Frame video profil atau edukasi budidaya Banyu Urip"
-                      className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-[#10b981] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-125 transition-transform duration-300">
-                        <Play size={24} fill="white" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      title: "Profil Kelompok Tani Banyu Urip 2024",
+                      image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=600"
+                    },
+                    {
+                      title: "Tutorial Budidaya Melon Hidroponik Skala Rumah",
+                      image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=600"
+                    }
+                  ].map((video, i) => (
+                    <div
+                      key={i}
+                      className="aspect-video bg-[#064e3b] rounded-[24px] overflow-hidden relative group cursor-pointer border-4 border-white shadow-lg"
+                    >
+                      <img
+                        src={video.image}
+                        alt="Frame video profil atau edukasi budidaya Banyu Urip"
+                        className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-[#10b981] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-125 transition-transform duration-300">
+                          <Play size={24} fill="white" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-6 left-6 right-6">
+                        <p className="text-white font-black text-sm drop-shadow-md">
+                          {video.title}
+                        </p>
                       </div>
                     </div>
-                    <div className="absolute bottom-6 left-6 right-6">
-                      <p className="text-white font-black text-sm drop-shadow-md">
-                        Profil Kelompok Tani Banyu Urip 2024
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* SISI KANAN: ASIDE SIDEBAR (4 KOLOM) */}
@@ -266,22 +329,37 @@ export default function GaleriPage() {
                 <span>ARTIKEL POPULER</span>
               </h4>
               <div className="space-y-6">
-                {[1, 2, 3].map((i) => (
+                {[
+                  {
+                    title: "Teknik Irigasi Tetes Pintar untuk Melon Premium Tanggumong",
+                    views: "120 Views",
+                    image: "https://images.unsplash.com/photo-1463121044474-70a11a2f7f64?q=80&w=150"
+                  },
+                  {
+                    title: "Manfaat Melon Honey Globe bagi Kesehatan Tubuh",
+                    views: "98 Views",
+                    image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=150"
+                  },
+                  {
+                    title: "Cara Memilih Melon Matang Sempurna dari Pohonnya",
+                    views: "85 Views",
+                    image: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?q=80&w=150"
+                  }
+                ].map((item, i) => (
                   <div key={i} className="flex gap-4 group cursor-pointer">
                     <div className="w-16 h-16 rounded-xl bg-gray-100 shrink-0 overflow-hidden border border-gray-100">
                       <img
-                        src=""
+                        src={item.image}
                         alt="Thumbnail artikel terpopuler"
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div>
                       <h5 className="text-xs font-bold text-gray-800 leading-snug group-hover:text-[#10b981] transition-colors line-clamp-2">
-                        Teknik Irigasi Tetes Pintar untuk Melon Premium
-                        Tanggumong
+                        {item.title}
                       </h5>
                       <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">
-                        120 Views
+                        {item.views}
                       </p>
                     </div>
                   </div>
@@ -346,7 +424,7 @@ export default function GaleriPage() {
                 rel="noopener noreferrer"
                 className="w-full bg-[#10b981] text-white py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 hover:scale-105 transition-all shadow-xl shadow-emerald-950/20 relative z-10"
               >
-                <MessageCircle size={18} fill="white" />
+                <WhatsAppIcon size={18} />
                 <span>CHAT VIA WHATSAPP</span>
               </a>
             </div>
@@ -383,7 +461,8 @@ export default function GaleriPage() {
       </div>
 
       <Footer />
-    </main>
+      </main>
+    </>
   );
 }
 

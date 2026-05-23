@@ -1,10 +1,10 @@
 import Link from "next/link";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import {
   Leaf,
   MapPin,
   Phone,
   Mail,
-  MessageCircle,
   ArrowRight,
 } from "lucide-react";
 
@@ -69,7 +69,7 @@ export default function Footer() {
             {[
               { icon: <FacebookIcon />, href: "#" },
               { icon: <InstagramIcon />, href: "#" },
-              { icon: <MessageCircle size={18} />, href: "#" },
+              { icon: <WhatsAppIcon size={18} />, href: "#" },
             ].map((social, i) => (
               <a
                 key={i}

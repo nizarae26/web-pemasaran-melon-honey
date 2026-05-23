@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -11,16 +11,15 @@ import {
   Filter,
   Calendar,
   Sparkles,
-  MessageCircle,
   ArrowUpDown,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function KatalogPage() {
   // State untuk Filter
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("Semua");
   const [sortBy, setSortBy] = useState("Terbaru");
-
   // Data Gabungan (Melon & Olahan)
   const products = [
     {
@@ -73,32 +72,30 @@ export default function KatalogPage() {
   ];
 
   // Logika Filter & Search
-  const filteredProducts = useMemo(() => {
-    return products
-      .filter((p) => {
-        const matchesSearch = p.name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        const matchesCategory =
-          category === "Semua" ||
-          (category === "Melon Segar" && p.type === "melon") ||
-          (category === "Hasil Olahan" && p.type === "olahan");
-        return matchesSearch && matchesCategory;
-      })
-      .sort((a, b) => {
-        if (sortBy === "Termurah")
-          return (
-            parseInt(a.price.replace(/\D/g, "")) -
-            parseInt(b.price.replace(/\D/g, ""))
-          );
-        if (sortBy === "Termahal")
-          return (
-            parseInt(b.price.replace(/\D/g, "")) -
-            parseInt(a.price.replace(/\D/g, ""))
-          );
-        return b.date - a.date; // Terbaru
-      });
-  }, [searchTerm, category, sortBy]);
+  const filteredProducts = products
+    .filter((p) => {
+      const matchesSearch = p.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        category === "Semua" ||
+        (category === "Melon Segar" && p.type === "melon") ||
+        (category === "Hasil Olahan" && p.type === "olahan");
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      if (sortBy === "Termurah")
+        return (
+          parseInt(a.price.replace(/\D/g, "")) -
+          parseInt(b.price.replace(/\D/g, ""))
+        );
+      if (sortBy === "Termahal")
+        return (
+          parseInt(b.price.replace(/\D/g, "")) -
+          parseInt(a.price.replace(/\D/g, ""))
+        );
+      return b.date - a.date; // Terbaru
+    });
 
   return (
     <main className="min-h-screen bg-gray-50/50">
@@ -124,15 +121,16 @@ export default function KatalogPage() {
               />
             </div>
 
-            <div className="flex bg-gray-50 p-1 rounded-xl border border-gray-100">
+            <div className="flex overflow-x-auto hide-scrollbar bg-gray-50 p-1 rounded-xl border border-gray-100 w-full sm:w-auto snap-x">
               {["Semua", "Melon Segar", "Hasil Olahan"].map((tab) => (
                 <button
                   key={tab}
+                  type="button"
                   onClick={() => setCategory(tab)}
-                  className={`px-6 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`relative z-10 whitespace-nowrap shrink-0 snap-start px-4 md:px-6 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     category === tab
-                      ? "bg-white text-[#10b981] shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-white text-[#10b981] shadow-sm ring-1 ring-emerald-100"
+                      : "text-gray-500 hover:text-gray-700 bg-white/50"
                   }`}
                 >
                   {tab}
@@ -142,7 +140,7 @@ export default function KatalogPage() {
           </div>
 
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+          <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end pt-4 lg:pt-0 border-t border-gray-100 lg:border-none">
             <span className="text-xs font-bold text-gray-400 flex items-center gap-1">
               <ArrowUpDown size={14} /> URUTKAN:
             </span>
@@ -296,7 +294,7 @@ export default function KatalogPage() {
               href="https://wa.me/6287812345678"
               className="w-full bg-white text-[#10b981] py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 hover:scale-105 transition-all shadow-lg active:scale-95"
             >
-              <MessageCircle size={18} fill="currentColor" fillOpacity={0.2} />
+              <WhatsAppIcon size={18} />
               KONSULTASI WA
             </a>
           </div>

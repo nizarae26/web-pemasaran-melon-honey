@@ -15,9 +15,10 @@ import {
 
 export default function ProfilPage() {
   return (
-    <main className="min-h-screen bg-white w-full overflow-x-hidden">
+    <>
       <Navbar />
-      <ProfilHero />
+      <main className="min-h-screen bg-white w-full overflow-x-hidden">
+        <ProfilHero />
 
       {/* 1. Sejarah & Latar Belakang - Tren Asymmetric Clean Layout */}
       <section className="py-28 px-6 md:px-12 lg:px-16 xl:px-24 bg-white relative overflow-hidden">
@@ -287,7 +288,8 @@ export default function ProfilPage() {
       </section>
 
       <Footer />
-    </main>
+      </main>
+    </>
   );
 }
 

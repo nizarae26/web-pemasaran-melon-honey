@@ -4,7 +4,8 @@ import ProductCard from "@/components/ProductCard";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import OlahanCard from "@/components/public/OlahanCard";
-import { MessageCircle, Leaf } from "lucide-react";
+import { Leaf } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -108,13 +109,13 @@ export default function Home() {
       <Hero />
 
       {/* 3. Katalog Melon Honey Globe  */}
-      <section className="py-14 px-8">
+      <section className="py-20 px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2 tracking-tight inline-block relative">
               Katalog Melon{" "}
-              <span className="text-[#10b981]">Honey Globe</span>
-              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-1 bg-[#10b981]"></span>
+              <span className="text-poktan-emerald">Honey Globe</span>
+              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-1 bg-poktan-emerald"></span>
             </h2>
           </div>
 
@@ -126,25 +127,26 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/katalog">
-              <button className="group border-2 border-[#10b981] text-[#10b981] px-10 py-3 rounded-xl font-bold hover:bg-[#10b981] hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-emerald-500/20">
-                <span>Lihat Semua Katalog</span>
-                <ArrowRight
-                  size={18}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </button>
+            <Link
+              href="/katalog"
+              className="group border-2 border-poktan-emerald text-poktan-emerald px-10 py-3 rounded-xl font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-poktan-emerald/20 w-fit"
+            >
+              <span>Lihat Semua Katalog</span>
+              <ArrowRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Section Produk Olahan */}
-      <section className="py-5 bg-gray-50">
+      <section className="py-20 bg-poktan-accent/10">
         <div className="max-w-6xl mx-auto px-8 md:px-20">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Produk Olahan <span className="text-[#10b981]">Kreatif</span>
+              Produk Olahan <span className="text-poktan-emerald">Kreatif</span>
             </h2>
             <p className="text-gray-500 max-w-xl">
               Selain buah segar, kami juga menghadirkan berbagai produk turunan
@@ -166,14 +168,15 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/katalog">
-              <button className="group border-2 border-[#10b981] text-[#10b981] px-10 py-3 rounded-xl font-bold hover:bg-[#10b981] hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-emerald-500/20">
-                <span>Lihat Semua Olahan</span>
-                <ArrowRight
-                  size={18}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </button>
+            <Link
+              href="/katalog"
+              className="group border-2 border-poktan-emerald text-poktan-emerald px-10 py-3 rounded-xl font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-poktan-emerald/20 w-fit"
+            >
+              <span>Lihat Semua Olahan</span>
+              <ArrowRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
           </div>
         </div>
@@ -254,18 +257,18 @@ export default function Home() {
       </section>
 
       {/* 6. CTA Bawah  */}
-      <section className="bg-emerald-50/50 py-16 px-8 border-y border-emerald-100">
+      <section className="bg-poktan-accent/20 py-20 px-8 border-y border-poktan-accent/50">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             {/* Ikon Utama dengan Efek Glow */}
-            <div className="w-16 h-16 bg-[#10b981] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-emerald-500/20 shrink-0">
+            <div className="w-16 h-16 bg-poktan-emerald rounded-2xl flex items-center justify-center text-white shadow-xl shadow-poktan-emerald/20 shrink-0">
               <Leaf size={32} strokeWidth={2.5} />
             </div>
 
             <div>
               <h4 className="font-black text-2xl text-gray-800 tracking-tight mb-1">
                 Tertarik dengan{" "}
-                <span className="text-[#10b981]">Melon Honey Globe</span> kami?
+                <span className="text-poktan-emerald">Melon Honey Globe</span> kami?
               </h4>
               <p className="text-gray-500 font-medium max-w-md">
                 Hubungi kami sekarang untuk pemesanan atau konsultasi produk
@@ -275,13 +278,8 @@ export default function Home() {
           </div>
 
           {/* Tombol WhatsApp Modern */}
-          <button className="w-full md:w-auto bg-[#10b981] text-white px-10 py-4 rounded-2xl font-bold shadow-lg shadow-emerald-500/20 hover:bg-[#059669] hover:scale-105 transition-all active:scale-95 flex items-center justify-center gap-3">
-            <MessageCircle
-              size={22}
-              strokeWidth={2.5}
-              fill="currentColor"
-              fillOpacity={0.2}
-            />
+          <button className="w-full md:w-auto bg-poktan-emerald text-white px-10 py-4 rounded-2xl font-bold shadow-lg shadow-poktan-emerald/20 hover:bg-poktan-green hover:scale-105 transition-all active:scale-95 flex items-center justify-center gap-3">
+            <WhatsAppIcon size={22} />
             <span>Hubungi Kami via WhatsApp</span>
           </button>
         </div>
