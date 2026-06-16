@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GaleriHero from "@/components/public/GaleriHero";
@@ -29,45 +30,49 @@ export default function GaleriPage() {
     { icon: <Users size={22} />, label: "Petani Terlibat", value: "25+" },
   ];
 
-  // Data Item Galeri Foto
-  const galleryItems = [
-    {
-      title: "Greenhouse Modern",
-      date: "12 Mei 2024",
-      cat: "Budidaya",
-      image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=600",
-    },
-    {
-      title: "Seleksi Bibit Unggul",
-      date: "10 Mei 2024",
-      cat: "Budidaya",
-      image: "https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?q=80&w=600",
-    },
-    {
-      title: "Pembekalan Petani",
-      date: "05 Mei 2024",
-      cat: "Pelatihan",
-      image: "https://images.unsplash.com/photo-1595275312780-3a1c0d5004e0?q=80&w=600",
-    },
-    {
-      title: "Pemanenan Terukur",
-      date: "15 Mei 2024",
-      cat: "Panen",
-      image: "https://images.unsplash.com/photo-1605001011156-cbf0b0f67a51?q=80&w=600",
-    },
-    {
-      title: "Monitoring IoT",
-      date: "13 Mei 2024",
-      cat: "Smart Farming",
-      image: "https://images.unsplash.com/photo-1563749372-1220038379c8?q=80&w=600",
-    },
-    {
-      title: "Pasca Panen",
-      date: "16 Mei 2024",
-      cat: "Panen",
-      image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=600",
-    },
-  ];
+  // State untuk Data Supabase
+  const [galleryItems, setGalleryItems] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [articles, setArticles] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      // Fetch Gallery
+      const { data: galleryData } = await supabase
+        .from("gallery")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (galleryData) {
+        setGalleryItems(galleryData.map((g) => ({
+          title: g.title,
+          date: new Date(g.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+          cat: g.category,
+          image: g.image_url,
+        })));
+      }
+
+      // Fetch Articles
+      const { data: articleData } = await supabase
+        .from("articles")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (articleData) {
+        setArticles(articleData.map((a) => ({
+          title: a.title,
+          date: new Date(a.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+          tag: a.tag,
+          desc: a.description,
+          image: a.image_url,
+        })));
+      }
+
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchData();
+  }, []);
 
   // Logika Filter
   const showGallery =
@@ -162,7 +167,12 @@ export default function GaleriPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredGalleryItems.map((item, i) => (
+                  {loading ? (
+                    <div className="col-span-full py-12 text-center text-gray-400">Memuat Galeri...</div>
+                  ) : filteredGalleryItems.length === 0 ? (
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada foto kegiatan.</div>
+                  ) : (
+                    filteredGalleryItems.map((item, i) => (
                     <div key={i} className="group cursor-pointer">
                       <div className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-sm">
                         <img
@@ -183,7 +193,7 @@ export default function GaleriPage() {
                         {item.date}
                       </p>
                     </div>
-                  ))}
+                  )))}
                 </div>
               </div>
             )}
@@ -214,22 +224,12 @@ export default function GaleriPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {[
-                    {
-                      title: "Panen Raya Melon Honey Globe di Lahan Tanggumong",
-                      date: "15 April 2024",
-                      tag: "Tips & Trik",
-                      desc: "Bagaimana cara menentukan waktu panen yang paling tepat agar melon mencapai kadar brix maksimal dan tekstur renyah sempurna...",
-                      image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?q=80&w=600"
-                    },
-                    {
-                      title: "Penerapan Smart Farming IoT Kelompok Tani Banyu Urip",
-                      date: "10 April 2024",
-                      tag: "Teknologi",
-                      desc: "Sistem pengairan otomatis berbasis sensor kelembaban tanah membantu petani menghemat air hingga 40% sekaligus meningkatkan kemanisan melon...",
-                      image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600"
-                    }
-                  ].map((item, i) => (
+                  {loading ? (
+                    <div className="col-span-full py-12 text-center text-gray-400">Memuat Artikel...</div>
+                  ) : articles.length === 0 ? (
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada artikel.</div>
+                  ) : (
+                    articles.map((item, i) => (
                     <div
                       key={i}
                       className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
@@ -247,7 +247,7 @@ export default function GaleriPage() {
                             {item.tag}
                           </span>
                           <span className="text-[10px] font-bold text-gray-300">
-                            •
+                            Ã¢â‚¬Â¢
                           </span>
                           <span className="text-[10px] font-bold text-gray-400">
                             {item.date}
@@ -265,7 +265,7 @@ export default function GaleriPage() {
                         </button>
                       </div>
                     </div>
-                  ))}
+                  )))}
                 </div>
               </div>
             )}
@@ -493,3 +493,5 @@ const SparklesIcon = ({
     <path d="M17 19h4" />
   </svg>
 );
+
+

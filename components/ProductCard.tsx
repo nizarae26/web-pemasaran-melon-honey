@@ -9,6 +9,7 @@ interface ProductProps {
   status: "Tersedia" | "Pre-Order" | "Habis";
   promo?: "Hot" | "Terlaris" | "Diskon";
   discountValue?: string; 
+  imageUrl?: string;
 }
 
 export default function ProductCard({
@@ -19,6 +20,7 @@ export default function ProductCard({
   status,
   promo,
   discountValue,
+  imageUrl,
 }: ProductProps) {
   const statusConfig = {
     Tersedia: {
@@ -97,10 +99,18 @@ export default function ProductCard({
           </div>
         )}
 
-        {/* Placeholder Gambar */}
-        <div className="flex items-center justify-center h-full text-gray-400 group-hover:scale-110 transition-transform duration-700 ease-in-out">
-          <span className="text-5xl">🍈</span>
-        </div>
+        {/* Gambar Produk atau Placeholder */}
+        {imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt={name} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full text-gray-400 group-hover:scale-110 transition-transform duration-700 ease-in-out">
+            <span className="text-5xl">🍈</span>
+          </div>
+        )}
       </div>
 
       <div className="p-5 text-center">

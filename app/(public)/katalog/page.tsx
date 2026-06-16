@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -21,55 +22,59 @@ export default function KatalogPage() {
   const [category, setCategory] = useState("Semua");
   const [sortBy, setSortBy] = useState("Terbaru");
   // Data Gabungan (Melon & Olahan)
-  const products = [
-    {
-      type: "melon",
-      name: "Melon Honey Globe Grade A",
-      grade: "1,5 – 2,5 kg / buah",
-      price: "Rp 35.000",
-      weight: "Tersedia",
-      status: "Tersedia" as const,
-      date: 5,
-    },
-    {
-      type: "melon",
-      name: "Melon Honey Globe Grade B",
-      grade: "1,2 – 1,5 kg / buah",
-      price: "Rp 28.000",
-      weight: "Tersedia",
-      status: "Tersedia" as const,
-      date: 4,
-    },
-    {
-      type: "melon",
-      name: "Melon Honey Globe Grade Jumbo",
-      grade: "2,5 – 3,5 kg / buah",
-      price: "Rp 55.000",
-      weight: "Pre-Order",
-      status: "Pre-Order" as const,
-      date: 3,
-    },
-    {
-      type: "olahan",
-      name: "Keripik Melon Vacuum",
-      description:
-        "Keripik renyah dari melon asli tanpa tambahan pemanis buatan.",
-      price: "Rp 25.000",
-      image:
-        "https://images.unsplash.com/photo-1623064034911-c94ed60c1d1e?q=80&w=1974",
-      date: 2,
-    },
-    {
-      type: "olahan",
-      name: "Sirup Melon Premium",
-      description:
-        "Sari buah melon murni dengan aroma segar yang kuat untuk minuman.",
-      price: "Rp 40.000",
-      image:
-        "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1974",
-      date: 1,
-    },
-  ];
+  const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      // Fetch Melon dari tabel products
+      const { data: melonData } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      // Fetch Olahan dari tabel olahan
+      const { data: olahanData } = await supabase
+        .from("olahan")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      let combinedData: any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */ = [];
+
+      if (melonData) {
+        const mappedMelon = melonData.map((item) => ({
+          ...item,
+          type: "melon",
+          price_raw: item.price,
+          price: `Rp ${Number(item.price).toLocaleString('id-ID')}`,
+          status: item.stock > 0 ? "Tersedia" : "Habis",
+          weight: "Tersedia",
+          grade: "", 
+          image: item.image_url,
+          date: new Date(item.created_at).getTime(),
+        }));
+        combinedData = [...combinedData, ...mappedMelon];
+      }
+
+      if (olahanData) {
+        const mappedOlahan = olahanData.map((item) => ({
+          ...item,
+          type: "olahan",
+          price_raw: item.price,
+          price: `Rp ${Number(item.price).toLocaleString('id-ID')}`,
+          status: "Tersedia", // Olahan diasumsikan selalu tersedia atau Anda bisa tambah kolom stok
+          image: item.image_url,
+          date: new Date(item.created_at).getTime(),
+        }));
+        combinedData = [...combinedData, ...mappedOlahan];
+      }
+
+      setProducts(combinedData);
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProducts();
+  }, []);
 
   // Logika Filter & Search
   const filteredProducts = products
@@ -161,7 +166,11 @@ export default function KatalogPage() {
       <section className="py-16 px-6 md:px-12 max-w-7xl mx-auto grid lg:grid-cols-4 gap-12">
         {/* Product Grid */}
         <div className="lg:col-span-3 space-y-14">
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+              <p className="text-gray-500 font-bold animate-pulse">Memuat Produk...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <>
               {/* 1. Kategori Melon Segar */}
               {filteredProducts.some((item) => item.type === "melon") && (
@@ -191,9 +200,10 @@ export default function KatalogPage() {
                           price={item.price}
                           weight={item.weight || ""}
                           status={
-                            (item.status as "Tersedia" | "Pre-Order") ||
+                            (item.status as "Tersedia" | "Pre-Order" | "Habis") ||
                             "Tersedia"
                           }
+                          imageUrl={item.image}
                         />
                       ))}
                   </div>
@@ -252,7 +262,7 @@ export default function KatalogPage() {
             <div className="space-y-4">
               <div className="p-4 bg-emerald-50 rounded-2xl">
                 <p className="font-black text-emerald-800 text-sm">
-                  Mei – Agustus 2024
+                  Mei â€“ Agustus 2024
                 </p>
                 <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mt-1">
                   Status: Panen Berlangsung
@@ -305,3 +315,5 @@ export default function KatalogPage() {
     </main>
   );
 }
+
+
