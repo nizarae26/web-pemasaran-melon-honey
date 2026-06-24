@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Plus, Trash2, Image as ImageIcon, X, Upload, Loader2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function AdminGallery() {
   const [items, setItems] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
@@ -11,6 +12,7 @@ export default function AdminGallery() {
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ title: "", category: "Galeri Foto" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -34,13 +36,36 @@ export default function AdminGallery() {
   }, []);
 
   async function handleDelete(id: string) {
-    if (!confirm("Yakin ingin menghapus foto ini?")) return;
+    const result = await Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Data foto akan dihapus secara permanen!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#10b981",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
     const { error } = await supabase.from("gallery").delete().eq("id", id);
     if (!error) {
+      Swal.fire({
+        title: "Terhapus!",
+        text: "Foto berhasil dihapus.",
+        icon: "success",
+        confirmButtonColor: "#10b981",
+      });
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchItems();
     } else {
-      alert("Gagal menghapus foto");
+      Swal.fire({
+        title: "Gagal!",
+        text: "Gagal menghapus foto",
+        icon: "error",
+        confirmButtonColor: "#10b981",
+      });
     }
   }
 
@@ -54,36 +79,75 @@ export default function AdminGallery() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!imageFile) return alert("Silakan pilih gambar terlebih dahulu");
+    if (!imageFile && !editingId) {
+      Swal.fire({
+        title: "Peringatan",
+        text: "Silakan pilih gambar terlebih dahulu",
+        icon: "warning",
+        confirmButtonColor: "#10b981",
+      });
+      return;
+    }
     setSubmitLoading(true);
 
     try {
-      const fileExt = imageFile.name.split('.').pop();
-      const fileName = `gallery_${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-      const filePath = `gallery/${fileName}`;
-      
-      const { error: uploadError } = await supabase.storage.from("image").upload(filePath, imageFile);
-      if (uploadError) throw uploadError;
-      
-      const { data: publicUrlData } = supabase.storage.from("image").getPublicUrl(filePath);
-      const image_url = publicUrlData.publicUrl;
+      let image_url = previewUrl; // Use existing image if not uploading a new one
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `gallery_${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+        const filePath = `gallery/${fileName}`;
+        
+        const { error: uploadError } = await supabase.storage.from("images").upload(filePath, imageFile);
+        if (uploadError) throw uploadError;
+        
+        const { data: publicUrlData } = supabase.storage.from("images").getPublicUrl(filePath);
+        image_url = publicUrlData.publicUrl;
+      }
 
-      const { error: insertError } = await supabase.from("gallery").insert({
-        title: formData.title,
-        category: formData.category,
-        image_url: image_url,
-      });
+      if (editingId) {
+        const { error: updateError } = await supabase.from("gallery").update({
+          title: formData.title,
+          category: formData.category,
+          image_url: image_url,
+        }).eq("id", editingId);
+        
+        if (updateError) throw updateError;
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Data foto berhasil diperbarui!",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
+      } else {
+        const { error: insertError } = await supabase.from("gallery").insert({
+          title: formData.title,
+          category: formData.category,
+          image_url: image_url,
+        });
 
-      if (insertError) throw insertError;
-      alert("Foto berhasil ditambahkan ke galeri!");
+        if (insertError) throw insertError;
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Foto berhasil ditambahkan ke galeri!",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
+      }
+      
       setIsModalOpen(false);
+      setEditingId(null);
       setFormData({ title: "", category: "Galeri Foto" });
       setImageFile(null);
       setPreviewUrl(null);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchItems();
     } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
-      alert(`Gagal: ${error.message}`);
+      Swal.fire({
+        title: "Gagal!",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#10b981",
+      });
     } finally {
       setSubmitLoading(false);
     }
@@ -97,7 +161,13 @@ export default function AdminGallery() {
           <p className="text-gray-500 mt-1 text-sm">Kelola foto-foto kegiatan dan dokumentasi.</p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setEditingId(null);
+            setFormData({ title: "", category: "Galeri Foto" });
+            setImageFile(null);
+            setPreviewUrl(null);
+            setIsModalOpen(true);
+          }}
           className="bg-[#10b981] hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20"
         >
           <Plus size={18} />
@@ -115,12 +185,26 @@ export default function AdminGallery() {
             <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
               <div className="aspect-square bg-gray-100 relative">
                 <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-                <button 
-                  onClick={() => handleDelete(item.id)}
-                  className="absolute top-2 right-2 p-2 bg-white/90 text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                >
-                  <Trash2 size={16} />
-                </button>
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
+                  <button 
+                    onClick={() => {
+                      setEditingId(item.id);
+                      setFormData({ title: item.title, category: item.category });
+                      setPreviewUrl(item.image_url);
+                      setImageFile(null);
+                      setIsModalOpen(true);
+                    }}
+                    className="p-2 bg-white/90 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors shadow-sm"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(item.id)}
+                    className="p-2 bg-white/90 text-red-500 hover:bg-red-50 rounded-lg transition-colors shadow-sm"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
                 <div className="absolute top-2 left-2">
                   <span className="bg-white/90 backdrop-blur-md text-[10px] font-black px-2 py-1 rounded-md text-[#064e3b] uppercase">
                     {item.category}
@@ -141,7 +225,9 @@ export default function AdminGallery() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-lg font-black text-gray-900">Upload Foto Baru</h2>
+              <h2 className="text-lg font-black text-gray-900">
+                {editingId ? "Edit Foto" : "Upload Foto Baru"}
+              </h2>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
                 <X size={20} />
               </button>

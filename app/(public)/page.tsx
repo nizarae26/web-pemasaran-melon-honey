@@ -8,8 +8,18 @@ import { Leaf } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
-export default function Home() {
+export const revalidate = 0; // Disable caching so it always fetches fresh data
+
+export default async function Home() {
+  // Fetch latest 6 gallery items
+  const { data: galleryItems } = await supabase
+    .from("gallery")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(6);
+
   // Data dummy untuk katalog sesuai mockup [cite: 19-24]
   const featuredProducts = [
     {
@@ -76,29 +86,6 @@ export default function Home() {
     },
   ];
 
-  const produkOlahan = [
-    {
-      title: "Keripik Melon Crispy",
-      description:
-        "Keripik melon premium yang diproses dengan teknik vacuum frying untuk menjaga nutrisi dan rasa manis alami.",
-      price: "Rp 15.000",
-      image: "/images/keripik.jpg",
-    },
-    {
-      title: "Selai Melon Honey",
-      description:
-        "Selai buah asli tanpa pemanis buatan, cocok untuk teman sarapan sehat keluarga Anda.",
-      price: "Rp 25.000",
-      image: "/images/selai.jpg",
-    },
-    {
-      title: "Sirup Melon Tanggumong",
-      description:
-        "Kesegaran melon Honey Globe dalam bentuk sirup kental yang menyegarkan dahaga.",
-      price: "Rp 35.000",
-      image: "/images/sirup.jpg",
-    },
-  ];
 
   return (
     <main className="min-h-screen bg-white">
@@ -141,46 +128,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Produk Olahan */}
-      <section className="py-20 bg-poktan-accent/10">
-        <div className="max-w-6xl mx-auto px-8 md:px-20">
-          <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Produk Olahan <span className="text-poktan-emerald">Kreatif</span>
-            </h2>
-            <p className="text-gray-500 max-w-xl">
-              Selain buah segar, kami juga menghadirkan berbagai produk turunan
-              melon berkualitas tinggi hasil karya petani Tanggumong.
-            </p>
-          </div>
 
-          {/* Grid Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {produkOlahan.map((item, index) => (
-              <OlahanCard
-                key={index}
-                title={item.title}
-                description={item.description}
-                price={item.price}
-                image={item.image}
-              />
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/katalog"
-              className="group border-2 border-poktan-emerald text-poktan-emerald px-10 py-3 rounded-xl font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-poktan-emerald/20 w-fit"
-            >
-              <span>Lihat Semua Olahan</span>
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* 4. Sekilas Tentang Poktan Banyu Urip [cite: 26, 27] */}
       <AboutSection />
@@ -198,17 +146,28 @@ export default function Home() {
                 Lihat Semua Galeri →
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="aspect-square bg-gray-200 rounded-lg overflow-hidden"
-                >
-                  <div className="w-full h-full bg-poktan-accent/50 flex items-center justify-center text-[10px] text-poktan-green text-center p-2">
-                    Foto Kegiatan {i}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {galleryItems && galleryItems.length > 0 ? (
+                galleryItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="aspect-square bg-gray-200 rounded-lg overflow-hidden relative group cursor-pointer"
+                  >
+                    <img 
+                      src={item.image_url} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end justify-start p-3 transition-opacity duration-300">
+                      <span className="text-white font-bold text-xs line-clamp-2">{item.title}</span>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="col-span-3 aspect-[3/1] bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 text-sm border border-gray-100">
+                  Belum ada foto galeri.
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

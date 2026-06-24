@@ -13,8 +13,8 @@ export default function AdminLayout({
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-          {/* Sidebar */}
+        <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row pb-20 md:pb-0">
+          {/* Navigation */}
           <Sidebar />
 
           {/* Main Content */}

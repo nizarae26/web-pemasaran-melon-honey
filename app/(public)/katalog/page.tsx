@@ -1,11 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import OlahanCard from "@/components/public/OlahanCard";
 import KatalogHero from "@/components/public/KatalogHero";
 import {
   Search,
@@ -13,15 +12,14 @@ import {
   Calendar,
   Sparkles,
   ArrowUpDown,
+  CheckCircle2,
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function KatalogPage() {
   // State untuk Filter
-  const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("Semua");
-  const [sortBy, setSortBy] = useState("Terbaru");
-  // Data Gabungan (Melon & Olahan)
+  // Data Melon
   const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,18 +31,13 @@ export default function KatalogPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      // Fetch Olahan dari tabel olahan
-      const { data: olahanData } = await supabase
-        .from("olahan")
-        .select("*")
-        .order("created_at", { ascending: false });
-
       let combinedData: any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */ = [];
 
       if (melonData) {
         const mappedMelon = melonData.map((item) => ({
           ...item,
           type: "melon",
+          type_melon: item.type_melon || "Honey Globe",
           price_raw: item.price,
           price: `Rp ${Number(item.price).toLocaleString('id-ID')}`,
           status: item.stock > 0 ? "Tersedia" : "Habis",
@@ -56,19 +49,6 @@ export default function KatalogPage() {
         combinedData = [...combinedData, ...mappedMelon];
       }
 
-      if (olahanData) {
-        const mappedOlahan = olahanData.map((item) => ({
-          ...item,
-          type: "olahan",
-          price_raw: item.price,
-          price: `Rp ${Number(item.price).toLocaleString('id-ID')}`,
-          status: "Tersedia", // Olahan diasumsikan selalu tersedia atau Anda bisa tambah kolom stok
-          image: item.image_url,
-          date: new Date(item.created_at).getTime(),
-        }));
-        combinedData = [...combinedData, ...mappedOlahan];
-      }
-
       setProducts(combinedData);
       setLoading(false);
     }
@@ -76,96 +56,91 @@ export default function KatalogPage() {
     fetchProducts();
   }, []);
 
-  // Logika Filter & Search
-  const filteredProducts = products
-    .filter((p) => {
-      const matchesSearch = p.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        category === "Semua" ||
-        (category === "Melon Segar" && p.type === "melon") ||
-        (category === "Hasil Olahan" && p.type === "olahan");
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      if (sortBy === "Termurah")
-        return (
-          parseInt(a.price.replace(/\D/g, "")) -
-          parseInt(b.price.replace(/\D/g, ""))
-        );
-      if (sortBy === "Termahal")
-        return (
-          parseInt(b.price.replace(/\D/g, "")) -
-          parseInt(a.price.replace(/\D/g, ""))
-        );
-      return b.date - a.date; // Terbaru
-    });
+  // Logika Filter Jenis Melon
+  const filteredProducts = products.filter((p) => {
+    return (
+      category === "Semua" ||
+      (p.type === "melon" && p.type_melon === category)
+    );
+  });
 
   return (
     <main className="min-h-screen bg-gray-50/50">
       <Navbar />
       <KatalogHero />
 
-      {/* Filter Bar Modern */}
-      <section className="sticky top-20 z-40 bg-white border-b border-gray-100 py-6 px-4 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 items-center justify-between">
-          {/* Search & Tabs */}
-          <div className="flex flex-col md:flex-row gap-4 w-full lg:w-auto">
-            <div className="relative group">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10b981] transition-colors"
-                size={18}
-              />
-              <input
-                type="text"
-                placeholder="Cari melon atau olahan..."
-                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm w-full md:w-64 focus:ring-2 focus:ring-emerald-500/20 focus:border-[#10b981] outline-none transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-
-            <div className="flex overflow-x-auto hide-scrollbar bg-gray-50 p-1 rounded-xl border border-gray-100 w-full sm:w-auto snap-x">
-              {["Semua", "Melon Segar", "Hasil Olahan"].map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setCategory(tab)}
-                  className={`relative z-10 whitespace-nowrap shrink-0 snap-start px-4 md:px-6 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    category === tab
-                      ? "bg-white text-[#10b981] shadow-sm ring-1 ring-emerald-100"
-                      : "text-gray-500 hover:text-gray-700 bg-white/50"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Sort Dropdown */}
-          <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end pt-4 lg:pt-0 border-t border-gray-100 lg:border-none">
-            <span className="text-xs font-bold text-gray-400 flex items-center gap-1">
-              <ArrowUpDown size={14} /> URUTKAN:
-            </span>
-            <select
-              className="bg-transparent text-sm font-black text-gray-800 focus:outline-none cursor-pointer"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
-              <option value="Terbaru">TERBARU</option>
-              <option value="Termurah">HARGA TERENDAH</option>
-              <option value="Termahal">HARGA TERTINGGI</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
       {/* Main Content Grid */}
-      <section className="py-16 px-6 md:px-12 max-w-7xl mx-auto grid lg:grid-cols-4 gap-12">
-        {/* Product Grid */}
-        <div className="lg:col-span-3 space-y-14">
+      <section className="py-16 px-4 md:px-6 max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-8 items-start relative">
+        {/* Sidebar Kiri - Filter (Shopee Style) */}
+        <aside className="w-full lg:w-1/5 space-y-8 shrink-0 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto hide-scrollbar pb-4">
+          <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+            <h4 className="font-black text-base text-gray-800 mb-4 flex items-center gap-2 border-b pb-3">
+              <Filter className="text-[#10b981]" size={18} /> FILTER
+            </h4>
+            
+            {/* Filter Jenis Melon */}
+            <div className="mb-6">
+              <h5 className="font-bold text-sm text-gray-700 mb-3">Jenis Melon</h5>
+              <div className="space-y-2">
+                {["Semua", "Honey Globe", "Golden Apollo"].map((cat) => (
+                  <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="kategori"
+                      checked={category === cat}
+                      onChange={() => setCategory(cat)}
+                      className="w-4 h-4 text-emerald-500 border-gray-300 focus:ring-emerald-500" 
+                    />
+                    <span className={`text-sm ${category === cat ? "text-emerald-600 font-bold" : "text-gray-600 group-hover:text-emerald-500"}`}>
+                      {cat}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Filter Berat / Ukuran (Mockup) */}
+            <div className="mb-6 border-t pt-4">
+              <h5 className="font-bold text-sm text-gray-700 mb-3">Berat / Ukuran</h5>
+              <div className="space-y-2">
+                {["< 1.0 kg", "1.0 - 1.5 kg", "1.5 - 2.5 kg", "> 2.5 kg"].map((ukuran, i) => (
+                  <label key={i} className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      className="w-4 h-4 text-emerald-500 rounded border-gray-300 focus:ring-emerald-500" 
+                    />
+                    <span className="text-sm text-gray-600 group-hover:text-emerald-500">
+                      {ukuran}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          {/* Filter Harga */}
+            {/* Filter Harga */}
+            <div className="border-t pt-4">
+              <h5 className="font-bold text-sm text-gray-700 mb-3">Batas Harga</h5>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200">
+                  <span className="text-xs text-gray-500 font-bold pl-2">Rp</span>
+                  <input type="number" placeholder="MIN" className="w-full bg-transparent text-sm outline-none font-medium" />
+                </div>
+                <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200">
+                  <span className="text-xs text-gray-500 font-bold pl-2">Rp</span>
+                  <input type="number" placeholder="MAX" className="w-full bg-transparent text-sm outline-none font-medium" />
+                </div>
+                <button className="w-full bg-emerald-500 text-white py-2 rounded-lg font-bold text-sm hover:bg-emerald-600 transition-colors shadow-sm">
+                  Terapkan
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Product Grid (Tengah) */}
+
+        {/* Product Grid (Tengah) */}
+        <div className="w-full lg:w-3/5 space-y-10">
           {loading ? (
             <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
               <p className="text-gray-500 font-bold animate-pulse">Memuat Produk...</p>
@@ -195,7 +170,7 @@ export default function KatalogPage() {
                       .map((item, index) => (
                         <ProductCard
                           key={`melon-${index}`}
-                          name={item.name}
+                          name={`${item.name} • ${item.type_melon}`}
                           grade={item.grade || ""}
                           price={item.price}
                           weight={item.weight || ""}
@@ -204,40 +179,6 @@ export default function KatalogPage() {
                             "Tersedia"
                           }
                           imageUrl={item.image}
-                        />
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 2. Kategori Hasil Olahan */}
-              {filteredProducts.some((item) => item.type === "olahan") && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 pb-2 border-b border-gray-100">
-                    <div className="w-1.5 h-6 bg-orange-500 rounded-full"></div>
-                    <h3 className="text-base font-black text-gray-800 uppercase tracking-wider">
-                      Hasil Olahan Melon
-                    </h3>
-                    <span className="text-xs bg-orange-50 text-orange-600 px-2.5 py-0.5 rounded-full font-bold">
-                      {
-                        filteredProducts.filter(
-                          (item) => item.type === "olahan",
-                        ).length
-                      }{" "}
-                      Produk
-                    </span>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProducts
-                      .filter((item) => item.type === "olahan")
-                      .map((item, index) => (
-                        <OlahanCard
-                          key={`olahan-${index}`}
-                          title={item.name}
-                          description={item.description || ""}
-                          price={item.price}
-                          image={item.image || ""}
                         />
                       ))}
                   </div>
@@ -253,60 +194,47 @@ export default function KatalogPage() {
           )}
         </div>
 
-        {/* Sidebar Modern */}
-        <aside className="space-y-8">
-          <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm">
-            <h4 className="font-black text-lg text-[#064e3b] mb-6 flex items-center gap-2">
-              <Calendar className="text-[#10b981]" size={20} /> Musim Panen
+        {/* Sidebar Kanan (Paten) - Varian & Info */}
+        <aside className="hidden lg:block w-full lg:w-1/5 space-y-6 shrink-0 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto hide-scrollbar pb-4">
+          {/* Widget 1: Varian Melon */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+            <h4 className="font-black text-sm text-[#064e3b] mb-4 flex items-center gap-2 border-b pb-3">
+              <CheckCircle2 className="text-[#10b981]" size={16} /> Varian Melon
             </h4>
-            <div className="space-y-4">
-              <div className="p-4 bg-emerald-50 rounded-2xl">
-                <p className="font-black text-emerald-800 text-sm">
-                  Mei â€“ Agustus 2024
-                </p>
-                <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mt-1">
-                  Status: Panen Berlangsung
-                </p>
+            
+            <div className="space-y-3">
+              {/* Card 1 */}
+              <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3">
+                <h5 className="font-black text-gray-800 text-[11px] mb-1 uppercase tracking-wide">Putih Honeyglobe</h5>
+                <p className="text-[#10b981] font-bold text-xs mb-1">Rp 20.000 <span className="text-gray-400 text-[9px] font-medium">/ kg</span></p>
               </div>
-              <p className="text-xs text-gray-500 leading-relaxed italic">
-                *Jadwal panen dapat berubah sesuai kondisi cuaca di Tanggumong.
-              </p>
+
+              {/* Card 2 */}
+              <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-3">
+                <h5 className="font-black text-gray-800 text-[11px] mb-1 uppercase tracking-wide">Kuning Golden Appolo</h5>
+                <p className="text-yellow-600 font-bold text-xs mb-1">Rp 22.000 <span className="text-yellow-600/60 text-[9px] font-medium">/ kg</span></p>
+              </div>
             </div>
           </div>
 
-          <div className="bg-[#064e3b] rounded-[32px] p-8 text-white shadow-xl shadow-emerald-900/10">
-            <h4 className="font-black text-lg mb-6 flex items-center gap-2">
-              <Sparkles className="text-[#10b981]" size={20} /> Kenapa Spesial?
+          <div className="bg-[#064e3b] rounded-2xl p-6 text-white shadow-lg shadow-emerald-900/10">
+            <h4 className="font-black text-sm mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
+              <Sparkles className="text-[#10b981]" size={16} /> Kenapa Spesial?
             </h4>
-            <ul className="text-xs space-y-4 text-emerald-50/80">
+            <ul className="text-[11px] space-y-3 text-emerald-50/80">
               {[
                 "Varietas Honey Globe Asli",
-                "Irigasi Tetes Cerdas (IoT)",
-                "Seleksi Buah Grade Ekspor",
-                "Petani Lokal Tanggumong",
+                "Irigasi Tetes Cerdas",
+                "Grade Ekspor",
               ].map((text, i) => (
-                <li key={i} className="flex gap-3 items-center">
-                  <div className="w-5 h-5 bg-[#10b981] rounded-full flex items-center justify-center shrink-0">
-                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                <li key={i} className="flex gap-2 items-start">
+                  <div className="w-4 h-4 bg-[#10b981] rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="w-1 h-1 bg-white rounded-full"></div>
                   </div>
                   {text}
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="bg-[#10b981] rounded-[32px] p-8 text-center group">
-            <p className="font-black text-white text-lg mb-2">Butuh Bantuan?</p>
-            <p className="text-xs text-white/80 mb-6">
-              Hubungi admin untuk pesanan khusus atau kemitraan.
-            </p>
-            <a
-              href="https://wa.me/6287812345678"
-              className="w-full bg-white text-[#10b981] py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 hover:scale-105 transition-all shadow-lg active:scale-95"
-            >
-              <WhatsAppIcon size={18} />
-              KONSULTASI WA
-            </a>
           </div>
         </aside>
       </section>

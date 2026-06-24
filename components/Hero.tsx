@@ -1,4 +1,4 @@
-import { Users, Droplets, Award, CalendarCheck } from "lucide-react";
+import { Users, Droplets, Award, CalendarCheck, Activity, Map } from "lucide-react";
 import Link from "next/link";
 
 export default function Hero() {
@@ -34,19 +34,13 @@ export default function Hero() {
               rel="noopener noreferrer"
               className="inline-block bg-poktan-green px-6 py-3 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg active:scale-95 text-white flex items-center gap-2 text-center"
             >
-              <span>Beli Sekarang via WhatsApp</span>
+              <span>Beli Sekarang</span>
             </a>
-            <Link
-              href="/katalog"
-              className="bg-white text-poktan-green px-8 py-3 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg active:scale-95 text-center inline-block"
-            >
-              Cek Ketersediaan
-            </Link>
           </div>
         </div>
 
-        {/* 4 Label Keunggulan - Dibuat lebih rapat (pt-4) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-6 border-t border-white/10 max-w-3xl pt-6">
+        {/* 6 Label Keunggulan - Dibuat lebih rapat (pt-4) */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-6 border-t border-white/10 max-w-5xl pt-6">
           {/* 1. Petani Lokal */}
           <div className="flex items-center gap-3 group">
             {/* Menggunakan Green-500 atau Emerald-500 untuk kesan hijau terang yang segar */}
@@ -104,6 +98,36 @@ export default function Hero() {
               </p>
               <p className="text-[9px] text-white/70 leading-tight">
                 Dipetik saat matang Optimal
+              </p>
+            </div>
+          </div>
+
+          {/* 5. Cek pH Tanah */}
+          <div className="flex items-center gap-3 group">
+            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
+              <Activity size={22} strokeWidth={2.5} />
+            </div>
+            <div>
+              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
+                Cek pH Tanah
+              </p>
+              <p className="text-[9px] text-white/70 leading-tight">
+                Data real-time presisi
+              </p>
+            </div>
+          </div>
+
+          {/* 6. Kesuburan Tanah */}
+          <div className="flex items-center gap-3 group">
+            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
+              <Map size={22} strokeWidth={2.5} />
+            </div>
+            <div>
+              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
+                Kesuburan Tanah
+              </p>
+              <p className="text-[9px] text-white/70 leading-tight">
+                Kandungan NPK terukur
               </p>
             </div>
           </div>

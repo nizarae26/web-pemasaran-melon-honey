@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
@@ -21,19 +21,18 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 export default function GaleriPage() {
   // State untuk Filter Aktif
   const [activeTab, setActiveTab] = useState("Semua");
-
-  // Definisi data statistik media
-  const stats = [
-    { icon: <Camera size={22} />, label: "Dokumentasi", value: "120+" },
-    { icon: <Newspaper size={22} />, label: "Berita & Artikel", value: "15" },
-    { icon: <GraduationCap size={22} />, label: "Pelatihan", value: "3" },
-    { icon: <Users size={22} />, label: "Petani Terlibat", value: "25+" },
-  ];
-
   // State untuk Data Supabase
   const [galleryItems, setGalleryItems] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
   const [articles, setArticles] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
   const [loading, setLoading] = useState(true);
+
+  // Definisi data statistik media
+  const stats = [
+    { icon: <Camera size={22} />, label: "Dokumentasi", value: loading ? "..." : galleryItems.length },
+    { icon: <Newspaper size={22} />, label: "Berita & Artikel", value: loading ? "..." : articles.length },
+    { icon: <GraduationCap size={22} />, label: "Pelatihan", value: loading ? "..." : galleryItems.filter(g => g.cat === "Pelatihan").length },
+    { icon: <Users size={22} />, label: "Petani Terlibat", value: "25+" },
+  ];
 
   useEffect(() => {
     async function fetchData() {
@@ -96,32 +95,8 @@ export default function GaleriPage() {
       <main className="min-h-screen bg-[#F8FAFC] w-full overflow-x-hidden">
         <GaleriHero />
 
-      {/* Konten Utama yang Menabrak Hero (z-20 dan -mt) */}
-      <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 -mt-20 md:-mt-26">
-        {/* === WADAH GABUNGAN: Gandeng, Putih Murni, Bershadow Tipis === */}
+      <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 py-8">
         <div className="bg-white rounded-[32px] shadow-sm shadow-black-200/90 border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
-          {/* 1. KONTEN ATAS: Stats Bar Card */}
-          <div className="p-8 pb-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 group">
-            {stats.map((stat, i) => (
-              <div key={i} className="flex items-center gap-4 group/item">
-                {/* Box Ikon dengan aksen warna pastel Emerald */}
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-[#10b981] flex items-center justify-center border border-emerald-100/30 shrink-0 transition-transform group-hover/item:scale-105 duration-300 shadow-sm shadow-emerald-500/5">
-                  {stat.icon}
-                </div>
-                <div>
-                  <p className="text-xl md:text-2xl font-black text-gray-900 leading-none mb-1">
-                    {stat.value}
-                  </p>
-                  <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest leading-none">
-                    {stat.label}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Garis Pemisah Tipis di Tengah */}
-          <div className="border-t border-gray-100 mx-8"></div>
 
           {/* 2. KONTEN BAWAH: Navigation Tab Bar (Pill Style Gandeng) */}
           <div className="p-4 px-6 md:px-8 flex flex-wrap items-center justify-center gap-2 w-full">
@@ -139,7 +114,7 @@ export default function GaleriPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === tab
-                    ? "bg-[#064e3b] text-white shadow-md shadow-emerald-900/10"
+                    ? "bg-poktan-green text-white shadow-md shadow-poktan-green/10"
                     : "text-gray-500 hover:bg-gray-50 bg-gray-50/50"
                 }`}
               >
@@ -160,7 +135,7 @@ export default function GaleriPage() {
                   <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
                     Galeri Foto Kegiatan
                   </h3>
-                  <button className="text-xs font-bold text-[#10b981] flex items-center gap-2 hover:gap-3 transition-all">
+                  <button className="text-xs font-bold text-poktan-accent flex items-center gap-2 hover:gap-3 transition-all">
                     <span>LIHAT SEMUA FOTO</span>
                     <ArrowRight size={14} />
                   </button>
@@ -186,7 +161,7 @@ export default function GaleriPage() {
                           </span>
                         </div>
                       </div>
-                      <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-[#10b981] transition-colors">
+                      <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-poktan-accent transition-colors">
                         {item.title}
                       </h4>
                       <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">
@@ -214,10 +189,10 @@ export default function GaleriPage() {
                       <input
                         type="text"
                         placeholder="Cari berita..."
-                        className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-[#10b981] w-full"
+                        className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-poktan-accent w-full"
                       />
                     </div>
-                    <button className="p-1.5 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-[#10b981] transition-colors shrink-0">
+                    <button className="p-1.5 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-poktan-accent transition-colors shrink-0">
                       <Filter size={14} />
                     </button>
                   </div>
@@ -243,7 +218,7 @@ export default function GaleriPage() {
                       </div>
                       <div className="p-6 space-y-4 flex flex-col flex-1">
                         <div className="flex gap-2">
-                          <span className="text-[10px] font-black text-[#10b981] uppercase">
+                          <span className="text-[10px] font-black text-poktan-accent uppercase">
                             {item.tag}
                           </span>
                           <span className="text-[10px] font-bold text-gray-300">
@@ -253,7 +228,7 @@ export default function GaleriPage() {
                             {item.date}
                           </span>
                         </div>
-                        <h4 className="text-lg font-black text-gray-900 leading-tight group-hover:text-[#10b981] transition-colors">
+                        <h4 className="text-lg font-black text-gray-900 leading-tight group-hover:text-poktan-accent transition-colors">
                           {item.title}
                         </h4>
                         <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
@@ -261,7 +236,7 @@ export default function GaleriPage() {
                         </p>
                         <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 mt-auto pt-4 group-hover:gap-3 transition-all">
                           <span>BACA SELENGKAPNYA</span>
-                          <ArrowRight size={14} className="text-[#10b981]" />
+                          <ArrowRight size={14} className="text-poktan-accent" />
                         </button>
                       </div>
                     </div>
@@ -296,7 +271,7 @@ export default function GaleriPage() {
                   ].map((video, i) => (
                     <div
                       key={i}
-                      className="aspect-video bg-[#064e3b] rounded-[24px] overflow-hidden relative group cursor-pointer border-4 border-white shadow-lg"
+                      className="aspect-video bg-poktan-green rounded-[24px] overflow-hidden relative group cursor-pointer border-4 border-white shadow-lg"
                     >
                       <img
                         src={video.image}
@@ -304,7 +279,7 @@ export default function GaleriPage() {
                         className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-[#10b981] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-125 transition-transform duration-300">
+                        <div className="w-16 h-16 bg-poktan-emerald rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-125 transition-transform duration-300">
                           <Play size={24} fill="white" />
                         </div>
                       </div>
@@ -321,45 +296,29 @@ export default function GaleriPage() {
           </div>
 
           {/* SISI KANAN: ASIDE SIDEBAR (4 KOLOM) */}
-          <aside className="lg:col-span-4 space-y-10">
+          <aside className="lg:col-span-4 space-y-10 sticky top-32 h-fit mb-24">
             {/* Widget 1: Artikel Populer */}
             <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm">
               <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
-                <SparklesIcon size={16} className="text-[#10b981]" />
-                <span>ARTIKEL POPULER</span>
+                <SparklesIcon size={16} className="text-poktan-accent" />
+                <span>ARTIKEL TERBARU</span>
               </h4>
               <div className="space-y-6">
-                {[
-                  {
-                    title: "Teknik Irigasi Tetes Pintar untuk Melon Premium Tanggumong",
-                    views: "120 Views",
-                    image: "https://images.unsplash.com/photo-1463121044474-70a11a2f7f64?q=80&w=150"
-                  },
-                  {
-                    title: "Manfaat Melon Honey Globe bagi Kesehatan Tubuh",
-                    views: "98 Views",
-                    image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=150"
-                  },
-                  {
-                    title: "Cara Memilih Melon Matang Sempurna dari Pohonnya",
-                    views: "85 Views",
-                    image: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?q=80&w=150"
-                  }
-                ].map((item, i) => (
+                {articles.slice(0, 3).map((item, i) => (
                   <div key={i} className="flex gap-4 group cursor-pointer">
                     <div className="w-16 h-16 rounded-xl bg-gray-100 shrink-0 overflow-hidden border border-gray-100">
                       <img
                         src={item.image}
                         alt="Thumbnail artikel terpopuler"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </div>
-                    <div>
-                      <h5 className="text-xs font-bold text-gray-800 leading-snug group-hover:text-[#10b981] transition-colors line-clamp-2">
+                    <div className="flex-1 flex flex-col justify-center">
+                      <h5 className="text-xs font-bold text-gray-800 leading-snug group-hover:text-poktan-accent transition-colors line-clamp-2">
                         {item.title}
                       </h5>
                       <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">
-                        {item.views}
+                        {item.date}
                       </p>
                     </div>
                   </div>
@@ -407,58 +366,11 @@ export default function GaleriPage() {
               </div>
             </div>
 
-            {/* Widget 3: Tanya & Pesan Call to Action */}
-            <div className="bg-[#064e3b] rounded-[32px] p-8 text-white relative overflow-hidden group shadow-md">
-              <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-[#10b981]/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
-              <h4 className="font-black text-lg mb-4 relative z-10 leading-tight tracking-tight">
-                Tanya & Pesan <br /> Sekarang Secara{" "}
-                <span className="text-[#10b981]">Langsung</span>
-              </h4>
-              <p className="text-xs text-white/60 mb-8 relative z-10 font-medium leading-relaxed">
-                Tim admin kami siap membantu menjawab pertanyaan Anda seputar
-                Melon Honey Globe premium.
-              </p>
-              <a
-                href="https://wa.me/6287812345678"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-[#10b981] text-white py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 hover:scale-105 transition-all shadow-xl shadow-emerald-950/20 relative z-10"
-              >
-                <WhatsAppIcon size={18} />
-                <span>CHAT VIA WHATSAPP</span>
-              </a>
-            </div>
 
-            {/* Widget 4: Kategori Berita Plain List */}
-            <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm">
-              <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6">
-                Kategori Berita
-              </h4>
-              <ul className="space-y-4">
-                {[
-                  "Budidaya",
-                  "Pelatihan",
-                  "Berita",
-                  "Panen",
-                  "Smart Farming",
-                ].map((cat) => (
-                  <li
-                    key={cat}
-                    className="flex justify-between items-center group cursor-pointer"
-                  >
-                    <span className="text-xs font-bold text-gray-500 group-hover:text-gray-900 transition-colors">
-                      {cat}
-                    </span>
-                    <span className="w-6 h-6 bg-gray-50 rounded-lg flex items-center justify-center text-[10px] font-black text-gray-300 group-hover:bg-[#10b981] group-hover:text-white transition-all">
-                      0{cat.length}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </aside>
         </div>
       </div>
+      {/* <div className="pt-2 md:pt-2"></div> */}
 
       <Footer />
       </main>

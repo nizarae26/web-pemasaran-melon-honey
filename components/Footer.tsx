@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import {
   Leaf,
@@ -46,12 +47,18 @@ const InstagramIcon = () => (
 export default function Footer() {
   return (
     <footer className="bg-poktan-green text-white pt-20 pb-10 px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-16">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-16">
         {/* 1. Branding Section */}
         <div className="space-y-6">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/10 group-hover:scale-110 transition-transform">
-              <Leaf size={22} strokeWidth={2.5} className="text-poktan-green" />
+            <div className="w-12 h-12 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Image 
+                src="/images/logo-putih.png" 
+                alt="Logo KING Agro Wisata Putih" 
+                width={60} 
+                height={60} 
+                className="w-full h-full object-contain"
+              />
             </div>
             {/* Mengurangi ketebalan font agar lebih ringan dibaca */}
             <span className="font-medium text-lg tracking-tight leading-none">
@@ -65,55 +72,9 @@ export default function Footer() {
             premium melalui teknologi irigasi tetes pintar dan dedikasi petani
             lokal Tanggumong.
           </p>
-          <div className="flex gap-4">
-            {[
-              { icon: <FacebookIcon />, href: "#" },
-              { icon: <InstagramIcon />, href: "#" },
-              { icon: <WhatsAppIcon size={18} />, href: "#" },
-            ].map((social, i) => (
-              <a
-                key={i}
-                href={social.href}
-                className="w-10 h-10 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-poktan-green transition-all"
-              >
-                {social.icon}
-              </a>
-            ))}
-          </div>
         </div>
 
-        {/* 2. Navigasi Cepat */}
-        <div>
-          <h4 className="font-bold text-lg mb-8 relative inline-block">
-            Navigasi
-            <span className="absolute -bottom-2 left-0 w-8 h-1 bg-poktan-leaf"></span>
-          </h4>
-          <ul className="space-y-4">
-            {[
-              { name: "Beranda", href: "/" },
-              { name: "Profil Kami", href: "/profil" },
-              { name: "Teknologi Budidaya", href: "/budidaya" },
-              { name: "Katalog Produk", href: "/katalog" },
-              { name: "Sistem Monitoring", href: "/monitoring" },
-            ].map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  /* Memastikan teks sejajar dengan judul (menghapus gap icon statis) */
-                  className="text-sm text-white/70 hover:text-white flex items-center group transition-all"
-                >
-                  <span className="group-hover:translate-x-1 transition-transform flex items-center gap-2">
-                    {link.name}
-                    <ArrowRight
-                      size={14}
-                      className="opacity-0 group-hover:opacity-100 transition-all"
-                    />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+
 
         {/* 3. Kontak Info */}
         <div>
@@ -141,15 +102,6 @@ export default function Footer() {
               <span className="text-sm text-white/80">0878-1234-5678</span>
             </li>
 
-            {/* Email: items-center agar sejajar tengah */}
-            <li className="flex items-center gap-4 group">
-              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
-                <Mail size={20} />
-              </div>
-              <span className="text-sm text-white/80">
-                poktanbanyuurip@gmail.com
-              </span>
-            </li>
           </ul>
         </div>
 

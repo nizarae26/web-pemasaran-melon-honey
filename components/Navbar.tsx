@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { LayoutDashboard, Menu, X, Leaf } from "lucide-react";
 
 export default function Navbar() {
@@ -11,10 +12,10 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Beranda", href: "/" },
-    { name: "Profil", href: "/profil" },
+    { name: "Tentang Kami", href: "/profil" },
     { name: "Katalog", href: "/katalog" },
-    { name: "Galeri & Berita", href: "/galeri" },
     { name: "Budidaya", href: "/budidaya" },
+    { name: "Galeri & Berita", href: "/galeri" },
   ];
 
   return (
@@ -23,8 +24,14 @@ export default function Navbar() {
         
         {/* 1. Logo Section */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 relative z-[110]">
-          <div className="w-9 h-9 md:w-10 md:h-10 bg-poktan-green rounded-lg flex items-center justify-center shadow-sm">
-            <Leaf size={20} className="text-white" />
+          <div className="w-9 h-9 md:w-12 md:h-12 flex items-center justify-center">
+            <Image 
+              src="/images/logo-utama.png" 
+              alt="Logo KING Agro Wisata" 
+              width={48} 
+              height={48} 
+              className="w-full h-full object-contain"
+            />
           </div>
           <span className="font-bold text-poktan-green leading-tight text-[12px] md:text-base">
             Kelompok Tani

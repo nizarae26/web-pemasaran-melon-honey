@@ -114,12 +114,23 @@ export default function ProductCard({
       </div>
 
       <div className="p-5 text-center">
-        <h3 className="font-bold text-lg text-gray-800 tracking-tight">
-          {name}
-        </h3>
-        <p className="text-[12px] text-gray-500 mb-2">
-          Grade {grade} • {weight}
-        </p>
+        <div className="h-14 flex items-center justify-center mb-1">
+          <h3 className={`font-bold text-gray-800 tracking-tight leading-tight ${
+            name.length > 24 ? "text-sm md:text-base" : "text-base md:text-lg"
+          }`}>
+            {name}
+          </h3>
+        </div>
+        {status === "Habis" ? (
+          <p className="text-[12px] text-red-500 font-bold mb-2">
+            Stok Sedang Kosong
+          </p>
+        ) : (
+          <p className="text-[12px] text-gray-500 mb-2">
+            Grade {grade} • {weight}
+          </p>
+        )}
+        
         <p className="text-[#10b981] font-bold text-lg md:text-xl mb-3 tracking-tight leading-tight">
           {price}
         </p>
