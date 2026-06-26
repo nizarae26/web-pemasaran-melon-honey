@@ -18,7 +18,7 @@ export default function BudidayaPage() {
   const alurProses = [
     {
       no: "01",
-      title: "Beli Bibit",
+      title: "Bibit",
       desc: "Pemilihan bibit unggul bersertifikat untuk memastikan kualitas genetika tanaman.",
       icon: <Sprout size={22} />,
       img: "/images/budidaya/bibit.jpeg", 
@@ -32,27 +32,20 @@ export default function BudidayaPage() {
     },
     {
       no: "03",
-      title: "Ditiriskan",
-      desc: "Benih diangkat dan ditiriskan perlahan hingga tidak ada air yang menetes.",
-      icon: <CheckCircle2 size={22} />,
-      img: "/images/budidaya/tiris.jpeg",
-    },
-    {
-      no: "04",
       title: "Diperam (Kain Hitam)",
       desc: "Benih dibungkus menggunakan kain hitam lembab selama 24 jam untuk memicu kecambah.",
       icon: <Layers size={22} />,
       img: "/images/budidaya/diperam.jpeg",
     },
     {
-      no: "05",
+      no: "04",
       title: "Penyemaian",
       desc: "Taruh kecambah di pot semai kecil (tray) dengan media tanam, maksimal selama 1 minggu.",
       icon: <Flower2 size={22} />,
       img: "/images/budidaya/semai.jpeg",
     },
     {
-      no: "06",
+      no: "05",
       title: "Pindah Tanam & Panen",
       desc: "Bibit ditanam di lahan gundukan. Masa perawatan memakan waktu 60-65 hari sampai buah siap panen.",
       icon: <Trees size={22} />,
@@ -74,8 +67,7 @@ export default function BudidayaPage() {
           {/* Judul & Subtitle Sesuai Gambar */}
           <div className="text-center mb-20">
             <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2 tracking-tight inline-block relative">
-              Alur Proses Budidaya Melon{" "}
-              <span className="text-[#10b981]">Honey Globe</span>
+              Alur Proses <span className="text-[#10b981]">Budidaya Melon</span>
               <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-[#10b981]"></span>
             </h2>
             <p className="text-sm text-gray-500 max-w-2xl mx-auto mt-8 leading-relaxed">
@@ -89,7 +81,7 @@ export default function BudidayaPage() {
             {/* Garis Putus-putus Horizontal (Hanya Desktop) */}
             <div className="hidden lg:block absolute top-5 left-0 w-full h-[2px] border-t-2 border-dashed border-gray-200 z-0"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 relative z-10">
               {alurProses.map((step, index) => (
                 <div key={index} className="flex flex-col items-center group">
                   {/* Nomor di Atas Garis */}
@@ -130,15 +122,7 @@ export default function BudidayaPage() {
         </div>
       </section>
 
-      {/* Galeri Praktik Baik */}
-      <section className="py-24 bg-gray-50 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-black text-center text-gray-800 mb-16 tracking-tight">
-            Galeri Praktik
-          </h2>
-          {/* ... (Konten galeri tetap sesuai kode Anda sebelumnya) */}
-        </div>
-      </section>
+
 
       <Footer />
     </main>

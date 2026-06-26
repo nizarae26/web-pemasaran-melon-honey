@@ -12,7 +12,7 @@ export default function AboutSection() {
             Sekilas Tentang
           </h2>
           <h3 className="text-3xl md:text-4xl font-bold text-poktan-green mb-6">
-            Poktan Banyu Urip
+            Kelompok Tani Banyu Urip
           </h3>
           <div className="space-y-4 text-gray-600 leading-relaxed">
             <p>
@@ -25,9 +25,9 @@ export default function AboutSection() {
               tim yang solid untuk menyejahterakan petani lokal.
             </p>
           </div>
-          <button className="mt-8 border-2 border-poktan-green text-poktan-green px-6 py-2 rounded-lg font-bold hover:bg-poktan-green hover:text-white transition-all">
+          <Link href="/profil" className="mt-8 inline-block border-2 border-poktan-green text-poktan-green px-6 py-2 rounded-lg font-bold hover:bg-poktan-green hover:text-white transition-all">
             Selengkapnya Tentang Kami ↗
-          </button>
+          </Link>
         </div>
 
         {/* Grid Statistik sesuai Mockup */}
@@ -77,7 +77,7 @@ export default function AboutSection() {
               <Leaf size={24} strokeWidth={2.5} />
             </div>
             <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
-              5
+              2
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
               Produk Unggulan

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import toast from "react-hot-toast";
 import { 
   Users, 
   Plus, 
@@ -46,7 +47,7 @@ export default function MembersPage() {
       console.error("Error fetching members:", error);
       // Fallback data if table doesn't exist yet
       if (error.code === '42P01') {
-        alert("Tabel 'members' belum ada di database. Silakan buat tabel terlebih dahulu menggunakan SQL Editor Supabase.");
+        toast.error("Tabel 'members' belum ada di database. Silakan buat tabel terlebih dahulu menggunakan SQL Editor Supabase.");
       }
     } else {
       setMembers(data || []);
@@ -54,7 +55,7 @@ export default function MembersPage() {
     setLoading(false);
   };
 
-  const handleOpenModal = (member = null) => {
+  const handleOpenModal = (member: any = null) => {
     if (member) {
       setEditingId(member.id);
       setFormData({
@@ -94,8 +95,10 @@ export default function MembersPage() {
         .update(formData)
         .eq("id", editingId);
         
-      if (error) alert("Gagal memperbarui: " + error.message);
-      else {
+      if (error) {
+        toast.error("Gagal memperbarui: " + error.message);
+      } else {
+        toast.success("Data anggota berhasil diperbarui!");
         fetchMembers();
         handleCloseModal();
       }
@@ -104,8 +107,10 @@ export default function MembersPage() {
         .from("members")
         .insert([formData]);
         
-      if (error) alert("Gagal menambahkan: " + error.message);
-      else {
+      if (error) {
+        toast.error("Gagal menambahkan: " + error.message);
+      } else {
+        toast.success("Anggota baru berhasil ditambahkan!");
         fetchMembers();
         handleCloseModal();
       }
@@ -116,8 +121,12 @@ export default function MembersPage() {
   const handleDelete = async (id: number) => {
     if (confirm("Apakah Anda yakin ingin menghapus anggota ini?")) {
       const { error } = await supabase.from("members").delete().eq("id", id);
-      if (error) alert("Gagal menghapus: " + error.message);
-      else fetchMembers();
+      if (error) {
+        toast.error("Gagal menghapus: " + error.message);
+      } else {
+        toast.success("Anggota berhasil dihapus!");
+        fetchMembers();
+      }
     }
   };
 

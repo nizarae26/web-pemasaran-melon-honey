@@ -1,4 +1,4 @@
-import { Cpu, FlaskConical, Award, Leaf } from "lucide-react";
+import { Cpu, FlaskConical, Award, Leaf, Droplets, Activity, Map } from "lucide-react";
 
 export default function BudidayaHero() {
   return (
@@ -25,22 +25,16 @@ export default function BudidayaHero() {
             Teknologi <span className="text-[#10b981]">Modern</span>
           </h1>
 
-          <p className="text-sm md:text-base lg:text-lg opacity-80 max-w-xl leading-relaxed font-medium">
+          <p className="text-sm md:text-base lg:text-lg opacity-80 max-w-xl leading-relaxed font-medium mb-8">
             Kami menerapkan praktik budidaya terbaik melalui sistem irigasi
             tetes pintar dan pengelolaan nutrisi terukur untuk hasil premium
             yang konsisten.
           </p>
 
-          {/* Menambahkan mt-8 (margin-top) untuk memberikan ruang napas yang cukup dari paragraf atas */}
-          <div className="flex flex-wrap justify-start gap-3 mt-8 mb-10">
-            <button className="bg-white text-poktan-green px-8 py-3 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition flex items-center justify-center shadow-lg min-h-[44px]">
-              <span>Konsultasi Budidaya</span>
-            </button>
-          </div>
         </div>
 
         {/* 4 Label Keunggulan - Dibuat memadat ke kiri dengan max-w-3xl */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 border-t border-white/10 pt-6 max-w-3xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 border-t border-white/10 pt-8 max-w-4xl">
           {/* 1. Smart Farming */}
           <div className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-poktan-green rounded-xl shadow-lg shadow-white-500/20 flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0">
@@ -71,32 +65,34 @@ export default function BudidayaHero() {
             </div>
           </div>
 
-          {/* 3. Kualitas Premium */}
+          {/* 3. dihapus */}
+
+          {/* 3. Irigasi Tetes Pintar */}
           <div className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-poktan-green rounded-xl shadow-lg shadow-white-500/20 flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0">
-              <Award size={20} strokeWidth={2.5} />
+              <Droplets size={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
-                Kualitas Premium
+                Irigasi Tetes Pintar
               </p>
               <p className="text-[9px] text-white/60 leading-tight">
-                Standar mutu tinggi
+                Hemat air, hasil maksimal
               </p>
             </div>
           </div>
 
-          {/* 4. Ramah Lingkungan */}
+          {/* 4. pH Kesuburan Tanah */}
           <div className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-poktan-green rounded-xl shadow-lg shadow-white-500/20 flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0">
-              <Leaf size={20} strokeWidth={2.5} />
+              <Activity size={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
-                Ramah Lingkungan
+                pH Kesuburan Tanah
               </p>
               <p className="text-[9px] text-white/60 leading-tight">
-                Eco Farming
+                Data real-time presisi
               </p>
             </div>
           </div>

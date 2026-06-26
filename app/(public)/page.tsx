@@ -20,71 +20,46 @@ export default async function Home() {
     .order("created_at", { ascending: false })
     .limit(6);
 
-  // Data dummy untuk katalog sesuai mockup [cite: 19-24]
-  const featuredProducts = [
-    {
-      name: "Melon Honey Globe",
-      grade: "Grade Super",
-      price: "Rp 60.000 - Rp 75.000",
-      weight: "3,5 - 4,5 kg / buah",
-      status: "Tersedia" as const,
-      promo: "Terlaris" as const,
-    },
-    {
-      name: "Melon Honey Globe",
-      grade: "Grade A",
-      price: "Rp 30.000 - Rp 35.000",
-      weight: "1,5 - 2,5 kg / buah",
-      status: "Pre-Order" as const,
-      promo: "Hot" as const,
-    },
-    {
-      name: "Melon Honey Globe",
-      grade: "Grade B",
-      price: "Rp 22.000 - Rp 28.000",
-      weight: "1,2 - 1,5 kg / buah",
-      status: "Habis" as const,
-      promo: "Hot" as const,
-    },
-    {
-      name: "Melon Honey Globe",
-      grade: "Grade C",
-      price: "Rp 18.000 - Rp 22.000",
-      weight: "1,0 - 1,2 kg / buah",
-      status: "Tersedia" as const,
-      promo: "Diskon" as const,
-      discountValue: "30%",
-    },
-    {
-      name: "Melon Honey Globe",
-      grade: "Grade Jumbo",
-      price: "Rp 45.000 - Rp 55.000",
-      weight: "2,5 - 3,5 kg / buah",
-      status: "Pre-Order" as const,
-    },
-    {
-      name: "Melon Honey Globe",
-      grade: "Grade Small",
-      price: "Rp 12.000 - Rp 15.000",
-      weight: "0,7 - 1,0 kg / buah",
-      status: "Tersedia" as const,
-    },
-    {
-      name: "Paket Hampers Melon",
-      grade: "Isi 2 Buah",
-      price: "Rp 85.000",
-      weight: "Box Premium",
-      status: "Pre-Order" as const,
-      promo: "Hot" as const,
-    },
-    {
-      name: "Bibit Melon Honey",
-      grade: "F1 Premium",
-      price: "Rp 150.000",
-      weight: "Pack Isi 50",
-      status: "Tersedia" as const,
-    },
-  ];
+  // Fetch latest 3 articles
+  const { data: articles } = await supabase
+    .from("articles")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  // Fetch Melon dari tabel products
+  const { data: melonData } = await supabase
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  let combinedData: any[] = [];
+
+  if (melonData) {
+    const mappedMelon = melonData.map((item) => ({
+      ...item,
+      type: "melon",
+      type_melon: item.type_melon || "Honey Globe",
+      price_raw: item.price,
+      name: `${item.name} (${item.weight ? (String(item.weight).toLowerCase().includes('kg') ? item.weight : item.weight + ' kg') : "1 kg"})`,
+      grade: item.type_melon || "Honey Globe",
+      price: `Rp.${Number(item.price).toLocaleString('id-ID')}`,
+      status: item.stock > 0 ? "Tersedia" : "Habis",
+      weight: item.weight || "1.0 kg",
+      imageUrl: item.image_url,
+      date: new Date(item.created_at).getTime(),
+    }));
+    combinedData = [...combinedData, ...mappedMelon];
+  }
+
+  // Urutkan agar produk yang "Tersedia" tampil di atas
+  combinedData.sort((a, b) => {
+    if (a.status === "Tersedia" && b.status === "Habis") return -1;
+    if (a.status === "Habis" && b.status === "Tersedia") return 1;
+    return 0;
+  });
+
+  const featuredProducts = combinedData.slice(0, 4);
 
 
   return (
@@ -100,16 +75,23 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2 tracking-tight inline-block relative">
-              Katalog Melon{" "}
-              <span className="text-poktan-emerald">Honey Globe</span>
+              Katalog <span className="text-poktan-emerald">Melon</span>
               <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-1 bg-poktan-emerald"></span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Mengambil hanya 4 data pertama dari array featuredProducts */}
-            {featuredProducts.slice(0, 4).map((product, index) => (
-              <ProductCard key={index} {...product} />
+            {featuredProducts.map((product, index) => (
+              <ProductCard 
+                key={index} 
+                name={product.name}
+                grade={product.grade}
+                price={product.price}
+                weight={product.weight}
+                status={product.status}
+                imageUrl={product.imageUrl}
+              />
             ))}
           </div>
 
@@ -142,9 +124,9 @@ export default async function Home() {
               <h3 className="text-2xl font-bold text-poktan-green">
                 Galeri Kegiatan
               </h3>
-              <span className="text-sm text-poktan-leaf font-semibold cursor-pointer">
+              <Link href="/galeri" className="text-sm text-poktan-leaf font-semibold hover:text-poktan-green transition-colors">
                 Lihat Semua Galeri →
-              </span>
+              </Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {galleryItems && galleryItems.length > 0 ? (
@@ -177,39 +159,39 @@ export default async function Home() {
               <h3 className="text-2xl font-bold text-poktan-green">
                 Berita & Artikel Terbaru
               </h3>
-              <span className="text-sm text-poktan-leaf font-semibold cursor-pointer">
+              <Link href="/galeri" className="text-sm text-poktan-leaf font-semibold hover:text-poktan-green transition-colors">
                 Lihat Semua Berita →
-              </span>
+              </Link>
             </div>
             <div className="space-y-4">
-              <div className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition cursor-pointer">
-                <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                <div>
-                  <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                    PANEN
-                  </span>
-                  <h4 className="font-bold text-sm text-gray-800 mt-1 line-clamp-2">
-                    Panen Raya Melon Honey Globe Bulan Agustus
-                  </h4>
-                  <p className="text-[10px] text-gray-400 mt-1">
-                    20 Agustus 2024
-                  </p>
+              {articles && articles.length > 0 ? (
+                articles.map((item) => (
+                  <Link href="/galeri" key={item.id} className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition cursor-pointer border border-transparent hover:border-gray-100">
+                    <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                      <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                        BERITA
+                      </span>
+                      <h4 className="font-bold text-sm text-gray-800 mt-1 line-clamp-2">
+                        {item.title}
+                      </h4>
+                      <p className="text-[10px] text-gray-400 mt-1">
+                        {new Date(item.created_at).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="bg-gray-50 p-6 rounded-xl text-center text-sm text-gray-400 border border-gray-100">
+                  Belum ada berita & artikel.
                 </div>
-              </div>
-              <div className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition cursor-pointer">
-                <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                <div>
-                  <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-                    BUDIDAYA
-                  </span>
-                  <h4 className="font-bold text-sm text-gray-800 mt-1 line-clamp-2">
-                    Tips Perawatan Melon di Musim Kemarau
-                  </h4>
-                  <p className="text-[10px] text-gray-400 mt-1">
-                    12 Agustus 2024
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

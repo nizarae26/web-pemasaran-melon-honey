@@ -5,26 +5,22 @@ import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GaleriHero from "@/components/public/GaleriHero";
-import {
-  Search,
-  Calendar,
-  Play,
-  ArrowRight,
-  Filter,
-  Camera,
-  Newspaper,
-  GraduationCap,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Calendar, Camera, Filter, GraduationCap, Newspaper, PlaySquare, Search, Users, X } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function GaleriPage() {
   // State untuk Filter Aktif
   const [activeTab, setActiveTab] = useState("Semua");
-  // State untuk Data Supabase
-  const [galleryItems, setGalleryItems] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
-  const [articles, setArticles] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [galleryItems, setGalleryItems] = useState<any[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [scheduleData, setScheduleData] = useState({
+    start_date: new Date().toISOString().split('T')[0],
+    end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
+    status: "PANEN"
+  });
 
   // Definisi data statistik media
   const stats = [
@@ -67,6 +63,21 @@ export default function GaleriPage() {
         })));
       }
 
+      // Fetch Settings for Schedule
+      const { data: scheduleSetting } = await supabase
+        .from("settings")
+        .select("value")
+        .eq("key", "jadwal_panen")
+        .single();
+        
+      if (scheduleSetting?.value) {
+        try {
+          setScheduleData(JSON.parse(scheduleSetting.value));
+        } catch (e) {
+          console.error("Error parsing schedule:", e);
+        }
+      }
+
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -74,26 +85,55 @@ export default function GaleriPage() {
   }, []);
 
   // Logika Filter
-  const showGallery =
-    activeTab === "Semua" ||
-    activeTab === "Galeri Foto" ||
-    activeTab === "Panen" ||
-    activeTab === "Pelatihan" ||
-    activeTab === "Smart Farming";
+  const showGallery = activeTab === "Semua" || activeTab === "Panen" || activeTab === "Smart Farming" || activeTab === "Video Dokumentasi";
 
   const showArticles = activeTab === "Semua" || activeTab === "Berita & Artikel";
-  const showVideos = activeTab === "Semua" || activeTab === "Galeri Foto";
+  const showVideos = activeTab === "Semua" || activeTab === "Video Dokumentasi";
 
   const filteredGalleryItems = galleryItems.filter((item) => {
-    if (activeTab === "Semua" || activeTab === "Galeri Foto") return true;
+    if (activeTab === "Semua") return item.cat !== "Video Dokumentasi";
     return item.cat === activeTab;
   });
+
+  // Logika Kalender Real-Time (Fix Timezone & Multi-Month)
+  const [sYear, sMonth, sDay] = scheduleData.start_date.split('-').map(Number);
+  const startDateObj = new Date(sYear, sMonth - 1, sDay);
+
+  const [eYear, eMonth, eDay] = scheduleData.end_date.split('-').map(Number);
+  const endDateObj = new Date(eYear, eMonth - 1, eDay);
+
+  const monthsToDisplay = [];
+  let currYear = startDateObj.getFullYear();
+  let currMonth = startDateObj.getMonth();
+
+  while (
+    currYear < endDateObj.getFullYear() || 
+    (currYear === endDateObj.getFullYear() && currMonth <= endDateObj.getMonth())
+  ) {
+    monthsToDisplay.push({ year: currYear, month: currMonth });
+    currMonth++;
+    if (currMonth > 11) {
+      currMonth = 0;
+      currYear++;
+    }
+  }
+
+  const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  
+  let displayBulan = "";
+  if (monthsToDisplay.length === 1) {
+    displayBulan = `${monthNames[startDateObj.getMonth()]} ${startDateObj.getFullYear()}`;
+  } else if (startDateObj.getFullYear() === endDateObj.getFullYear()) {
+    displayBulan = `${monthNames[startDateObj.getMonth()]} - ${monthNames[endDateObj.getMonth()]} ${startDateObj.getFullYear()}`;
+  } else {
+    displayBulan = `${monthNames[startDateObj.getMonth()]} ${startDateObj.getFullYear()} - ${monthNames[endDateObj.getMonth()]} ${endDateObj.getFullYear()}`;
+  }
 
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-[#F8FAFC] w-full overflow-x-hidden">
-        <GaleriHero />
+        <GaleriHero displayBulan={displayBulan} />
 
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 py-8">
         <div className="bg-white rounded-[32px] shadow-sm shadow-black-200/90 border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
@@ -102,10 +142,9 @@ export default function GaleriPage() {
           <div className="p-4 px-6 md:px-8 flex flex-wrap items-center justify-center gap-2 w-full">
             {[
               "Semua",
-              "Galeri Foto",
               "Berita & Artikel",
+              "Video Dokumentasi",
               "Panen",
-              "Pelatihan",
               "Smart Farming",
             ].map((tab) => (
               <button
@@ -147,28 +186,39 @@ export default function GaleriPage() {
                   ) : filteredGalleryItems.length === 0 ? (
                     <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada foto kegiatan.</div>
                   ) : (
-                    filteredGalleryItems.map((item, i) => (
-                    <div key={i} className="group cursor-pointer">
-                      <div className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-sm">
-                        <img
-                          src={item.image}
-                          alt={`Dokumentasi kegiatan ${item.title}`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-white/90 backdrop-blur-md text-[9px] font-black px-2 py-1 rounded-md text-[#064e3b] uppercase">
-                            {item.cat}
-                          </span>
-                        </div>
-                      </div>
-                      <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-poktan-accent transition-colors">
-                        {item.title}
-                      </h4>
-                      <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">
-                        {item.date}
-                      </p>
-                    </div>
-                  )))}
+                    <AnimatePresence>
+                      {filteredGalleryItems.map((item, i) => (
+                        <motion.div 
+                          key={i} 
+                          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.4, delay: i * 0.05 }}
+                          whileHover={{ y: -8, scale: 1.03, rotateX: 2, rotateY: -2 }}
+                          style={{ perspective: 1000 }}
+                          className="group cursor-pointer relative"
+                        >
+                          <div className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-md group-hover:shadow-2xl transition-all duration-500">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                            <img
+                              src={item.image || "/api/placeholder/400/300"}
+                              alt={`Dokumentasi kegiatan ${item.title}`}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            />
+                            <div className="absolute bottom-4 left-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                               <p className="text-white text-xs font-bold bg-poktan-accent/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg">Lihat HD</p>
+                            </div>
+                          </div>
+                          <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-poktan-accent transition-colors">
+                            {item.title}
+                          </h4>
+                          <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">
+                            {item.date}
+                          </p>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  )}
                 </div>
               </div>
             )}
@@ -204,43 +254,54 @@ export default function GaleriPage() {
                   ) : articles.length === 0 ? (
                     <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada artikel.</div>
                   ) : (
-                    articles.map((item, i) => (
-                    <div
-                      key={i}
-                      className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
-                    >
-                      <div className="aspect-video bg-zinc-100 relative overflow-hidden">
-                        <img
-                          src={item.image}
-                          alt="Thumbnail artikel berita seputar pertanian melon Tanggumong"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                      </div>
-                      <div className="p-6 space-y-4 flex flex-col flex-1">
-                        <div className="flex gap-2">
-                          <span className="text-[10px] font-black text-poktan-accent uppercase">
-                            {item.tag}
-                          </span>
-                          <span className="text-[10px] font-bold text-gray-300">
-                            Ã¢â‚¬Â¢
-                          </span>
-                          <span className="text-[10px] font-bold text-gray-400">
-                            {item.date}
-                          </span>
-                        </div>
-                        <h4 className="text-lg font-black text-gray-900 leading-tight group-hover:text-poktan-accent transition-colors">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
-                          {item.desc}
-                        </p>
-                        <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 mt-auto pt-4 group-hover:gap-3 transition-all">
-                          <span>BACA SELENGKAPNYA</span>
-                          <ArrowRight size={14} className="text-poktan-accent" />
-                        </button>
-                      </div>
-                    </div>
-                  )))}
+                    <AnimatePresence>
+                      {articles.map((item, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, y: 50, rotateX: 5 }}
+                          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                          transition={{ duration: 0.6, delay: i * 0.1, type: "spring" }}
+                          whileHover={{ scale: 1.02, y: -5 }}
+                          className={`bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-lg hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] transition-all duration-500 group flex flex-col ${i === 0 ? "col-span-full md:flex-row" : "h-full"}`}
+                        >
+                          <div className={`bg-zinc-100 relative overflow-hidden ${i === 0 ? "w-full md:w-3/5 aspect-video md:aspect-auto" : "aspect-video"}`}>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                            <img
+                              src={item.image}
+                              alt="Thumbnail artikel berita"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            />
+                            {/* 3D Modern News Overlay */}
+                            <div className="absolute bottom-6 left-6 right-6 z-20 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                               <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl shadow-2xl">
+                                  <p className="text-white text-xs font-bold uppercase tracking-wider mb-1 opacity-80">{item.tag || "Update Terbaru"}</p>
+                                  <p className="text-white font-black text-sm line-clamp-2 leading-tight">{item.title}</p>
+                               </div>
+                            </div>
+                          </div>
+                          <div className={`p-6 md:p-8 space-y-4 flex flex-col flex-1 ${i === 0 ? "justify-center" : ""}`}>
+                            <div className="flex items-center text-xs text-gray-500 mb-2 gap-2 font-bold tracking-wider uppercase">
+                              <span className="text-poktan-accent bg-emerald-50 px-2 py-1 rounded-md">{item.date}</span>
+                              <span>• Admin</span>
+                            </div>
+                            <h4 className={`font-black text-gray-900 leading-tight group-hover:text-poktan-accent transition-colors ${i === 0 ? "text-2xl" : "text-lg"}`}>
+                              {item.title}
+                            </h4>
+                            <p className="text-sm text-gray-500 leading-relaxed line-clamp-3">
+                              {item.desc}
+                            </p>
+                            <button 
+                              onClick={() => setSelectedArticle(item)}
+                              className="flex items-center gap-2 text-xs font-black text-white bg-gray-900 hover:bg-poktan-accent px-5 py-3 rounded-xl mt-auto self-start group-hover:shadow-lg group-hover:shadow-poktan-accent/30 transition-all duration-300"
+                            >
+                              <span>BACA ARTIKEL</span>
+                              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  )}
                 </div>
               </div>
             )}
@@ -250,7 +311,7 @@ export default function GaleriPage() {
               <div className="space-y-8 mb-16">
                 <div className="flex items-center justify-between border-b border-gray-200 pb-4">
                   <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                    Video Dokumentasi
+                    Video Dokumentasi & Galeri
                   </h3>
                   <button className="text-xs font-bold text-gray-400 flex items-center gap-2 hover:text-gray-600 transition-colors">
                     <span>LIHAT CHANNEL YOUTUBE</span>
@@ -259,37 +320,29 @@ export default function GaleriPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[
-                    {
-                      title: "Profil Kelompok Tani Banyu Urip 2024",
-                      image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=600"
-                    },
-                    {
-                      title: "Tutorial Budidaya Melon Hidroponik Skala Rumah",
-                      image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=600"
-                    }
-                  ].map((video, i) => (
-                    <div
-                      key={i}
-                      className="aspect-video bg-poktan-green rounded-[24px] overflow-hidden relative group cursor-pointer border-4 border-white shadow-lg"
-                    >
-                      <img
-                        src={video.image}
-                        alt="Frame video profil atau edukasi budidaya Banyu Urip"
-                        className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-poktan-emerald rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-125 transition-transform duration-300">
-                          <Play size={24} fill="white" />
+                  {galleryItems.filter(g => g.cat === "Video Dokumentasi").length > 0 ? (
+                    galleryItems.filter(g => g.cat === "Video Dokumentasi").map((video, i) => (
+                      <div
+                        key={i}
+                        className="aspect-video bg-zinc-900 rounded-[24px] overflow-hidden relative group border border-gray-100 shadow-sm"
+                      >
+                        <video
+                          src={video.image}
+                          controls
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <span className="bg-white/90 backdrop-blur-md text-[10px] font-black px-3 py-1.5 rounded-lg text-[#064e3b] uppercase shadow-sm">
+                            Video
+                          </span>
                         </div>
                       </div>
-                      <div className="absolute bottom-6 left-6 right-6">
-                        <p className="text-white font-black text-sm drop-shadow-md">
-                          {video.title}
-                        </p>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                      Belum ada video dokumentasi.
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             )}
@@ -332,37 +385,65 @@ export default function GaleriPage() {
                 <Calendar size={16} className="text-[#10b981]" />
                 <span>JADWAL MUSIM PANEN</span>
               </h4>
-              <div className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100/50">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs font-black text-[#064e3b]">
-                    Mei - Juli 2024
-                  </span>
-                  <span className="text-[9px] bg-[#10b981] text-white px-2 py-0.5 rounded-full font-black">
-                    PANEN
-                  </span>
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center">
-                  {["M", "S", "S", "R", "K", "J", "S"].map((d) => (
-                    <span
-                      key={d}
-                      className="text-[9px] font-black text-gray-300"
-                    >
-                      {d}
-                    </span>
-                  ))}
-                  {Array.from({ length: 28 }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`text-[10px] p-1 font-bold ${
-                        i > 10 && i < 20
-                          ? "bg-[#10b981] text-white rounded-md shadow-sm shadow-emerald-500/20"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {i + 1}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-col gap-6">
+                {monthsToDisplay.map(({ year, month }) => {
+                  const daysInMonth = new Date(year, month + 1, 0).getDate();
+                  const firstDay = new Date(year, month, 1).getDay();
+                  const emptySlots = Array.from({ length: firstDay });
+                  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+                  const monthLabel = `${monthNames[month]} ${year}`;
+
+                  return (
+                    <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100/50">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="text-xs font-black text-[#064e3b]">
+                          {monthLabel}
+                        </span>
+                        <span className="text-[9px] bg-[#10b981] text-white px-2 py-0.5 rounded-full font-black">
+                          {scheduleData.status}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-7 gap-y-2 gap-x-1 text-center mt-2">
+                        {["M", "S", "S", "R", "K", "J", "S"].map((d, index) => (
+                          <div
+                            key={index}
+                            className="text-[10px] font-black text-emerald-600/70 mb-1"
+                          >
+                            {d}
+                          </div>
+                        ))}
+                        {emptySlots.map((_, i) => (
+                          <div key={`empty-${i}`}></div>
+                        ))}
+                        {days.map((day) => {
+                          const currentDate = new Date(year, month, day);
+                          const isHighlighted = currentDate >= startDateObj && currentDate <= endDateObj;
+                          const today = new Date();
+                          const isToday = currentDate.getDate() === today.getDate() && currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear();
+                          
+                          return (
+                            <div key={day} className="flex justify-center items-center relative">
+                              <span
+                                className={`w-7 h-7 flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
+                                  isHighlighted
+                                    ? "bg-gradient-to-br from-[#10b981] to-[#059669] text-white rounded-xl shadow-lg shadow-emerald-500/30 scale-110"
+                                    : isToday
+                                    ? "border border-[#10b981] text-[#10b981] rounded-full"
+                                    : "text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-xl"
+                                }`}
+                              >
+                                {day}
+                                {isHighlighted && (
+                                  <span className="absolute -top-1.5 -right-1.5 text-[10px] leading-none drop-shadow-md z-20" title="Jadwal Panen">🍈</span>
+                                )}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -371,6 +452,47 @@ export default function GaleriPage() {
         </div>
       </div>
       {/* <div className="pt-2 md:pt-2"></div> */}
+
+      {/* Modal Artikel */}
+      {selectedArticle && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-3xl rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="relative aspect-video sm:aspect-[21/9] bg-gray-100 overflow-hidden shrink-0">
+              <img
+                src={selectedArticle.image}
+                alt={selectedArticle.title}
+                className="w-full h-full object-cover"
+              />
+              <button 
+                onClick={() => setSelectedArticle(null)}
+                className="absolute top-4 right-4 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            
+            <div className="p-6 md:p-10 overflow-y-auto flex-1">
+              <div className="flex items-center text-sm text-gray-500 mb-4 gap-2">
+                <span className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold text-xs">
+                  Berita
+                </span>
+                <span>•</span>
+                <span>{selectedArticle.date}</span>
+                <span>•</span>
+                <span>Oleh Admin</span>
+              </div>
+              
+              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-6 leading-tight">
+                {selectedArticle.title}
+              </h2>
+              
+              <div className="prose prose-emerald max-w-none text-gray-600 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
+                {selectedArticle.desc}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
       </main>

@@ -359,7 +359,7 @@ export default function ProfilPage() {
                  }`}>
                    {Object.entries(groupedLainnya).map(([sectionName, membersList]) => (
                      <SeksiCard key={sectionName} title={sectionName} icon={<Users size={24} className="text-emerald-400" />}>
-                       {membersList.map((m, i) => (
+                       {(membersList as any[]).map((m: any, i: number) => (
                          <SeksiItem key={i} role={m.role} name={m.name} />
                        ))}
                      </SeksiCard>

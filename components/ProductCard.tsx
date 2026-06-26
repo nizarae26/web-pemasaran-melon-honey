@@ -75,7 +75,7 @@ export default function ProductCard({
   const waLink = `https://wa.me/6287812345678?text=${encodeURIComponent(waMessage)}`;
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition group">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition group flex flex-col h-full">
       <div className="relative h-48 bg-gray-100 overflow-hidden">
         {/* Badge Status (Kiri Atas) */}
         <span
@@ -113,49 +113,49 @@ export default function ProductCard({
         )}
       </div>
 
-      <div className="p-5 text-center">
-        <div className="h-14 flex items-center justify-center mb-1">
-          <h3 className={`font-bold text-gray-800 tracking-tight leading-tight ${
+      <div className="p-5 text-left flex flex-col flex-grow">
+        <div className="h-12 flex items-center justify-start mb-1">
+          <h3 className={`font-bold text-gray-800 tracking-tight leading-tight line-clamp-2 ${
             name.length > 24 ? "text-sm md:text-base" : "text-base md:text-lg"
           }`}>
             {name}
           </h3>
         </div>
-        {status === "Habis" ? (
-          <p className="text-[12px] text-red-500 font-bold mb-2">
-            Stok Sedang Kosong
-          </p>
-        ) : (
-          <p className="text-[12px] text-gray-500 mb-2">
-            Grade {grade} • {weight}
-          </p>
-        )}
-        
-        <p className="text-[#10b981] font-bold text-lg md:text-xl mb-3 tracking-tight leading-tight">
-          {price}
+        <p className="text-[12px] text-gray-500 mb-2 font-medium">
+          Varian: <span className="font-bold text-gray-700">{grade || "-"}</span> 
+          <span className="mx-1.5 text-gray-300">|</span> 
+          <span className={status === "Habis" ? "text-red-500 font-bold" : "text-emerald-500 font-bold"}>
+            {status}
+          </span>
         </p>
+        
+        <div className="mt-auto pt-2">
+          <p className="text-[#10b981] font-bold text-lg md:text-xl mb-3 tracking-tight leading-tight">
+            {price}
+          </p>
 
-        {status === "Habis" ? (
-          <button
-            disabled
-            className={`w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
-            transition-all shadow-lg active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed`}
-          >
-            {current.icon}
-            <span className="text-sm">{current.label}</span>
-          </button>
-        ) : (
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`block w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
-            transition-all shadow-lg hover:brightness-110 active:scale-95 text-center`}
-          >
-            {current.icon}
-            <span className="text-sm">{current.label}</span>
-          </a>
-        )}
+          {status === "Habis" ? (
+            <button
+              disabled
+              className={`w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
+              transition-all shadow-lg active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed`}
+            >
+              {current.icon}
+              <span className="text-sm">{current.label}</span>
+            </button>
+          ) : (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`block w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
+              transition-all shadow-lg hover:brightness-110 active:scale-95 text-center`}
+            >
+              {current.icon}
+              <span className="text-sm">{current.label}</span>
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );

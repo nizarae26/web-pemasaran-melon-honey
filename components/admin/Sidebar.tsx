@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, Image as ImageIcon, Newspaper, LogOut, Coffee, Settings, Users } from "lucide-react";
+import { LayoutDashboard, Package, Image as ImageIcon, Newspaper, LogOut, Coffee, Settings, Users, Calendar } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -13,6 +13,7 @@ export default function Sidebar() {
     { name: "Galeri", href: "/admin/gallery", icon: ImageIcon },
     { name: "Artikel", href: "/admin/articles", icon: Newspaper },
     { name: "Keanggotaan", href: "/admin/members", icon: Users },
+    { name: "Jadwal Panen", href: "/admin/schedule", icon: Calendar },
     { name: "Pengaturan", href: "/admin/settings", icon: Settings },
   ];
 

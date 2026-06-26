@@ -13,7 +13,7 @@ export default function AdminProducts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "", type_melon: "Honey Globe", price: "", stock: "" });
+  const [formData, setFormData] = useState({ name: "", type_melon: "Honey Globe", price: "", stock: "", weight: "" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -108,6 +108,7 @@ export default function AdminProducts() {
           type_melon: formData.type_melon,
           price: Number(formData.price),
           stock: Number(formData.stock),
+          weight: formData.weight,
           image_url: image_url,
         }).eq("id", editingId);
 
@@ -124,6 +125,7 @@ export default function AdminProducts() {
           type_melon: formData.type_melon,
           price: Number(formData.price),
           stock: Number(formData.stock),
+          weight: formData.weight,
           image_url: image_url,
         });
 
@@ -138,7 +140,7 @@ export default function AdminProducts() {
 
       setIsModalOpen(false);
       setEditingId(null);
-      setFormData({ name: "", type_melon: "Honey Globe", price: "", stock: "" });
+      setFormData({ name: "", type_melon: "Honey Globe", price: "", stock: "", weight: "" });
       setImageFile(null);
       setPreviewUrl(null);
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -165,7 +167,7 @@ export default function AdminProducts() {
         <button
           onClick={() => {
             setEditingId(null);
-            setFormData({ name: "", type_melon: "Honey Globe", price: "", stock: "" });
+            setFormData({ name: "", type_melon: "Honey Globe", price: "", stock: "", weight: "" });
             setImageFile(null);
             setPreviewUrl(null);
             setIsModalOpen(true);
@@ -213,8 +215,11 @@ export default function AdminProducts() {
                         </div>
                         <div className="flex flex-col">
                           <span className="font-bold text-sm text-gray-800">
-                            {p.name} {p.type_melon ? `• ${p.type_melon}` : ""}
+                            {p.weight ? `${p.name} • ${p.weight}` : p.name}
                           </span>
+                          {p.type_melon && (
+                            <span className="text-xs text-emerald-600 font-bold mt-0.5">{p.type_melon}</span>
+                          )}
                           {p.stock <= 0 && (
                             <span className="text-[10px] text-red-500 font-bold mt-0.5">Sedang Kosong / Pre-Order</span>
                           )}
@@ -238,7 +243,8 @@ export default function AdminProducts() {
                               name: p.name, 
                               type_melon: p.type_melon || "Honey Globe", 
                               price: String(p.price), 
-                              stock: String(p.stock) 
+                              stock: String(p.stock),
+                              weight: p.weight || ""
                             });
                             setPreviewUrl(p.image_url);
                             setImageFile(null);
@@ -302,7 +308,7 @@ export default function AdminProducts() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700">Harga (Rp)</label>
                   <input
@@ -326,6 +332,18 @@ export default function AdminProducts() {
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-[#10b981] transition-all text-sm"
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">Berat</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Contoh: 1.5 kg"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-[#10b981] transition-all text-sm"
+                    value={formData.weight}
+                    onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
                   />
                 </div>
               </div>

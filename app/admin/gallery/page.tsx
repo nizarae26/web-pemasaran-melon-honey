@@ -184,7 +184,11 @@ export default function AdminGallery() {
           items.map((item) => (
             <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
               <div className="aspect-square bg-gray-100 relative">
-                <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                {item.category === "Video Dokumentasi" ? (
+                  <video src={item.image_url} className="w-full h-full object-cover" />
+                ) : (
+                  <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                )}
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
                   <button 
                     onClick={() => {
@@ -255,7 +259,7 @@ export default function AdminGallery() {
                 >
                   <option value="Galeri Foto">Galeri Foto</option>
                   <option value="Panen">Panen</option>
-                  <option value="Pelatihan">Pelatihan</option>
+                  <option value="Video Dokumentasi">Video Dokumentasi</option>
                   <option value="Smart Farming">Smart Farming</option>
                 </select>
               </div>
@@ -265,14 +269,18 @@ export default function AdminGallery() {
                 <div className="mt-2 flex justify-center rounded-2xl border border-dashed border-gray-300 px-6 py-8 hover:bg-gray-50 transition-colors relative cursor-pointer">
                   <input 
                     type="file" 
-                    accept="image/*"
+                    accept="image/*,video/*"
                     onChange={handleImageChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                   <div className="text-center">
                     {previewUrl ? (
                       <div className="relative w-full h-40 mx-auto rounded-xl overflow-hidden border border-gray-200">
-                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                        {imageFile?.type.startsWith('video/') || formData.category === "Video Dokumentasi" ? (
+                          <video src={previewUrl} className="w-full h-full object-cover" controls />
+                        ) : (
+                          <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                        )}
                       </div>
                     ) : (
                       <>

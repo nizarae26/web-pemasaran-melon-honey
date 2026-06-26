@@ -19,6 +19,11 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 export default function KatalogPage() {
   // State untuk Filter
   const [category, setCategory] = useState("Semua");
+  const [selectedWeights, setSelectedWeights] = useState<string[]>([]);
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [appliedMinPrice, setAppliedMinPrice] = useState<number | null>(null);
+  const [appliedMaxPrice, setAppliedMaxPrice] = useState<number | null>(null);
   // Data Melon
   const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
   const [loading, setLoading] = useState(true);
@@ -39,15 +44,23 @@ export default function KatalogPage() {
           type: "melon",
           type_melon: item.type_melon || "Honey Globe",
           price_raw: item.price,
-          price: `Rp ${Number(item.price).toLocaleString('id-ID')}`,
+          name: `${item.name} (${item.weight ? (String(item.weight).toLowerCase().includes('kg') ? item.weight : item.weight + ' kg') : "1 kg"})`,
+          grade: item.type_melon || "Honey Globe",
+          price: `Rp.${Number(item.price).toLocaleString('id-ID')}`,
           status: item.stock > 0 ? "Tersedia" : "Habis",
-          weight: "Tersedia",
-          grade: "", 
-          image: item.image_url,
+          weight: item.weight || "1.0 kg",
+          imageUrl: item.image_url,
           date: new Date(item.created_at).getTime(),
         }));
         combinedData = [...combinedData, ...mappedMelon];
       }
+
+      // Urutkan agar produk yang "Tersedia" tampil di atas
+      combinedData.sort((a, b) => {
+        if (a.status === "Tersedia" && b.status === "Habis") return -1;
+        if (a.status === "Habis" && b.status === "Tersedia") return 1;
+        return 0; // Jika sama-sama Tersedia/Habis, biarkan sesuai urutan aslinya (berdasarkan created_at)
+      });
 
       setProducts(combinedData);
       setLoading(false);
@@ -56,12 +69,29 @@ export default function KatalogPage() {
     fetchProducts();
   }, []);
 
-  // Logika Filter Jenis Melon
+  // Logika Filter
   const filteredProducts = products.filter((p) => {
-    return (
-      category === "Semua" ||
-      (p.type === "melon" && p.type_melon === category)
-    );
+    // 1. Jenis Melon
+    const matchCategory = category === "Semua" || (p.type === "melon" && p.type_melon === category);
+    
+    // 2. Harga
+    const matchMinPrice = appliedMinPrice !== null ? p.price_raw >= appliedMinPrice : true;
+    const matchMaxPrice = appliedMaxPrice !== null ? p.price_raw <= appliedMaxPrice : true;
+
+    // 3. Berat
+    let matchWeight = true;
+    if (selectedWeights.length > 0) {
+      const w = parseFloat(String(p.weight).replace(/[^\d.]/g, '')) || 0;
+      matchWeight = selectedWeights.some(range => {
+        if (range === "< 1.0 kg") return w < 1.0;
+        if (range === "1.0 - 1.5 kg") return w >= 1.0 && w <= 1.5;
+        if (range === "1.5 - 2.5 kg") return w > 1.5 && w <= 2.5;
+        if (range === "> 2.5 kg") return w > 2.5;
+        return false;
+      });
+    }
+
+    return matchCategory && matchMinPrice && matchMaxPrice && matchWeight;
   });
 
   return (
@@ -99,7 +129,7 @@ export default function KatalogPage() {
               </div>
             </div>
 
-            {/* Filter Berat / Ukuran (Mockup) */}
+            {/* Filter Berat / Ukuran */}
             <div className="mb-6 border-t pt-4">
               <h5 className="font-bold text-sm text-gray-700 mb-3">Berat / Ukuran</h5>
               <div className="space-y-2">
@@ -107,6 +137,14 @@ export default function KatalogPage() {
                   <label key={i} className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="checkbox" 
+                      checked={selectedWeights.includes(ukuran)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedWeights([...selectedWeights, ukuran]);
+                        } else {
+                          setSelectedWeights(selectedWeights.filter(w => w !== ukuran));
+                        }
+                      }}
                       className="w-4 h-4 text-emerald-500 rounded border-gray-300 focus:ring-emerald-500" 
                     />
                     <span className="text-sm text-gray-600 group-hover:text-emerald-500">
@@ -116,22 +154,55 @@ export default function KatalogPage() {
                 ))}
               </div>
             </div>
-          {/* Filter Harga */}
+
             {/* Filter Harga */}
             <div className="border-t pt-4">
               <h5 className="font-bold text-sm text-gray-700 mb-3">Batas Harga</h5>
               <div className="space-y-3">
                 <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200">
                   <span className="text-xs text-gray-500 font-bold pl-2">Rp</span>
-                  <input type="number" placeholder="MIN" className="w-full bg-transparent text-sm outline-none font-medium" />
+                  <input 
+                    type="number" 
+                    placeholder="MIN" 
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="w-full bg-transparent text-sm outline-none font-medium" 
+                  />
                 </div>
                 <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200">
                   <span className="text-xs text-gray-500 font-bold pl-2">Rp</span>
-                  <input type="number" placeholder="MAX" className="w-full bg-transparent text-sm outline-none font-medium" />
+                  <input 
+                    type="number" 
+                    placeholder="MAX" 
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="w-full bg-transparent text-sm outline-none font-medium" 
+                  />
                 </div>
-                <button className="w-full bg-emerald-500 text-white py-2 rounded-lg font-bold text-sm hover:bg-emerald-600 transition-colors shadow-sm">
-                  Terapkan
-                </button>
+                <div className="flex gap-2 pt-2">
+                  <button 
+                    onClick={() => {
+                      setCategory("Semua");
+                      setSelectedWeights([]);
+                      setMinPrice("");
+                      setMaxPrice("");
+                      setAppliedMinPrice(null);
+                      setAppliedMaxPrice(null);
+                    }}
+                    className="w-1/3 bg-gray-100 text-gray-600 py-2 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors"
+                  >
+                    Hapus
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setAppliedMinPrice(minPrice ? Number(minPrice) : null);
+                      setAppliedMaxPrice(maxPrice ? Number(maxPrice) : null);
+                    }}
+                    className="w-2/3 bg-emerald-500 text-white py-2 rounded-lg font-bold text-sm hover:bg-emerald-600 transition-colors shadow-sm"
+                  >
+                    Terapkan
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -170,15 +241,12 @@ export default function KatalogPage() {
                       .map((item, index) => (
                         <ProductCard
                           key={`melon-${index}`}
-                          name={`${item.name} • ${item.type_melon}`}
-                          grade={item.grade || ""}
+                          name={item.name}
+                          grade={item.grade}
                           price={item.price}
-                          weight={item.weight || ""}
-                          status={
-                            (item.status as "Tersedia" | "Pre-Order" | "Habis") ||
-                            "Tersedia"
-                          }
-                          imageUrl={item.image}
+                          weight={item.weight}
+                          status={item.status}
+                          imageUrl={item.imageUrl}
                         />
                       ))}
                   </div>

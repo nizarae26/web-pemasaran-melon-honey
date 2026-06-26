@@ -31,8 +31,8 @@ export default function KatalogHero() {
           </p>
         </div>
 
-        {/* 4 Label Fitur Katalog - Dibuat memadat rapi di bawah teks utama */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 border-t border-white/10 pt-6 max-w-3xl">
+        {/* 3 Label Fitur Katalog - Dibuat memadat rapi di bawah teks utama */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6 border-t border-white/10 pt-8 max-w-3xl">
           <div className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
               <Star size={20} strokeWidth={2.5} />
@@ -54,12 +54,6 @@ export default function KatalogHero() {
             <p className="font-bold text-[11px] md:text-xs leading-tight text-white">Stok Terjaga</p>
           </div>
 
-          <div className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
-              <Truck size={20} strokeWidth={2.5} />
-            </div>
-            <p className="font-bold text-[11px] md:text-xs leading-tight text-white">Pengiriman Aman</p>
-          </div>
         </div>
       </div>
     </section>

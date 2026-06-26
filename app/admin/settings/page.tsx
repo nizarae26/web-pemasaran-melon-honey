@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Save, Phone, Info, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import toast from "react-hot-toast";
 
 export default function SettingsPage() {
   const [waNumber, setWaNumber] = useState("");
@@ -21,7 +22,7 @@ export default function SettingsPage() {
     if (error) {
       console.error("Error fetching settings:", error);
       if (error.code === '42P01') {
-        alert("Tabel 'settings' belum ada. Silakan buat tabel di Supabase.");
+        toast.error("Tabel 'settings' belum ada. Silakan buat tabel di Supabase.");
       }
     } else if (data) {
       const wa = data.find((s) => s.key === "wa_number");
@@ -47,9 +48,9 @@ export default function SettingsPage() {
       .upsert({ key: "tentang_kami", value: tentangKami }, { onConflict: 'key' });
 
     if (waError || tentangError) {
-      alert("Gagal menyimpan pengaturan. Pastikan tabel 'settings' sudah dibuat dan RLS dinonaktifkan.");
+      toast.error("Gagal menyimpan pengaturan. Pastikan tabel 'settings' sudah dibuat.");
     } else {
-      alert("Pengaturan berhasil disimpan!");
+      toast.success("Pengaturan berhasil disimpan!");
     }
     setSaving(false);
   };

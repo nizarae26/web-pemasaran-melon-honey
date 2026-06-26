@@ -40,11 +40,11 @@ export default function Hero() {
         </div>
 
         {/* 6 Label Keunggulan - Dibuat lebih rapat (pt-4) */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-6 border-t border-white/10 max-w-5xl pt-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 md:gap-x-8 gap-y-6 border-t border-white/10 max-w-3xl pt-8">
           {/* 1. Petani Lokal */}
           <div className="flex items-center gap-3 group">
             {/* Menggunakan Green-500 atau Emerald-500 untuk kesan hijau terang yang segar */}
-            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
+            <div className="w-10 h-10 shrink-0 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
               <Users size={22} strokeWidth={2.5} />
             </div>
             <div>
@@ -57,24 +57,9 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* 2. Irigasi Pintar */}
+          {/* 2. Kualitas Premium */}
           <div className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
-              <Droplets size={22} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
-                Irigasi Tetes Pintar
-              </p>
-              <p className="text-[9px] text-white/70 leading-tight">
-                Hemat air, hasil maksimal
-              </p>
-            </div>
-          </div>
-
-          {/* 3. Kualitas Premium */}
-          <div className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
+            <div className="w-10 h-10 shrink-0 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
               <Award size={22} strokeWidth={2.5} />
             </div>
             <div>
@@ -87,9 +72,9 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* 4. Panen Terpilih */}
+          {/* 3. Panen Terpilih */}
           <div className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
+            <div className="w-10 h-10 shrink-0 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
               <CalendarCheck size={22} strokeWidth={2.5} />
             </div>
             <div>
@@ -98,36 +83,6 @@ export default function Hero() {
               </p>
               <p className="text-[9px] text-white/70 leading-tight">
                 Dipetik saat matang Optimal
-              </p>
-            </div>
-          </div>
-
-          {/* 5. Cek pH Tanah */}
-          <div className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
-              <Activity size={22} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
-                Cek pH Tanah
-              </p>
-              <p className="text-[9px] text-white/70 leading-tight">
-                Data real-time presisi
-              </p>
-            </div>
-          </div>
-
-          {/* 6. Kesuburan Tanah */}
-          <div className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-poktan-green rounded-xl shadow-lg shadow-poktan-green/20 flex items-center justify-center text-white transition-transform group-hover:scale-110">
-              <Map size={22} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
-                Kesuburan Tanah
-              </p>
-              <p className="text-[9px] text-white/70 leading-tight">
-                Kandungan NPK terukur
               </p>
             </div>
           </div>
