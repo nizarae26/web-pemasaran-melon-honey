@@ -26,13 +26,6 @@ Dashboard khusus admin untuk mengelola konten website dengan fitur:
 - **Icons:** Lucide React
 - **Animations:** Framer Motion
 
-## 🔄 Catatan Pembaruan (Update Log) Terakhir
-Beberapa pembaruan sistem dan desain yang baru saja diselesaikan:
-1. **Perbaikan UX Upload Gambar CMS:** Memperbaiki lapisan *overlay* (z-index) agar admin dapat dengan mudah mengklik/mengubah foto di *modal* form.
-2. **Standardisasi Tata Letak (Layout) Thumbnail:** Menyesuaikan *thumbnail* artikel dan galeri dengan patokan *pixel* pasti (`fixed height`). Semua foto yang diunggah akan otomatis terpotong proporsional mengikuti rasio kotak, mencegah tampilan halaman rusak akibat unggahan foto potret yang memanjang.
-3. **Penyempurnaan Alert:** Standarisasi semua *alert* (sukses/gagal/hapus) di seluruh halaman Admin (Produk, Galeri, Artikel, Anggota) menjadi *pop-up* elegan menggunakan SweetAlert2.
-4. **Penyempurnaan Ikon:** Menggunakan ikon `MonitorSmartphone` untuk menu Monitoring, dan ikon `Edit` sebagai indikasi bahwa gambar dapat diubah.
-
 ## 💻 Menjalankan Proyek Secara Lokal
 
 1. Buka terminal lalu install dependencies:
