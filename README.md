@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web Pemasaran Melon Honey - Kelompok Tani Banyu Urip
 
-## Getting Started
+Website ini dikembangkan untuk Kelompok Tani Banyu Urip guna memperkenalkan, mempromosikan, serta memasarkan produk unggulan berupa **Melon Honey** dan produk pertanian lainnya.
 
-First, run the development server:
+## 🚀 Fitur Utama
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 1. Halaman Publik (Pengunjung)
+- **Beranda (Home):** Tampilan utama yang menarik dengan pengenalan singkat kelompok tani.
+- **Profil (Tentang Kami):** Informasi detail mengenai Kelompok Tani Banyu Urip, visi misi, dan susunan pengurus.
+- **Katalog Produk:** Menampilkan daftar produk unggulan yang tersedia untuk dijual.
+- **Galeri & Berita:** Dokumentasi kegiatan (foto/video) dan pembaruan artikel/berita terbaru.
+- **Edukasi Budidaya:** Panduan dan edukasi seputar proses penanaman hingga panen melon.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Halaman Admin (CMS)
+Dashboard khusus admin untuk mengelola konten website dengan fitur:
+- **Manajemen Produk:** Tambah, ubah, dan hapus produk katalog dengan sistem unggah foto yang rapi (fitur proporsi piksel tetap).
+- **Manajemen Galeri:** Kelola foto dokumentasi kegiatan dengan tampilan responsif.
+- **Manajemen Artikel:** Kelola berita dan artikel edukasi.
+- **Manajemen Anggota:** Kelola daftar anggota dan struktur organisasi kepengurusan.
+- **Monitoring:** (Dalam pengembangan) Memantau aktivitas atau data IoT pertanian.
+- **Notifikasi Pintar:** Menggunakan `SweetAlert2` untuk konfirmasi aksi (*delete*, *success*, dll).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Teknologi yang Digunakan
+- **Framework:** Next.js (React)
+- **Styling:** Tailwind CSS (Modern, Clean, UI/UX Animations)
+- **Icons:** Lucide React
+- **Animations:** Framer Motion
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔄 Catatan Pembaruan (Update Log) Terakhir
+Beberapa pembaruan sistem dan desain yang baru saja diselesaikan:
+1. **Perbaikan UX Upload Gambar CMS:** Memperbaiki lapisan *overlay* (z-index) agar admin dapat dengan mudah mengklik/mengubah foto di *modal* form.
+2. **Standardisasi Tata Letak (Layout) Thumbnail:** Menyesuaikan *thumbnail* artikel dan galeri dengan patokan *pixel* pasti (`fixed height`). Semua foto yang diunggah akan otomatis terpotong proporsional mengikuti rasio kotak, mencegah tampilan halaman rusak akibat unggahan foto potret yang memanjang.
+3. **Penyempurnaan Alert:** Standarisasi semua *alert* (sukses/gagal/hapus) di seluruh halaman Admin (Produk, Galeri, Artikel, Anggota) menjadi *pop-up* elegan menggunakan SweetAlert2.
+4. **Penyempurnaan Ikon:** Menggunakan ikon `MonitorSmartphone` untuk menu Monitoring, dan ikon `Edit` sebagai indikasi bahwa gambar dapat diubah.
 
-## Learn More
+## 💻 Menjalankan Proyek Secara Lokal
 
-To learn more about Next.js, take a look at the following resources:
+1. Buka terminal lalu install dependencies:
+   ```bash
+   npm install
+   ```
+2. Jalankan server pengembangan (development):
+   ```bash
+   npm run dev
+   ```
+3. Buka browser dan arahkan ke [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Didedikasikan untuk memajukan sektor pertanian lokal di era digital.*
