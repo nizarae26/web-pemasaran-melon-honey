@@ -123,7 +123,7 @@ export default function ProfilPage() {
               ) : (
                 <>
                   <p className="first-letter:text-4xl first-letter:font-black first-letter:text-poktan-green first-letter:mr-2 first-letter:float-left">
-                    Kelompok Tani Banyu Urip terbentuk pada tahun 2018 atas
+                    Kelompok Tani Banyu Urip terbentuk pada tahun 2019 atas
                     inisiatif para petani di Desa Tanggumong, Kecamatan Sampang,
                     Kabupaten Sampang, Madura.
                   </p>
@@ -133,7 +133,7 @@ export default function ProfilPage() {
                     kelompok tani ini terus belajar dan berinovasi. Saat ini kami
                     fokus membudidayakan{" "}
                     <span className="font-bold text-poktan-emerald bg-poktan-accent/50 px-2 py-0.5 rounded-md border border-poktan-accent">
-                      Melon Honey Globe
+                      Melon Honey Globe & Golden Apollo
                     </span>{" "}
                     dengan sistem irigasi tetes pintar dan pengelolaan yang ramah
                     lingkungan.
@@ -148,7 +148,7 @@ export default function ProfilPage() {
             {/* Container Gambar Utama dengan Efek Inner Shadow & Scale */}
             <div className="w-full aspect-[16/10] bg-zinc-50 rounded-[32px] overflow-hidden border border-gray-100 shadow-xl shadow-gray-200/40 group relative">
               <img 
-                src="/images/logo-utama.png"
+                src="/images/profil.jpeg"
                 alt="Foto bersama seluruh anggota pengurus Kelompok Tani Banyu Urip di area perkebunan Tanggumong"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
@@ -390,7 +390,7 @@ export default function ProfilPage() {
                 </div>
                 <div className="space-y-1">
                   <p className="font-bold text-sm text-gray-800">
-                    Alamat Kelompok
+                    Alamat Kelompok Tani
                   </p>
                   <p className="text-gray-500 leading-relaxed text-xs md:text-sm">
                     Desa Tanggumong, Kecamatan Sampang, Kabupaten Sampang,

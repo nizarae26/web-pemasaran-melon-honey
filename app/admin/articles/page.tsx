@@ -184,7 +184,7 @@ export default function AdminArticles() {
           items.map((item) => (
             <div key={item.id} className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm flex flex-col group relative">
               <div className="aspect-video bg-gray-100 relative">
-                <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2" />
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
                   <button 
                     onClick={() => {
@@ -274,17 +274,24 @@ export default function AdminArticles() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700">Thumbnail Artikel</label>
-                <div className="mt-2 flex justify-center rounded-2xl border border-dashed border-gray-300 px-6 py-8 hover:bg-gray-50 transition-colors relative cursor-pointer">
+                <div className="mt-2 flex justify-center rounded-2xl border border-dashed border-gray-300 px-6 py-8 hover:bg-gray-50 transition-colors relative cursor-pointer group">
                   <input 
                     type="file" 
                     accept="image/*"
                     onChange={handleImageChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
                   />
                   <div className="text-center">
                     {previewUrl ? (
-                      <div className="relative w-full h-40 mx-auto rounded-xl overflow-hidden border border-gray-200">
-                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      <div className="flex flex-col items-center w-full">
+                        <div className="relative w-full h-40 mx-auto rounded-xl overflow-hidden border border-gray-200 group shadow-sm bg-gray-50">
+                          <img src={previewUrl} alt="Preview" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 p-2" />
+                          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <Edit className="w-6 h-6 text-white mb-1 drop-shadow-lg" />
+                            <span className="text-white text-xs font-bold drop-shadow-lg">Ubah Gambar</span>
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-gray-400 mt-2 font-medium">Klik gambar untuk mengganti</p>
                       </div>
                     ) : (
                       <>

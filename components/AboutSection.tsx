@@ -20,7 +20,7 @@ export default function AboutSection() {
               Tanggumong, Kecamatan Sampang, Kabupaten Sampang, Madura.
             </p>
             <p>
-              Kami berkomitmen menghasilkan Melon Honey Globe berkualitas
+              Kami berkomitmen menghasilkan Melon Honey Globe & Golden Apollo berkualitas
               premium dengan dukungan teknologi pertanian modern dan kerja sama
               tim yang solid untuk menyejahterakan petani lokal.
             </p>
@@ -38,7 +38,7 @@ export default function AboutSection() {
               <Users size={24} strokeWidth={2.5} />
             </div>
             <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
-              25+
+              10+
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
               Anggota Aktif
@@ -64,7 +64,7 @@ export default function AboutSection() {
               <CalendarDays size={24} strokeWidth={2.5} />
             </div>
             <p className="text-2xl font-black text-poktan-emerald tracking-tighter leading-none">
-              2018
+              2019
             </p>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
               Tahun Berdiri

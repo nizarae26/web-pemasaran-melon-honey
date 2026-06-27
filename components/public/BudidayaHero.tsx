@@ -19,13 +19,13 @@ export default function BudidayaHero() {
             Teknologi Budidaya Modern
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight tracking-tight">
             Budidaya Melon <br />
             Honey Globe dengan <br />
             Teknologi <span className="text-[#10b981]">Modern</span>
           </h1>
 
-          <p className="text-sm md:text-base lg:text-lg opacity-80 max-w-xl leading-relaxed font-medium mb-8">
+          <p className="text-sm md:text-base mb-8 opacity-90 max-w-xl leading-relaxed text-white/80">
             Kami menerapkan praktik budidaya terbaik melalui sistem irigasi
             tetes pintar dan pengelolaan nutrisi terukur untuk hasil premium
             yang konsisten.

@@ -26,7 +26,7 @@ export default function GaleriHero({ displayBulan = "Update Musim Tanam" }: { di
             <span className="text-[#10b981]">Banyu Urip</span>
           </h1>
 
-          <p className="text-sm md:text-base lg:text-lg opacity-80 max-w-xl leading-relaxed font-medium mb-8">
+          <p className="text-sm md:text-base mb-8 opacity-90 max-w-xl leading-relaxed text-white/80">
             Kumpulan dokumentasi kegiatan, informasi edukatif, serta kabar
             terbaru mengenai perkembangan pertanian melon modern di Tanggumong.
           </p>

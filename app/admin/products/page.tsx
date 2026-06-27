@@ -206,7 +206,7 @@ export default function AdminProducts() {
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
                           {p.image_url ? (
-                            <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+                            <img src={p.image_url} alt={p.name} className="w-full h-full object-contain p-1" />
                           ) : (
                             <div className="w-full h-full bg-emerald-50 flex items-center justify-center text-emerald-200">
                               <Package size={24} />
@@ -350,17 +350,24 @@ export default function AdminProducts() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700">Gambar Produk</label>
-                <div className="mt-2 flex justify-center rounded-2xl border border-dashed border-gray-300 px-6 py-8 hover:bg-gray-50 transition-colors relative cursor-pointer">
+                <div className="mt-2 flex justify-center rounded-2xl border border-dashed border-gray-300 px-6 py-8 hover:bg-gray-50 transition-colors relative cursor-pointer group">
                   <input 
                     type="file" 
                     accept="image/*"
                     onChange={handleImageChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
                   />
                   <div className="text-center">
                     {previewUrl ? (
-                      <div className="relative w-32 h-32 mx-auto rounded-xl overflow-hidden border border-gray-200">
-                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      <div className="flex flex-col items-center">
+                        <div className="relative w-32 h-32 mx-auto rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-50">
+                          <img src={previewUrl} alt="Preview" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 p-2" />
+                          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Edit className="w-6 h-6 text-white mb-1 drop-shadow-lg" />
+                            <span className="text-white text-xs font-bold drop-shadow-lg">Ubah Gambar</span>
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-gray-400 mt-2 font-medium">Klik kotak ini untuk mengganti</p>
                       </div>
                     ) : (
                       <>

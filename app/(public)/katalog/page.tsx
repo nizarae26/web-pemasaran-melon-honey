@@ -291,7 +291,7 @@ export default function KatalogPage() {
             </h4>
             <ul className="text-[11px] space-y-3 text-emerald-50/80">
               {[
-                "Varietas Honey Globe Asli",
+                "Varietas Honey Globe & Golden Apollo Asli",
                 "Irigasi Tetes Cerdas",
                 "Grade Ekspor",
               ].map((text, i) => (

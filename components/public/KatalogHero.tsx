@@ -5,9 +5,9 @@ export default function KatalogHero() {
     <section className="relative min-h-[600px] md:h-[650px] flex items-center justify-start text-left text-white overflow-hidden py-12 md:py-0">
       {/* Background & Linear Gradient */}
       <div className="absolute inset-0 z-0">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/bgmelon.jpg')" }} 
+          style={{ backgroundImage: "url('/bgmelon.jpg')" }}
         ></div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/30 to-transparent"></div>
       </div>
@@ -18,16 +18,16 @@ export default function KatalogHero() {
           <span className="bg-poktan-green px-3 py-1 rounded-md text-[10px] font-bold mb-4 inline-block uppercase tracking-wider shadow-sm">
             Katalog Produk Premium
           </span>
-          
+
           <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight tracking-tight">
             Pilih Kualitas <br />
-            Terbaik Untuk <br />
-            Keluarga <span className="text-[#10b981]">Anda</span>
+            <span className="text-[#10b981]">Terbaik</span> Untuk <br />
+            Keluarga Anda
           </h1>
-          
+
           <p className="text-sm md:text-base mb-8 opacity-90 max-w-xl leading-relaxed text-white/80">
-            Mulai dari Melon Honey Globe segar hingga produk olahan turunan, 
-            semua dihasilkan dengan standar mutu tinggi khas Banyu Urip.
+            Menyediakan varietas unggulan Melon Honey Globe yang manis renyah
+            dan Golden Apollo yang premium, dipetik segar langsung dari Kelompok Tani Banyu Urip.
           </p>
         </div>
 

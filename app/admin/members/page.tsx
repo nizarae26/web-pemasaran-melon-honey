@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 import { 
   Users, 
   Plus, 
@@ -47,7 +47,12 @@ export default function MembersPage() {
       console.error("Error fetching members:", error);
       // Fallback data if table doesn't exist yet
       if (error.code === '42P01') {
-        toast.error("Tabel 'members' belum ada di database. Silakan buat tabel terlebih dahulu menggunakan SQL Editor Supabase.");
+        Swal.fire({
+          title: "Peringatan",
+          text: "Tabel 'members' belum ada di database. Silakan buat tabel terlebih dahulu menggunakan SQL Editor Supabase.",
+          icon: "warning",
+          confirmButtonColor: "#10b981",
+        });
       }
     } else {
       setMembers(data || []);
@@ -96,9 +101,19 @@ export default function MembersPage() {
         .eq("id", editingId);
         
       if (error) {
-        toast.error("Gagal memperbarui: " + error.message);
+        Swal.fire({
+          title: "Gagal!",
+          text: "Gagal memperbarui: " + error.message,
+          icon: "error",
+          confirmButtonColor: "#10b981",
+        });
       } else {
-        toast.success("Data anggota berhasil diperbarui!");
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Data anggota berhasil diperbarui!",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
         fetchMembers();
         handleCloseModal();
       }
@@ -108,9 +123,19 @@ export default function MembersPage() {
         .insert([formData]);
         
       if (error) {
-        toast.error("Gagal menambahkan: " + error.message);
+        Swal.fire({
+          title: "Gagal!",
+          text: "Gagal menambahkan: " + error.message,
+          icon: "error",
+          confirmButtonColor: "#10b981",
+        });
       } else {
-        toast.success("Anggota baru berhasil ditambahkan!");
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Anggota baru berhasil ditambahkan!",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
         fetchMembers();
         handleCloseModal();
       }
@@ -119,14 +144,35 @@ export default function MembersPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Apakah Anda yakin ingin menghapus anggota ini?")) {
-      const { error } = await supabase.from("members").delete().eq("id", id);
-      if (error) {
-        toast.error("Gagal menghapus: " + error.message);
-      } else {
-        toast.success("Anggota berhasil dihapus!");
-        fetchMembers();
-      }
+    const result = await Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Data anggota akan dihapus permanen!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#10b981",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
+    const { error } = await supabase.from("members").delete().eq("id", id);
+    if (error) {
+      Swal.fire({
+        title: "Gagal!",
+        text: "Gagal menghapus: " + error.message,
+        icon: "error",
+        confirmButtonColor: "#10b981",
+      });
+    } else {
+      Swal.fire({
+        title: "Terhapus!",
+        text: "Anggota berhasil dihapus.",
+        icon: "success",
+        confirmButtonColor: "#10b981",
+      });
+      fetchMembers();
     }
   };
 

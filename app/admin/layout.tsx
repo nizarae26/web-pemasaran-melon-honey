@@ -4,6 +4,20 @@ import "./../globals.css";
 
 export const metadata = {
   title: "Admin Panel - Melon Honey",
+  icons: [
+    {
+      rel: 'icon',
+      media: '(prefers-color-scheme: light)',
+      type: 'image/png',
+      url: '/images/logo-utama.png',
+    },
+    {
+      rel: 'icon',
+      media: '(prefers-color-scheme: dark)',
+      type: 'image/png',
+      url: '/images/logo-putih.png',
+    },
+  ],
 };
 
 export default function AdminLayout({

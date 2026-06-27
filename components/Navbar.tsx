@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, Menu, X, Leaf } from "lucide-react";
+import { MonitorSmartphone, Menu, X, Leaf } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,14 +70,14 @@ export default function Navbar() {
         <div className="flex items-center gap-2 md:gap-4 relative z-[110]">
           <Link
             href="/monitoring"
-            className={`px-3 md:px-5 py-2 rounded-xl font-bold text-[10px] md:text-sm flex items-center gap-2 shadow-sm transition-all active:scale-95 ${
+            className={`h-10 w-10 md:w-auto md:px-5 rounded-xl font-bold text-xs md:text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 ${
               pathname === "/monitoring"
                 ? "bg-poktan-leaf text-white"
                 : "bg-poktan-green text-white hover:bg-opacity-90"
             }`}
           >
-            <LayoutDashboard size={16} />
-            <span className="hidden sm:inline">Monitoring</span>
+            <MonitorSmartphone size={18} className="shrink-0" />
+            <span className="hidden md:inline">Monitoring</span>
           </Link>
 
           <button

@@ -16,6 +16,8 @@ export default function GaleriPage() {
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [scheduleData, setScheduleData] = useState({
     start_date: new Date().toISOString().split('T')[0],
     end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
@@ -94,6 +96,12 @@ export default function GaleriPage() {
     if (activeTab === "Semua") return item.cat !== "Video Dokumentasi";
     return item.cat === activeTab;
   });
+
+  const filteredArticles = articles.filter(article => 
+    article.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (article.desc && article.desc.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (article.tag && article.tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   // Logika Kalender Real-Time (Fix Timezone & Multi-Month)
   const [sYear, sMonth, sDay] = scheduleData.start_date.split('-').map(Number);
@@ -174,7 +182,10 @@ export default function GaleriPage() {
                   <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
                     Galeri Foto Kegiatan
                   </h3>
-                  <button className="text-xs font-bold text-poktan-accent flex items-center gap-2 hover:gap-3 transition-all">
+                  <button 
+                    onClick={() => setActiveTab("Semua")}
+                    className="text-xs font-bold text-poktan-green flex items-center gap-2 hover:gap-3 transition-all"
+                  >
                     <span>LIHAT SEMUA FOTO</span>
                     <ArrowRight size={14} />
                   </button>
@@ -198,7 +209,10 @@ export default function GaleriPage() {
                           style={{ perspective: 1000 }}
                           className="group cursor-pointer relative"
                         >
-                          <div className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-md group-hover:shadow-2xl transition-all duration-500">
+                          <div 
+                            className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-md group-hover:shadow-2xl transition-all duration-500"
+                            onClick={() => setSelectedImage(item.image)}
+                          >
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
                             <img
                               src={item.image || "/api/placeholder/400/300"}
@@ -206,7 +220,7 @@ export default function GaleriPage() {
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             />
                             <div className="absolute bottom-4 left-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                               <p className="text-white text-xs font-bold bg-poktan-accent/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg">Lihat HD</p>
+                               <p className="text-white text-xs font-bold bg-poktan-green/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg">Lihat HD</p>
                             </div>
                           </div>
                           <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-poktan-accent transition-colors">
@@ -239,7 +253,9 @@ export default function GaleriPage() {
                       <input
                         type="text"
                         placeholder="Cari berita..."
-                        className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-poktan-accent w-full"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-poktan-green w-full"
                       />
                     </div>
                     <button className="p-1.5 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-poktan-accent transition-colors shrink-0">
@@ -251,20 +267,20 @@ export default function GaleriPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {loading ? (
                     <div className="col-span-full py-12 text-center text-gray-400">Memuat Artikel...</div>
-                  ) : articles.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada artikel.</div>
+                  ) : filteredArticles.length === 0 ? (
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada artikel yang sesuai.</div>
                   ) : (
                     <AnimatePresence>
-                      {articles.map((item, i) => (
+                      {filteredArticles.map((item, i) => (
                         <motion.div
                           key={i}
                           initial={{ opacity: 0, y: 50, rotateX: 5 }}
                           animate={{ opacity: 1, y: 0, rotateX: 0 }}
                           transition={{ duration: 0.6, delay: i * 0.1, type: "spring" }}
                           whileHover={{ scale: 1.02, y: -5 }}
-                          className={`bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-lg hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] transition-all duration-500 group flex flex-col ${i === 0 ? "col-span-full md:flex-row" : "h-full"}`}
+                          className={`bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-lg hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] transition-all duration-500 group flex flex-col ${i === 0 ? "col-span-full md:flex-row md:h-[300px]" : "h-full"}`}
                         >
-                          <div className={`bg-zinc-100 relative overflow-hidden ${i === 0 ? "w-full md:w-3/5 aspect-video md:aspect-auto" : "aspect-video"}`}>
+                          <div className={`bg-zinc-100 relative overflow-hidden shrink-0 ${i === 0 ? "w-full md:w-1/2 h-[200px] md:h-full" : "w-full h-[200px] md:h-[220px]"}`}>
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
                             <img
                               src={item.image}
@@ -281,7 +297,7 @@ export default function GaleriPage() {
                           </div>
                           <div className={`p-6 md:p-8 space-y-4 flex flex-col flex-1 ${i === 0 ? "justify-center" : ""}`}>
                             <div className="flex items-center text-xs text-gray-500 mb-2 gap-2 font-bold tracking-wider uppercase">
-                              <span className="text-poktan-accent bg-emerald-50 px-2 py-1 rounded-md">{item.date}</span>
+                              <span className="text-poktan-green bg-emerald-50 px-2 py-1 rounded-md">{item.date}</span>
                               <span>• Admin</span>
                             </div>
                             <h4 className={`font-black text-gray-900 leading-tight group-hover:text-poktan-accent transition-colors ${i === 0 ? "text-2xl" : "text-lg"}`}>
@@ -313,10 +329,6 @@ export default function GaleriPage() {
                   <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
                     Video Dokumentasi & Galeri
                   </h3>
-                  <button className="text-xs font-bold text-gray-400 flex items-center gap-2 hover:text-gray-600 transition-colors">
-                    <span>LIHAT CHANNEL YOUTUBE</span>
-                    <ArrowRight size={14} />
-                  </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -453,9 +465,28 @@ export default function GaleriPage() {
       </div>
       {/* <div className="pt-2 md:pt-2"></div> */}
 
+      {/* Modal Gambar HD */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setSelectedImage(null)}>
+          <div className="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={selectedImage}
+              alt="Gambar HD"
+              className="max-w-full max-h-[90vh] object-contain rounded-xl"
+            />
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors shadow-lg"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Modal Artikel */}
       {selectedArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-3xl rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="relative aspect-video sm:aspect-[21/9] bg-gray-100 overflow-hidden shrink-0">
               <img

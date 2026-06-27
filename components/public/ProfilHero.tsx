@@ -2,10 +2,10 @@ import { Users, Maximize, Calendar, Award } from "lucide-react";
 
 export default function ProfilHero() {
   const stats = [
-    { icon: <Users size={20} />, label: "Anggota Aktif", value: "25+" },
-    { icon: <Maximize size={20} />, label: "Luas Lahan", value: "± 2 Ha" },
-    { icon: <Calendar size={20} />, label: "Tahun Berdiri", value: "2018" },
-    { icon: <Award size={20} />, label: "Produk Unggulan", value: "12+" },
+    { icon: <Users size={20} strokeWidth={2.5} />, label: "Anggota Aktif", value: "10+ Orang" },
+    { icon: <Maximize size={20} strokeWidth={2.5} />, label: "Luas Lahan", value: "± 2 Hektar" },
+    { icon: <Calendar size={20} strokeWidth={2.5} />, label: "Tahun Berdiri", value: "Sejak 2019" },
+    { icon: <Award size={20} strokeWidth={2.5} />, label: "Produk Unggulan", value: "2 Varian" },
   ];
 
   return (
@@ -42,16 +42,16 @@ export default function ProfilHero() {
         {/* 4 Statistik Utama (Stat Bar) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 border-t border-white/10 pt-8 max-w-4xl">
           {stats.map((stat, i) => (
-            <div key={i} className="flex items-center gap-4 group">
-              <div className="w-12 h-12 bg-poktan-green rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-[poktan-green]/20 group-hover:scale-110 transition-transform duration-300">
+            <div key={i} className="flex items-center gap-3 group">
+              <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
                 {stat.icon}
               </div>
               <div>
-                <p className="text-xl md:text-2xl font-black text-white leading-none mb-1">
-                  {stat.value}
-                </p>
-                <p className="text-[10px] md:text-[11px] font-bold text-white/60 uppercase tracking-widest">
+                <p className="font-bold text-[11px] md:text-xs leading-tight text-white">
                   {stat.label}
+                </p>
+                <p className="text-[9px] text-white/60 leading-tight">
+                  {stat.value}
                 </p>
               </div>
             </div>
