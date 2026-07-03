@@ -5,7 +5,6 @@ export default function ProfilHero() {
     { icon: <Users size={20} strokeWidth={2.5} />, label: "Anggota Aktif", value: "10+ Orang" },
     { icon: <Maximize size={20} strokeWidth={2.5} />, label: "Luas Lahan", value: "± 2 Hektar" },
     { icon: <Calendar size={20} strokeWidth={2.5} />, label: "Tahun Berdiri", value: "Sejak 2019" },
-    { icon: <Award size={20} strokeWidth={2.5} />, label: "Produk Unggulan", value: "2 Varian" },
   ];
 
   return (

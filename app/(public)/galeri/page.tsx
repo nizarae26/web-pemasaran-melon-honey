@@ -5,8 +5,9 @@ import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GaleriHero from "@/components/public/GaleriHero";
-import { ArrowRight, Calendar, Camera, Filter, GraduationCap, Newspaper, PlaySquare, Search, Users, X } from "lucide-react";
+import { ArrowRight, Calendar, Camera, Filter, GraduationCap, Newspaper, PlaySquare, Search, Users, X, Link2, Sparkles } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { Toaster } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function GaleriPage() {
@@ -23,6 +24,11 @@ export default function GaleriPage() {
     end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
     status: "PANEN"
   });
+
+  const [categorizedVideos, setCategorizedVideos] = useState<{
+    landscape: any[];
+    portrait: any[];
+  }>({ landscape: [], portrait: [] });
 
   // Definisi data statistik media
   const stats = [
@@ -86,9 +92,45 @@ export default function GaleriPage() {
     fetchData();
   }, []);
 
-  // Logika Filter
-  const showGallery = activeTab === "Semua" || activeTab === "Panen" || activeTab === "Smart Farming" || activeTab === "Video Dokumentasi";
+  useEffect(() => {
+    const videos = galleryItems.filter(g => g.cat === "Video Dokumentasi");
+    if (videos.length === 0) {
+      setCategorizedVideos({ landscape: [], portrait: [] });
+      return;
+    }
 
+    const landscape: any[] = [];
+    const portrait: any[] = [];
+    let processed = 0;
+
+    videos.forEach((video) => {
+      if (typeof window === 'undefined') return;
+      const vid = document.createElement('video');
+      vid.src = video.image;
+      vid.preload = 'metadata';
+      vid.onloadedmetadata = () => {
+        if (vid.videoHeight > vid.videoWidth) {
+          portrait.push(video);
+        } else {
+          landscape.push(video);
+        }
+        processed++;
+        if (processed === videos.length) {
+          setCategorizedVideos({ landscape, portrait });
+        }
+      };
+      vid.onerror = () => {
+        landscape.push(video);
+        processed++;
+        if (processed === videos.length) {
+          setCategorizedVideos({ landscape, portrait });
+        }
+      };
+    });
+  }, [galleryItems]);
+
+  // Logika Filter
+  const showGallery = activeTab === "Semua" || activeTab === "Panen" || activeTab === "Smart Farming";
   const showArticles = activeTab === "Semua" || activeTab === "Berita & Artikel";
   const showVideos = activeTab === "Semua" || activeTab === "Video Dokumentasi";
 
@@ -110,13 +152,20 @@ export default function GaleriPage() {
   const [eYear, eMonth, eDay] = scheduleData.end_date.split('-').map(Number);
   const endDateObj = new Date(eYear, eMonth - 1, eDay);
 
+  const today = new Date();
+  const minDateObj = startDateObj < today ? startDateObj : today;
+  const maxDateObj = endDateObj > today ? endDateObj : today;
+
   const monthsToDisplay = [];
-  let currYear = startDateObj.getFullYear();
-  let currMonth = startDateObj.getMonth();
+  let currYear = minDateObj.getFullYear();
+  let currMonth = minDateObj.getMonth();
+
+  const targetYear = maxDateObj.getFullYear();
+  const targetMonth = maxDateObj.getMonth();
 
   while (
-    currYear < endDateObj.getFullYear() || 
-    (currYear === endDateObj.getFullYear() && currMonth <= endDateObj.getMonth())
+    currYear < targetYear || 
+    (currYear === targetYear && currMonth <= targetMonth)
   ) {
     monthsToDisplay.push({ year: currYear, month: currMonth });
     currMonth++;
@@ -144,7 +193,7 @@ export default function GaleriPage() {
         <GaleriHero displayBulan={displayBulan} />
 
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 py-8">
-        <div className="bg-white rounded-[32px] shadow-sm shadow-black-200/90 border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-sm shadow-black-200/90 border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
 
           {/* 2. KONTEN BAWAH: Navigation Tab Bar (Pill Style Gandeng) */}
           <div className="p-4 px-6 md:px-8 flex flex-wrap items-center justify-center gap-2 w-full">
@@ -178,18 +227,13 @@ export default function GaleriPage() {
             {/* Sub-Section: Galeri Foto Kegiatan */}
             {showGallery && (
               <div className="space-y-8">
-                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                    Galeri Foto Kegiatan
-                  </h3>
-                  <button 
-                    onClick={() => setActiveTab("Semua")}
-                    className="text-xs font-bold text-poktan-green flex items-center gap-2 hover:gap-3 transition-all"
-                  >
-                    <span>LIHAT SEMUA FOTO</span>
-                    <ArrowRight size={14} />
-                  </button>
-                </div>
+                {activeTab === "Semua" && (
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                    <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                      Galeri Foto Kegiatan
+                    </h3>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {loading ? (
@@ -210,7 +254,7 @@ export default function GaleriPage() {
                           className="group cursor-pointer relative"
                         >
                           <div 
-                            className="aspect-square bg-zinc-100 rounded-[24px] overflow-hidden relative mb-4 border border-gray-100 shadow-md group-hover:shadow-2xl transition-all duration-500"
+                            className="aspect-square bg-zinc-100 rounded-2xl overflow-hidden relative mb-4 border border-gray-100 shadow-md group-hover:shadow-2xl transition-all duration-500"
                             onClick={() => setSelectedImage(item.image)}
                           >
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
@@ -240,29 +284,13 @@ export default function GaleriPage() {
             {/* Sub-Section: Berita & Artikel Terbaru */}
             {showArticles && (
               <div className="space-y-8">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-gray-200 pb-4 gap-4 md:gap-0">
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                    Berita & Artikel Terbaru
-                  </h3>
-                  <div className="flex items-center gap-2 w-full md:w-auto">
-                    <div className="relative flex-1 md:w-48">
-                      <Search
-                        size={14}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Cari berita..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 pr-4 py-1.5 bg-white border border-gray-200 rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-poktan-green w-full"
-                      />
-                    </div>
-                    <button className="p-1.5 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-poktan-accent transition-colors shrink-0">
-                      <Filter size={14} />
-                    </button>
+                {activeTab === "Semua" && (
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                    <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                      Berita & Artikel Terbaru
+                    </h3>
                   </div>
-                </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {loading ? (
@@ -274,41 +302,55 @@ export default function GaleriPage() {
                       {filteredArticles.map((item, i) => (
                         <motion.div
                           key={i}
-                          initial={{ opacity: 0, y: 50, rotateX: 5 }}
-                          animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                          transition={{ duration: 0.6, delay: i * 0.1, type: "spring" }}
-                          whileHover={{ scale: 1.02, y: -5 }}
-                          className={`bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-lg hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] transition-all duration-500 group flex flex-col ${i === 0 ? "col-span-full md:flex-row md:h-[300px]" : "h-full"}`}
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: i * 0.05 }}
+                          whileHover={{ y: -6 }}
+                          className={`bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:border-poktan-leaf/25 transition-all duration-300 group flex flex-col ${
+                            i === 0 ? "col-span-full md:flex-row md:h-[280px]" : "h-full"
+                          }`}
                         >
-                          <div className={`bg-zinc-100 relative overflow-hidden shrink-0 ${i === 0 ? "w-full md:w-1/2 h-[200px] md:h-full" : "w-full h-[200px] md:h-[220px]"}`}>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                          <div className={`bg-zinc-50 relative overflow-hidden shrink-0 ${
+                            i === 0 ? "w-full md:w-1/2 h-[200px] md:h-full" : "w-full h-[180px] md:h-[200px]"
+                          }`}>
                             <img
                               src={item.image}
                               alt="Thumbnail artikel berita"
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
-                            {/* 3D Modern News Overlay */}
-                            <div className="absolute bottom-6 left-6 right-6 z-20 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                               <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl shadow-2xl">
-                                  <p className="text-white text-xs font-bold uppercase tracking-wider mb-1 opacity-80">{item.tag || "Update Terbaru"}</p>
-                                  <p className="text-white font-black text-sm line-clamp-2 leading-tight">{item.title}</p>
-                               </div>
-                            </div>
+                            {i === 0 && (
+                              <div className="absolute top-4 left-4 z-20">
+                                <span className="bg-poktan-green text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider flex items-center gap-1.5">
+                                  <Sparkles size={10} className="text-[#f0cc4b] animate-pulse" />
+                                  Sorotan
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <div className={`p-6 md:p-8 space-y-4 flex flex-col flex-1 ${i === 0 ? "justify-center" : ""}`}>
-                            <div className="flex items-center text-xs text-gray-500 mb-2 gap-2 font-bold tracking-wider uppercase">
-                              <span className="text-poktan-green bg-emerald-50 px-2 py-1 rounded-md">{item.date}</span>
-                              <span>• Admin</span>
+                          
+                          <div className={`p-6 md:p-8 flex flex-col flex-1 justify-between`}>
+                            <div className="space-y-3">
+                              <div className="flex items-center text-xs text-gray-400 gap-2 font-semibold uppercase tracking-wider">
+                                <span className="text-poktan-green bg-poktan-accent/30 px-2 py-0.5 rounded-md text-[10px] font-bold">
+                                  {item.date}
+                                </span>
+                                <span>• Admin</span>
+                              </div>
+                              
+                              <h4 className={`font-bold text-gray-800 leading-snug group-hover:text-poktan-leaf transition-colors ${
+                                i === 0 ? "text-xl md:text-2xl" : "text-base md:text-lg"
+                              }`}>
+                                {item.title}
+                              </h4>
+                              
+                              <p className="text-xs md:text-sm text-gray-500 leading-relaxed line-clamp-3">
+                                {item.desc}
+                              </p>
                             </div>
-                            <h4 className={`font-black text-gray-900 leading-tight group-hover:text-poktan-accent transition-colors ${i === 0 ? "text-2xl" : "text-lg"}`}>
-                              {item.title}
-                            </h4>
-                            <p className="text-sm text-gray-500 leading-relaxed line-clamp-3">
-                              {item.desc}
-                            </p>
+                            
                             <button 
                               onClick={() => setSelectedArticle(item)}
-                              className="flex items-center gap-2 text-xs font-black text-white bg-gray-900 hover:bg-poktan-accent px-5 py-3 rounded-xl mt-auto self-start group-hover:shadow-lg group-hover:shadow-poktan-accent/30 transition-all duration-300"
+                              className="flex items-center gap-2 text-xs font-bold text-white bg-poktan-green hover:bg-poktan-leaf px-4.5 py-2.5 rounded-xl mt-4 self-start shadow-sm active:scale-95 transition-all duration-300 cursor-pointer"
                             >
                               <span>BACA ARTIKEL</span>
                               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -324,38 +366,71 @@ export default function GaleriPage() {
 
             {/* Sub-Section: Video Dokumentasi */}
             {showVideos && (
-              <div className="space-y-8 mb-16">
-                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
-                    Video Dokumentasi & Galeri
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {galleryItems.filter(g => g.cat === "Video Dokumentasi").length > 0 ? (
-                    galleryItems.filter(g => g.cat === "Video Dokumentasi").map((video, i) => (
-                      <div
-                        key={i}
-                        className="aspect-video bg-zinc-900 rounded-[24px] overflow-hidden relative group border border-gray-100 shadow-sm"
-                      >
-                        <video
-                          src={video.image}
-                          controls
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-white/90 backdrop-blur-md text-[10px] font-black px-3 py-1.5 rounded-lg text-[#064e3b] uppercase shadow-sm">
-                            Video
-                          </span>
-                        </div>
+              <div className="space-y-12 mb-16">
+                {/* 1. Video Landscape / Layar Lebar */}
+                {categorizedVideos.landscape.length > 0 && (
+                  <div className="space-y-6">
+                    {activeTab === "Semua" && (
+                      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                        <h4 className="text-sm font-black text-gray-900 uppercase tracking-wider">
+                          Video Dokumentasi
+                        </h4>
                       </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                      Belum ada video dokumentasi.
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {categorizedVideos.landscape.map((video, i) => (
+                        <div
+                          key={`land-${i}`}
+                          className="aspect-video bg-zinc-900 rounded-2xl overflow-hidden relative group border border-gray-100 shadow-sm"
+                        >
+                          <video
+                            src={video.image}
+                            controls
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
+
+                {/* 2. Video Portrait / Shorts */}
+                {categorizedVideos.portrait.length > 0 && (
+                  <div className="space-y-6">
+                    {activeTab === "Semua" && (
+                      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                        <h4 className="text-sm font-black text-gray-900 uppercase tracking-wider">
+                          Video Shorts
+                        </h4>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                      {categorizedVideos.portrait.map((video, i) => (
+                        <div
+                          key={`port-${i}`}
+                          className="aspect-[9/16] bg-zinc-900 rounded-2xl overflow-hidden relative group border border-gray-100 shadow-sm"
+                        >
+                          <video
+                            src={video.image}
+                            controls
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute top-4 left-4">
+                            <span className="bg-white/90 backdrop-blur-md text-[10px] font-bold px-3 py-1.5 rounded-full text-poktan-green uppercase shadow-sm tracking-wider">
+                              Shorts
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {categorizedVideos.landscape.length === 0 && categorizedVideos.portrait.length === 0 && (
+                  <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                    Belum ada video dokumentasi.
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -363,14 +438,14 @@ export default function GaleriPage() {
           {/* SISI KANAN: ASIDE SIDEBAR (4 KOLOM) */}
           <aside className="lg:col-span-4 space-y-10 sticky top-32 h-fit mb-24">
             {/* Widget 1: Artikel Populer */}
-            <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm">
+            <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
               <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
                 <SparklesIcon size={16} className="text-poktan-accent" />
                 <span>ARTIKEL TERBARU</span>
               </h4>
               <div className="space-y-6">
-                {articles.slice(0, 3).map((item, i) => (
-                  <div key={i} className="flex gap-4 group cursor-pointer">
+                {articles.slice(0, 5).map((item, i) => (
+                  <div key={i} className="flex gap-4 group cursor-pointer" onClick={() => setSelectedArticle(item)}>
                     <div className="w-16 h-16 rounded-xl bg-gray-100 shrink-0 overflow-hidden border border-gray-100">
                       <img
                         src={item.image}
@@ -379,7 +454,7 @@ export default function GaleriPage() {
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-center">
-                      <h5 className="text-xs font-bold text-gray-800 leading-snug group-hover:text-poktan-accent transition-colors line-clamp-2">
+                      <h5 className="text-xs font-bold text-gray-800 leading-snug group-hover:text-poktan-leaf transition-colors line-clamp-2">
                         {item.title}
                       </h5>
                       <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">
@@ -392,7 +467,7 @@ export default function GaleriPage() {
             </div>
 
             {/* Widget 2: Jadwal Musim Panen */}
-            <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm">
+            <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
               <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
                 <Calendar size={16} className="text-[#10b981]" />
                 <span>JADWAL MUSIM PANEN</span>
@@ -488,34 +563,68 @@ export default function GaleriPage() {
       {selectedArticle && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-3xl rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="relative aspect-video sm:aspect-[21/9] bg-gray-100 overflow-hidden shrink-0">
-              <img
-                src={selectedArticle.image}
-                alt={selectedArticle.title}
-                className="w-full h-full object-cover"
-              />
-              <button 
-                onClick={() => setSelectedArticle(null)}
-                className="absolute top-4 right-4 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
-              >
-                <X size={16} />
-              </button>
+            <div className="p-6 pb-0 md:p-10 md:pb-0 shrink-0">
+              <div className="relative aspect-video sm:aspect-[21/9] bg-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                <img
+                  src={selectedArticle.image}
+                  alt={selectedArticle.title}
+                  className="w-full h-full object-cover"
+                />
+                <button 
+                  onClick={() => setSelectedArticle(null)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm"
+                >
+                  <X size={16} />
+                </button>
+              </div>
             </div>
             
             <div className="p-6 md:p-10 overflow-y-auto flex-1">
-              <div className="flex items-center text-sm text-gray-500 mb-4 gap-2">
-                <span className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold text-xs">
-                  Berita
+              <div className="flex items-center text-sm text-gray-500 mb-4 gap-2.5">
+                <span className="text-poktan-green bg-poktan-accent/30 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
+                  {selectedArticle.tag || "Berita"}
                 </span>
                 <span>•</span>
-                <span>{selectedArticle.date}</span>
+                <span className="font-semibold">{selectedArticle.date}</span>
                 <span>•</span>
                 <span>Oleh Admin</span>
               </div>
               
-              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-6 leading-tight">
+              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight">
                 {selectedArticle.title}
               </h2>
+              
+              {/* Tombol Bagikan Sosial Media (Feature 1) */}
+              <div className="flex items-center gap-2 mb-6 pb-6 border-b border-gray-100 flex-wrap">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-1">Bagikan:</span>
+                
+                {/* Bagikan WA */}
+                <button
+                  onClick={() => {
+                    const text = encodeURIComponent(`Baca berita terbaru dari Poktan Banyu Urip: "${selectedArticle.title}"\n\nSelengkapnya di website kami.`);
+                    const url = encodeURIComponent(window.location.href);
+                    window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+                  }}
+                  className="bg-emerald-50/50 hover:bg-emerald-100 text-emerald-700 hover:text-emerald-800 border border-emerald-100/60 text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer shadow-sm"
+                >
+                  <WhatsAppIcon size={12} />
+                  <span>WhatsApp</span>
+                </button>
+
+                {/* Salin Tautan */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    import('react-hot-toast').then(({ default: toast }) => {
+                      toast.success("Tautan berhasil disalin!");
+                    });
+                  }}
+                  className="bg-gray-50/50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 border border-gray-200/60 text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer shadow-sm"
+                >
+                  <Link2 size={12} />
+                  <span>Salin Link</span>
+                </button>
+              </div>
               
               <div className="prose prose-emerald max-w-none text-gray-600 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
                 {selectedArticle.desc}
@@ -526,6 +635,7 @@ export default function GaleriPage() {
       )}
 
       <Footer />
+      <Toaster position="top-center" reverseOrder={false} />
       </main>
     </>
   );

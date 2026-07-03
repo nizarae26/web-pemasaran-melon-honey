@@ -16,6 +16,7 @@ export default function AdminGallery() {
   const [formData, setFormData] = useState({ title: "", category: "Galeri Foto" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [videoError, setVideoError] = useState(false);
 
   async function fetchItems() {
 
@@ -74,6 +75,7 @@ export default function AdminGallery() {
       const file = e.target.files[0];
       setImageFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      setVideoError(false);
     }
   };
 
@@ -82,7 +84,7 @@ export default function AdminGallery() {
     if (!imageFile && !editingId) {
       Swal.fire({
         title: "Peringatan",
-        text: "Silakan pilih gambar terlebih dahulu",
+        text: `Silakan pilih file ${formData.category === "Video Dokumentasi" ? "video" : "gambar"} terlebih dahulu`,
         icon: "warning",
         confirmButtonColor: "#10b981",
       });
@@ -106,7 +108,7 @@ export default function AdminGallery() {
 
       if (editingId) {
         const { error: updateError } = await supabase.from("gallery").update({
-          title: formData.title,
+          title: formData.category === "Video Dokumentasi" ? "Video" : formData.title,
           category: formData.category,
           image_url: image_url,
         }).eq("id", editingId);
@@ -120,7 +122,7 @@ export default function AdminGallery() {
         });
       } else {
         const { error: insertError } = await supabase.from("gallery").insert({
-          title: formData.title,
+          title: formData.category === "Video Dokumentasi" ? "Video" : formData.title,
           category: formData.category,
           image_url: image_url,
         });
@@ -139,6 +141,7 @@ export default function AdminGallery() {
       setFormData({ title: "", category: "Galeri Foto" });
       setImageFile(null);
       setPreviewUrl(null);
+      setVideoError(false);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchItems();
     } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
@@ -158,7 +161,7 @@ export default function AdminGallery() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900">Upload Galeri</h1>
-          <p className="text-gray-500 mt-1 text-sm">Kelola foto-foto kegiatan dan dokumentasi.</p>
+          <p className="text-gray-500 mt-1 text-sm">Kelola foto dan video kegiatan serta dokumentasi.</p>
         </div>
         <button
           onClick={() => {
@@ -166,12 +169,13 @@ export default function AdminGallery() {
             setFormData({ title: "", category: "Galeri Foto" });
             setImageFile(null);
             setPreviewUrl(null);
+            setVideoError(false);
             setIsModalOpen(true);
           }}
           className="bg-[#10b981] hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20"
         >
           <Plus size={18} />
-          Upload Foto
+          Upload Media
         </button>
       </div>
 
@@ -196,6 +200,7 @@ export default function AdminGallery() {
                       setFormData({ title: item.title, category: item.category });
                       setPreviewUrl(item.image_url);
                       setImageFile(null);
+                      setVideoError(false);
                       setIsModalOpen(true);
                     }}
                     className="p-2 bg-white/90 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors shadow-sm"
@@ -230,7 +235,7 @@ export default function AdminGallery() {
           <div className="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-lg font-black text-gray-900">
-                {editingId ? "Edit Foto" : "Upload Foto Baru"}
+                {editingId ? "Edit Media" : "Upload Media Baru"}
               </h2>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
                 <X size={20} />
@@ -238,17 +243,19 @@ export default function AdminGallery() {
             </div>
             
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700">Judul Foto</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Contoh: Panen Raya 2024"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-[#10b981] transition-all text-sm"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                />
-              </div>
+              {formData.category !== "Video Dokumentasi" && (
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">Judul Foto</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Contoh: Panen Raya 2024"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-[#10b981] transition-all text-sm"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700">Kategori</label>
@@ -265,7 +272,7 @@ export default function AdminGallery() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700">File Foto</label>
+                <label className="text-sm font-bold text-gray-700">{formData.category === "Video Dokumentasi" ? "File Video" : "File Foto"}</label>
                 <div className="mt-2 flex justify-center rounded-2xl border border-dashed border-gray-300 px-6 py-8 hover:bg-gray-50 transition-colors relative cursor-pointer group">
                   <input 
                     type="file" 
@@ -273,12 +280,26 @@ export default function AdminGallery() {
                     onChange={handleImageChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
                   />
-                  <div className="text-center">
+                  <div className="text-center w-full">
                     {previewUrl ? (
                       <div className="flex flex-col items-center w-full">
-                        <div className="relative w-full h-40 mx-auto rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-50">
+                        <div className="relative w-full h-40 mx-auto rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-50 flex items-center justify-center">
                           {imageFile?.type.startsWith('video/') || formData.category === "Video Dokumentasi" ? (
-                            <video src={previewUrl} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 p-2" controls />
+                            <div className="relative w-full h-full bg-gray-900 flex flex-col items-center justify-center">
+                              <video 
+                                src={previewUrl} 
+                                className="w-full h-full object-contain p-2" 
+                                controls 
+                                onError={() => setVideoError(true)}
+                              />
+                              {videoError && (
+                                <div className="absolute inset-0 bg-red-950/95 flex flex-col items-center justify-center p-4 text-center z-30">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white mb-1"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                  <p className="text-[10px] text-white font-bold leading-tight">Codec Tidak Didukung</p>
+                                  <p className="text-[9px] text-red-200 mt-1 leading-snug">Format HEVC/H.265 HP tidak didukung browser. Gunakan format MP4 H.264 standar.</p>
+                                </div>
+                              )}
+                            </div>
                           ) : (
                             <img src={previewUrl} alt="Preview" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 p-2" />
                           )}
