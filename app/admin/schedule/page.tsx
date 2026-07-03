@@ -99,17 +99,17 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black text-gray-800 tracking-tight">
+    <div className="p-4 md:p-10 max-w-4xl space-y-6">
+      <div>
+        <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">
           Jadwal <span className="text-[#10b981]">Panen</span>
         </h1>
-        <p className="text-gray-500 mt-2">
+        <p className="text-gray-500 mt-1 text-xs md:text-sm">
           Pilih rentang tanggal riil. Kalender di halaman galeri akan otomatis menyesuaikan hari dan bulan.
         </p>
       </div>
 
-      <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm">
+      <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center">
             <CalendarDays size={20} />
@@ -219,16 +219,16 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        <div className="flex justify-end pt-8">
+        <div className="flex justify-end pt-6">
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-3 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20"
+            className="w-full md:w-auto justify-center flex items-center gap-2 px-6 py-2.5 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20 active:scale-95 text-xs md:text-sm cursor-pointer"
           >
             {saving ? (
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin" />
             ) : (
-              <Save size={20} />
+              <Save size={16} />
             )}
             <span>{saving ? "Menyimpan..." : "Simpan Jadwal"}</span>
           </button>

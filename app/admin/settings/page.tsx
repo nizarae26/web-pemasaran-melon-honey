@@ -60,35 +60,35 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black text-gray-800 tracking-tight">
+    <div className="p-4 md:p-10 max-w-4xl space-y-6">
+      <div>
+        <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">
           Pengaturan <span className="text-[#10b981]">Website</span>
         </h1>
-        <p className="text-gray-500 mt-2">
+        <p className="text-gray-500 mt-1 text-xs md:text-sm">
           Kelola informasi kontak WhatsApp dan Profil Kelompok Tani (Tentang Kami).
         </p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-6 md:space-y-8">
         {/* WA Settings */}
-        <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center">
-              <Phone size={20} />
+        <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
+            <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center shrink-0">
+              <Phone size={18} className="md:w-5 md:h-5" />
             </div>
-            <h2 className="text-xl font-bold text-gray-800">Nomor WhatsApp Admin</h2>
+            <h2 className="text-base md:text-xl font-bold text-gray-800">Nomor WhatsApp Admin</h2>
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
+              <label className="block text-xs md:text-sm font-bold text-gray-700 mb-2">
                 Nomor WA (Gunakan format 62...)
               </label>
               <input
                 type="text"
                 value={waNumber}
                 onChange={(e) => setWaNumber(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium"
                 placeholder="Contoh: 6281234567890"
               />
             </div>
@@ -96,23 +96,23 @@ export default function SettingsPage() {
         </div>
 
         {/* Profil & Tentang Kami Settings */}
-        <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center">
-              <Info size={20} />
+        <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
+            <div className="w-9 h-9 md:w-10 md:h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center shrink-0">
+              <Info size={18} className="md:w-5 md:h-5" />
             </div>
-            <h2 className="text-xl font-bold text-gray-800">Tentang Kami (Profil)</h2>
+            <h2 className="text-base md:text-xl font-bold text-gray-800">Tentang Kami (Profil)</h2>
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
+              <label className="block text-xs md:text-sm font-bold text-gray-700 mb-2">
                 Deskripsi Singkat Profil
               </label>
               <textarea
                 value={tentangKami}
                 onChange={(e) => setTentangKami(e.target.value)}
                 rows={4}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium"
                 placeholder="Tulis deskripsi kelompok tani di sini..."
               />
             </div>
@@ -120,16 +120,16 @@ export default function SettingsPage() {
         </div>
 
         {/* Save Button */}
-        <div className="flex justify-end pt-6">
+        <div className="flex justify-end pt-2">
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-3 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50"
+            className="w-full md:w-auto justify-center flex items-center gap-2 px-6 py-2.5 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20 active:scale-95 text-xs md:text-sm cursor-pointer"
           >
             {saving ? (
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin" />
             ) : (
-              <Save size={20} />
+              <Save size={16} />
             )}
             <span>{saving ? "Menyimpan..." : "Simpan Pengaturan"}</span>
           </button>

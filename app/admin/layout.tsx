@@ -1,5 +1,6 @@
 import Sidebar from "@/components/admin/Sidebar";
 import { Toaster } from "react-hot-toast";
+import AuthGuard from "@/components/admin/AuthGuard";
 import "./../globals.css";
 
 export const metadata = {
@@ -29,15 +30,17 @@ export default function AdminLayout({
     <html lang="en">
       <body>
         <Toaster position="top-center" reverseOrder={false} />
-        <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row pb-20 md:pb-0">
-          {/* Navigation */}
-          <Sidebar />
+        <AuthGuard>
+          <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row pb-20 md:pb-0">
+            {/* Navigation */}
+            <Sidebar />
 
-          {/* Main Content */}
-          <main className="flex-1 overflow-auto">
-            {children}
-          </main>
-        </div>
+            {/* Main Content */}
+            <main className="flex-1 overflow-auto">
+              {children}
+            </main>
+          </div>
+        </AuthGuard>
       </body>
     </html>
   );

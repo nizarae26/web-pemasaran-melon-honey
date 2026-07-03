@@ -183,26 +183,26 @@ export default function MembersPage() {
   );
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div className="p-4 md:p-10 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-800 tracking-tight flex items-center gap-3">
-            <Users className="text-[#10b981]" /> Keanggotaan
+          <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight flex items-center gap-2">
+            <Users className="text-[#10b981] w-6 h-6 md:w-8 md:h-8" /> Keanggotaan
           </h1>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 mt-1 text-xs md:text-sm">
             Kelola struktur organisasi dan anggota Kelompok Tani Banyu Urip.
           </p>
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 bg-[#10b981] text-white px-6 py-3 rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95"
+          className="w-full md:w-auto justify-center flex items-center gap-2 bg-[#10b981] text-white px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95"
         >
-          <Plus size={20} />
+          <Plus size={16} className="md:w-5 md:h-5" />
           <span>Tambah Anggota</span>
         </button>
       </div>
 
-      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden mb-8">
+      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
@@ -216,7 +216,8 @@ export default function MembersPage() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Tampilan Desktop (Tabel) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider">
@@ -281,6 +282,66 @@ export default function MembersPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Tampilan Mobile (Grid 2 Kolom) */}
+        <div className="block md:hidden border-t border-gray-100">
+          {loading ? (
+            <div className="py-8 text-center text-xs text-gray-400">
+              <div className="flex justify-center mb-2"><Loader2 className="animate-spin text-emerald-500" /></div>
+              Memuat data anggota...
+            </div>
+          ) : filteredMembers.length === 0 ? (
+            <div className="py-8 text-center text-xs text-gray-400">
+              Belum ada data anggota.
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 p-4 bg-gray-50/30">
+              {filteredMembers.map((member) => (
+                <div key={member.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3 flex flex-col justify-between relative">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[8px] font-black text-gray-400 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-full">
+                        Urutan: {member.sort_order}
+                      </span>
+                      {member.is_primary && (
+                        <span className="text-[8px] font-black text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md uppercase">
+                          Utama
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs text-white shrink-0 ${member.is_primary ? 'bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md shadow-emerald-500/10' : 'bg-gray-100 text-gray-400'}`}>
+                        {member.name.charAt(0)}
+                      </div>
+                      <p className="font-bold text-xs text-gray-800 line-clamp-1 flex-1">{member.name}</p>
+                    </div>
+                    <div className="space-y-0.5 mt-1">
+                      <p className="text-[9px] text-gray-500 font-bold leading-none">{member.role}</p>
+                      <p className="text-[9px] text-gray-400 leading-none">{member.section || "-"}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-1.5 mt-3 pt-2 border-t border-gray-100">
+                    <button 
+                      onClick={() => handleOpenModal(member)}
+                      className="flex-1 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-center flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+                      title="Edit"
+                    >
+                      <Edit size={12} />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(member.id)}
+                      className="flex-1 py-1.5 bg-red-50 text-red-600 rounded-lg text-center flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+                      title="Hapus"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

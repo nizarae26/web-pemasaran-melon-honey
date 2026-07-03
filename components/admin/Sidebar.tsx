@@ -1,11 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Package, Image as ImageIcon, Newspaper, LogOut, Coffee, Settings, Users, Calendar } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import Swal from "sweetalert2";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    const result = await Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Anda akan keluar dari sesi administrator!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#10b981",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Ya, Keluar!",
+      cancelButtonText: "Batal",
+      customClass: {
+        popup: 'rounded-3xl'
+      }
+    });
+
+    if (result.isConfirmed) {
+      await supabase.auth.signOut();
+      document.cookie = "admin_session=; path=/; max-age=0; SameSite=Strict";
+      router.push("/login");
+    }
+  };
 
   const menuItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -27,9 +54,9 @@ export default function Sidebar() {
           </div>
           <span className="font-black text-lg text-gray-900 tracking-tight">AdminPanel</span>
         </div>
-        <Link href="/" className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors">
+        <button onClick={handleLogout} className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors cursor-pointer">
           <LogOut size={20} />
-        </Link>
+        </button>
       </div>
 
       {/* Mobile Bottom Navigation (PWA Style) */}
@@ -78,10 +105,10 @@ export default function Sidebar() {
           })}
         </nav>
         <div className="p-4 border-t border-gray-100">
-          <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors cursor-pointer text-left">
             <LogOut size={18} />
             Keluar
-          </Link>
+          </button>
         </div>
       </aside>
     </>

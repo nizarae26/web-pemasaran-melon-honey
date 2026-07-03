@@ -154,11 +154,11 @@ export default function AdminArticles() {
   };
 
   return (
-    <div className="p-8 space-y-8 relative">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 relative">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900">Manajemen Artikel</h1>
-          <p className="text-gray-500 mt-1 text-sm">Kelola berita, artikel, dan tips pertanian.</p>
+          <h1 className="text-lg md:text-2xl font-black text-gray-900">Manajemen Artikel</h1>
+          <p className="text-gray-500 mt-1 text-xs md:text-sm">Kelola berita, artikel, dan tips pertanian.</p>
         </div>
         <button
           onClick={() => {
@@ -168,53 +168,60 @@ export default function AdminArticles() {
             setPreviewUrl(null);
             setIsModalOpen(true);
           }}
-          className="bg-[#10b981] hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20"
+          className="w-full md:w-auto justify-center bg-[#10b981] hover:bg-emerald-600 text-white px-5 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20 active:scale-95"
         >
-          <Plus size={18} />
+          <Plus size={16} className="md:w-[18px] md:h-[18px]" />
           Tulis Artikel
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         {loading ? (
-          <div className="col-span-full py-12 text-center text-gray-400">Loading...</div>
+          <div className="col-span-full py-12 text-center text-xs text-gray-400">Loading...</div>
         ) : items.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100">Belum ada artikel.</div>
+          <div className="col-span-full py-12 text-center text-xs text-gray-400 bg-white rounded-2xl border border-gray-100">Belum ada artikel.</div>
         ) : (
           items.map((item) => (
-            <div key={item.id} className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm flex flex-col group relative">
-              <div className="aspect-video bg-gray-100 relative">
-                <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2" />
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
-                  <button 
-                    onClick={() => {
-                      setEditingId(item.id);
-                      setFormData({ title: item.title, tag: item.tag, description: item.description });
-                      setPreviewUrl(item.image_url);
-                      setImageFile(null);
-                      setIsModalOpen(true);
-                    }}
-                    className="p-2 bg-white/90 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors shadow-sm"
-                  >
-                    <Edit size={16} />
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(item.id)}
-                    className="p-2 bg-white/90 text-red-500 hover:bg-red-50 rounded-lg transition-colors shadow-sm"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+            <div key={item.id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col justify-between group relative">
+              <div>
+                <div className="aspect-video bg-gray-50 relative overflow-hidden">
+                  <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2" />
+                  
+                  {/* Actions (Always visible on mobile, hover-only on desktop) */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-20">
+                    <button 
+                      onClick={() => {
+                        setEditingId(item.id);
+                        setFormData({ title: item.title, tag: item.tag, description: item.description });
+                        setPreviewUrl(item.image_url);
+                        setImageFile(null);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-1.5 bg-white/90 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors shadow-sm cursor-pointer"
+                    >
+                      <Edit size={12} />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(item.id)}
+                      className="p-1.5 bg-white/90 text-red-500 hover:bg-red-50 rounded-lg transition-colors shadow-sm cursor-pointer"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="flex gap-2 mb-3">
-                  <span className="text-[10px] font-black text-[#10b981] uppercase">{item.tag}</span>
-                  <span className="text-[10px] font-bold text-gray-400">
-                    â€¢ {new Date(item.created_at).toLocaleDateString('id-ID')}
-                  </span>
+                
+                <div className="p-3 md:p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex gap-1.5 md:gap-2 mb-2 md:mb-3">
+                      <span className="text-[8px] md:text-[10px] font-black text-[#10b981] uppercase">{item.tag}</span>
+                      <span className="text-[8px] md:text-[10px] font-bold text-gray-400">
+                        • {new Date(item.created_at).toLocaleDateString('id-ID')}
+                      </span>
+                    </div>
+                    <h4 className="text-xs md:text-lg font-black text-gray-900 leading-tight mb-1.5 md:mb-2 line-clamp-1 md:line-clamp-none">{item.title}</h4>
+                    <p className="text-[10px] md:text-xs text-gray-500 line-clamp-2 md:line-clamp-3 leading-relaxed">{item.description}</p>
+                  </div>
                 </div>
-                <h4 className="text-lg font-black text-gray-900 leading-tight mb-2">{item.title}</h4>
-                <p className="text-xs text-gray-500 line-clamp-3">{item.description}</p>
               </div>
             </div>
           ))

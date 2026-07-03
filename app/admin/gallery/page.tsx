@@ -157,11 +157,11 @@ export default function AdminGallery() {
   };
 
   return (
-    <div className="p-8 space-y-8 relative">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 relative">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900">Upload Galeri</h1>
-          <p className="text-gray-500 mt-1 text-sm">Kelola foto dan video kegiatan serta dokumentasi.</p>
+          <h1 className="text-lg md:text-2xl font-black text-gray-900">Upload Galeri</h1>
+          <p className="text-gray-500 mt-1 text-xs md:text-sm">Kelola foto dan video kegiatan serta dokumentasi.</p>
         </div>
         <button
           onClick={() => {
@@ -172,57 +172,63 @@ export default function AdminGallery() {
             setVideoError(false);
             setIsModalOpen(true);
           }}
-          className="bg-[#10b981] hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20"
+          className="w-full md:w-auto justify-center bg-[#10b981] hover:bg-emerald-600 text-white px-5 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm flex items-center gap-2 transition-colors shadow-md shadow-emerald-500/20 active:scale-95"
         >
-          <Plus size={18} />
+          <Plus size={16} className="md:w-[18px] md:h-[18px]" />
           Upload Media
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
         {loading ? (
-          <div className="col-span-full py-12 text-center text-gray-400">Loading...</div>
+          <div className="col-span-full py-12 text-center text-xs text-gray-400">Loading...</div>
         ) : items.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100">Belum ada foto galeri.</div>
+          <div className="col-span-full py-12 text-center text-xs text-gray-400 bg-white rounded-2xl border border-gray-100">Belum ada foto galeri.</div>
         ) : (
           items.map((item) => (
-            <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
-              <div className="aspect-square bg-gray-100 relative">
-                {item.category === "Video Dokumentasi" ? (
-                  <video src={item.image_url} className="w-full h-full object-cover" />
-                ) : (
-                  <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2" />
-                )}
-                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
-                  <button 
-                    onClick={() => {
-                      setEditingId(item.id);
-                      setFormData({ title: item.title, category: item.category });
-                      setPreviewUrl(item.image_url);
-                      setImageFile(null);
-                      setVideoError(false);
-                      setIsModalOpen(true);
-                    }}
-                    className="p-2 bg-white/90 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors shadow-sm"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(item.id)}
-                    className="p-2 bg-white/90 text-red-500 hover:bg-red-50 rounded-lg transition-colors shadow-sm"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+            <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col justify-between group">
+              <div>
+                <div className="aspect-square bg-gray-50 relative overflow-hidden">
+                  {item.category === "Video Dokumentasi" ? (
+                    <video src={item.image_url} className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2" />
+                  )}
+                  
+                  {/* Actions (Always visible on mobile, hover-only on desktop) */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-20">
+                    <button 
+                      onClick={() => {
+                        setEditingId(item.id);
+                        setFormData({ title: item.title, category: item.category });
+                        setPreviewUrl(item.image_url);
+                        setImageFile(null);
+                        setVideoError(false);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-1.5 md:p-2 bg-white/90 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors shadow-sm cursor-pointer"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" className="md:w-4 md:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(item.id)}
+                      className="p-1.5 md:p-2 bg-white/90 text-red-500 hover:bg-red-50 rounded-lg transition-colors shadow-sm cursor-pointer"
+                    >
+                      <Trash2 size={12} className="md:w-4 md:h-4" />
+                    </button>
+                  </div>
+
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="bg-white/90 backdrop-blur-md text-[8px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[#064e3b] uppercase tracking-wider">
+                      {item.category.split(" ")[0]}
+                    </span>
+                  </div>
                 </div>
-                <div className="absolute top-2 left-2">
-                  <span className="bg-white/90 backdrop-blur-md text-[10px] font-black px-2 py-1 rounded-md text-[#064e3b] uppercase">
-                    {item.category}
-                  </span>
+                
+                <div className="p-2.5 md:p-4">
+                  <h3 className="font-bold text-xs md:text-sm text-gray-800 line-clamp-1">{item.title}</h3>
+                  <p className="text-[9px] md:text-xs text-gray-400 mt-0.5">{new Date(item.created_at).toLocaleDateString('id-ID')}</p>
                 </div>
-              </div>
-              <div className="p-4">
-                <h3 className="font-bold text-sm text-gray-800 line-clamp-1">{item.title}</h3>
-                <p className="text-xs text-gray-400 mt-1">{new Date(item.created_at).toLocaleDateString('id-ID')}</p>
               </div>
             </div>
           ))
