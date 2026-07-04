@@ -52,7 +52,7 @@ export default function BudidayaPage() {
       title: "Pemilihan Bibit",
       desc: "Memilih biji hibrida (persilangan buatan unggul) Honey Globe yang sehat untuk menjamin keseragaman tumbuh, ketahanan penyakit, serta kualitas buah premium.",
       icon: <Sprout size={22} />,
-      img: "", 
+      img: "/images/budidaya/Bibit.jpeg", 
     },
     {
       no: "06",
@@ -71,7 +71,7 @@ export default function BudidayaPage() {
     {
       no: "08",
       title: "Penyemaian",
-      desc: "Kecambah dipindahkan satu per satu ke lubang seeding tray dengan media khusus steril (cocopeat & kompos) selama 7-10 hari hingga tumbuh daun sejati.",
+      desc: "Kecambah dipindahkan satu per satu ke lubang seeding tray dengan media khusus steril (cocopeat & kompos) selama 2x24 jam hingga tumbuh daun sejati.",
       icon: <Flower2 size={22} />,
       img: "/images/budidaya/semai.jpeg",
     },
@@ -165,13 +165,22 @@ export default function BudidayaPage() {
                   {/* Kartu Proses */}
                   <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 w-full flex flex-col items-center text-center h-full">
                     {/* Gambar Proses */}
-                    <div className="w-full aspect-[4/3] rounded-2xl bg-gray-100 mb-4 overflow-hidden relative group">
-                      <div className="absolute inset-0 bg-emerald-900/10 group-hover:bg-transparent transition-colors z-10"></div>
-                      <img
-                        src={step.img}
-                        alt={step.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
+                    <div className="w-full aspect-[4/3] rounded-2xl bg-gray-100 mb-4 overflow-hidden relative group flex items-center justify-center">
+                      {step.img ? (
+                        <>
+                          <div className="absolute inset-0 bg-emerald-900/10 group-hover:bg-transparent transition-colors z-10"></div>
+                          <img
+                            src={step.img}
+                            alt={step.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-emerald-600/40 p-4">
+                          <Leaf className="w-10 h-10 mb-1" />
+                          <span className="text-[10px] text-gray-400 font-medium">Dokumentasi Menyusul</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Ikon dan Judul */}

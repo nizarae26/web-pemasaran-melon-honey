@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import ProductCard from "@/components/ProductCard";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
-import OlahanCard from "@/components/public/OlahanCard";
 import { Leaf } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Link from "next/link";
@@ -13,19 +12,20 @@ import { supabase } from "@/lib/supabase";
 export const revalidate = 0; // Disable caching so it always fetches fresh data
 
 export default async function Home() {
-  // Fetch latest 6 gallery items
+  // Fetch latest 6 gallery items (excluding videos, only photos)
   const { data: galleryItems } = await supabase
     .from("gallery")
     .select("*")
+    .neq("category", "Video Dokumentasi")
     .order("created_at", { ascending: false })
     .limit(6);
 
-  // Fetch latest 3 articles
+  // Fetch latest 6 articles
   const { data: articles } = await supabase
     .from("articles")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(3);
+    .limit(6);
 
   // Fetch Melon dari tabel products
   const { data: melonData } = await supabase

@@ -26,7 +26,7 @@ export default function LoginPage() {
       if (error) throw error;
       
       if (data.session) {
-        // Set cookie for middleware
+        // Set cookie for proxy
         document.cookie = "admin_session=true; path=/; max-age=86400; SameSite=Strict";
         toast.success("Login berhasil! Mengalihkan...");
         
