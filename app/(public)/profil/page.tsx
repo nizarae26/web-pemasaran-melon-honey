@@ -410,7 +410,7 @@ export default function ProfilPage() {
                   href="https://www.google.com/maps/place/King+Agrowisata/@-7.172934,113.2257627,17z"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full bg-poktan-emerald text-white py-3 rounded-xl font-bold text-xs hover:bg-poktan-green transition-all active:scale-95 shadow-sm shadow-poktan-emerald/10"
+                  className="inline-flex items-center justify-center gap-2 w-full bg-poktan-leaf hover:bg-poktan-green text-white py-3.5 rounded-full font-bold text-xs shadow-md shadow-poktan-leaf/10 hover:shadow-lg hover:shadow-poktan-leaf/20 active:scale-[0.98] transition-all duration-300"
                 >
                   <ExternalLink size={14} /> Buka Peta Google Maps
                 </a>

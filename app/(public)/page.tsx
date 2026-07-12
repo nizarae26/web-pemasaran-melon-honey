@@ -8,6 +8,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export const revalidate = 0; // Disable caching so it always fetches fresh data
 
@@ -61,172 +62,192 @@ export default async function Home() {
 
   const featuredProducts = combinedData.slice(0, 4);
 
-
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[#fcfdfb]">
       {/* 1. Header & Navigasi  */}
       <Navbar />
 
-      {/* 2. Hero Section [cite: 15-18] */}
+      {/* 2. Hero Section */}
       <Hero />
 
       {/* 3. Katalog Melon Honey Globe  */}
-      <section className="py-20 px-8">
+      <section className="py-12 px-6 md:px-12 bg-[#fcfdfb]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2 tracking-tight inline-block relative">
-              Katalog <span className="text-poktan-emerald">Melon</span>
-              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-1 bg-poktan-emerald"></span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Mengambil hanya 4 data pertama dari array featuredProducts */}
-            {featuredProducts.map((product, index) => (
-              <ProductCard 
-                key={index} 
-                name={product.name}
-                grade={product.grade}
-                price={product.price}
-                weight={product.weight}
-                status={product.status}
-                imageUrl={product.imageUrl}
-              />
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/katalog"
-              className="group border-2 border-poktan-emerald text-poktan-emerald px-10 py-3 rounded-xl font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 shadow-sm hover:shadow-poktan-emerald/20 w-fit"
-            >
-              <span>Lihat Semua Katalog</span>
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* 4. Sekilas Tentang Poktan Banyu Urip [cite: 26, 27] */}
-      <AboutSection />
-
-      {/* 5. Galeri & Berita (Preview) [cite: 28-30] */}
-      <section className="py-20 px-8">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
-          {/* Kolom Galeri Kegiatan */}
-          <div>
-            <div className="flex justify-between items-end mb-6">
-              <h3 className="text-2xl font-bold text-poktan-green">
-                Galeri Kegiatan
-              </h3>
-              <Link href="/galeri" className="text-sm text-poktan-leaf font-semibold hover:text-poktan-green transition-colors">
-                Lihat Semua Galeri →
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {galleryItems && galleryItems.length > 0 ? (
-                galleryItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="aspect-square bg-gray-200 rounded-lg overflow-hidden relative group cursor-pointer"
-                  >
-                    <img 
-                      src={item.image_url} 
-                      alt={item.title} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end justify-start p-3 transition-opacity duration-300">
-                      <span className="text-white font-bold text-xs line-clamp-2">{item.title}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="col-span-3 aspect-[3/1] bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 text-sm border border-gray-100">
-                  Belum ada foto galeri.
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Kolom Berita & Artikel */}
-          <div>
-            <div className="flex justify-between items-end mb-6">
-              <h3 className="text-2xl font-bold text-poktan-green">
-                Berita & Artikel Terbaru
-              </h3>
-              <Link href="/galeri" className="text-sm text-poktan-leaf font-semibold hover:text-poktan-green transition-colors">
-                Lihat Semua Berita →
-              </Link>
-            </div>
-            <div className="space-y-4">
-              {articles && articles.length > 0 ? (
-                articles.map((item) => (
-                  <Link href="/galeri" key={item.id} className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition cursor-pointer border border-transparent hover:border-gray-100">
-                    <div className="w-24 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                      <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                        BERITA
-                      </span>
-                      <h4 className="font-bold text-sm text-gray-800 mt-1 line-clamp-2">
-                        {item.title}
-                      </h4>
-                      <p className="text-[10px] text-gray-400 mt-1">
-                        {new Date(item.created_at).toLocaleDateString("id-ID", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </p>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className="bg-gray-50 p-6 rounded-xl text-center text-sm text-gray-400 border border-gray-100">
-                  Belum ada berita & artikel.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. CTA Bawah  */}
-      <section className="bg-poktan-accent/20 py-20 px-8 border-y border-poktan-accent/50">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            {/* Ikon Utama dengan Efek Glow */}
-            <div className="w-16 h-16 bg-poktan-emerald rounded-2xl flex items-center justify-center text-white shadow-xl shadow-poktan-emerald/20 shrink-0">
-              <Leaf size={32} strokeWidth={2.5} />
-            </div>
-
-            <div>
-              <h4 className="font-black text-2xl text-gray-800 tracking-tight mb-1">
-                Tertarik dengan{" "}
-                <span className="text-poktan-emerald">Melon Honey Globe</span> kami?
-              </h4>
-              <p className="text-gray-500 font-medium max-w-md">
-                Hubungi kami sekarang untuk pemesanan atau konsultasi produk
-                unggulan dari petani Tanggumong.
+          
+          <ScrollReveal>
+            <div className="text-center mb-16 space-y-3">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+                Katalog <span className="text-poktan-emerald">Melon Premium</span>
+              </h2>
+              <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+                Melon Honey Globe segar dengan tingkat kemanisan brix tinggi, dipanen langsung dari kebun kami.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
 
-          {/* Tombol WhatsApp Modern */}
-          <button className="w-full md:w-auto bg-poktan-emerald text-white px-10 py-4 rounded-2xl font-bold shadow-lg shadow-poktan-emerald/20 hover:bg-poktan-green hover:scale-105 transition-all active:scale-95 flex items-center justify-center gap-3">
-            <WhatsAppIcon size={22} />
-            <span>Hubungi Kami via WhatsApp</span>
-          </button>
+          <ScrollReveal delay={0.2}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product, index) => (
+                <ProductCard 
+                  key={index} 
+                  name={product.name}
+                  grade={product.grade}
+                  price={product.price}
+                  weight={product.weight}
+                  status={product.status}
+                  imageUrl={product.imageUrl}
+                />
+              ))}
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.3}>
+            <div className="text-center mt-16">
+              <Link
+                href="/katalog"
+                className="group border border-poktan-emerald text-poktan-emerald px-10 py-3.5 rounded-full font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 w-fit text-sm"
+              >
+                <span>Lihat Semua Katalog</span>
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* 7. Footer [cite: 32] */}
+      {/* 4. Sekilas Tentang Poktan Banyu Urip */}
+      <ScrollReveal>
+        <AboutSection />
+      </ScrollReveal>
+
+      {/* 5. Galeri & Berita (Preview) */}
+      <section className="py-24 px-6 md:px-12 bg-[#fcfdfb]">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
+          {/* Kolom Galeri Kegiatan */}
+          <ScrollReveal>
+            <div>
+              <div className="flex justify-between items-center mb-8 border-b border-[#f0f4f1] pb-4">
+                <h3 className="text-xl md:text-2xl font-extrabold text-poktan-green">
+                  Galeri Kegiatan
+                </h3>
+                <Link href="/galeri" className="text-xs md:text-sm text-poktan-leaf font-bold hover:text-poktan-green hover:underline transition-all">
+                  Lihat Semua Galeri →
+                </Link>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {galleryItems && galleryItems.length > 0 ? (
+                  galleryItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="aspect-square bg-slate-50 rounded-[16px] overflow-hidden relative group cursor-pointer border border-[#f0f4f1]/55"
+                    >
+                      <img 
+                        src={item.image_url} 
+                        alt={item.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end justify-start p-3 transition-opacity duration-300">
+                        <span className="text-white font-bold text-xs line-clamp-2">{item.title}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-3 aspect-[3/1] bg-slate-50 rounded-[16px] flex items-center justify-center text-gray-400 text-sm border border-[#f0f4f1]">
+                    Belum ada foto galeri.
+                  </div>
+                )}
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Kolom Berita & Artikel */}
+          <ScrollReveal delay={0.1}>
+            <div>
+              <div className="flex justify-between items-center mb-8 border-b border-[#f0f4f1] pb-4">
+                <h3 className="text-xl md:text-2xl font-extrabold text-poktan-green">
+                  Berita & Artikel Terbaru
+                </h3>
+                <Link href="/galeri" className="text-xs md:text-sm text-poktan-leaf font-bold hover:text-poktan-green hover:underline transition-all">
+                  Lihat Semua Berita →
+                </Link>
+              </div>
+              
+              <div className="space-y-4">
+                {articles && articles.length > 0 ? (
+                  articles.map((item) => (
+                    <Link href="/galeri" key={item.id} className="flex gap-4 p-3 hover:bg-[#f0f4f1]/30 rounded-2xl transition cursor-pointer border border-transparent hover:border-[#f0f4f1]/80">
+                      <div className="w-24 h-20 bg-slate-50 rounded-xl flex-shrink-0 overflow-hidden border border-[#f0f4f1]/40">
+                        <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <div>
+                          <span className="text-[8px] tracking-wider font-extrabold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full uppercase border border-emerald-100/50">
+                            BERITA
+                          </span>
+                        </div>
+                        <h4 className="font-bold text-sm text-gray-800 mt-2 line-clamp-1 group-hover:text-poktan-leaf transition-colors">
+                          {item.title}
+                        </h4>
+                        <p className="text-[10px] text-gray-400 mt-1">
+                          {new Date(item.created_at).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="bg-slate-50 p-6 rounded-[24px] text-center text-sm text-gray-400 border border-[#f0f4f1]">
+                    Belum ada berita & artikel.
+                  </div>
+                )}
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* 6. CTA Bawah */}
+      <section className="py-16 px-6 md:px-12 bg-[#fcfdfb]">
+        <ScrollReveal>
+          <div className="max-w-5xl mx-auto bg-poktan-accent/40 border border-poktan-leaf/10 rounded-[32px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+              {/* Ikon Utama */}
+              <div className="w-16 h-16 bg-white border border-[#f0f4f1] rounded-2xl flex items-center justify-center text-poktan-leaf shrink-0 shadow-sm">
+                <Leaf size={28} strokeWidth={2} />
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-2xl text-gray-900 tracking-tight mb-1">
+                  Tertarik dengan <span className="text-poktan-emerald">Melon Honey Globe</span> kami?
+                </h4>
+                <p className="text-gray-500 text-sm font-medium max-w-md leading-relaxed">
+                  Hubungi kami sekarang untuk pemesanan atau konsultasi produk unggulan dari petani Tanggumong.
+                </p>
+              </div>
+            </div>
+
+            {/* Tombol WhatsApp Modern */}
+            <a 
+              href="https://wa.me/6287812345678?text=Halo%2C%20saya%20tertarik%20dengan%20Melon%20Honey%20Globe%20Anda"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full md:w-auto bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-full font-bold shadow-md shadow-poktan-leaf/10 hover:scale-102 transition-all duration-300 text-sm flex items-center justify-center gap-3 shrink-0"
+            >
+              <WhatsAppIcon size={20} />
+              <span>Hubungi via WhatsApp</span>
+            </a>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* 7. Footer */}
       <Footer />
     </main>
   );

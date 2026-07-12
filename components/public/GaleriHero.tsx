@@ -1,79 +1,115 @@
-import { Camera, PlaySquare, FileText, Calendar } from "lucide-react";
+"use client";
+
+import { motion } from "framer-motion";
+import { Camera, PlaySquare, FileText, Calendar, Leaf } from "lucide-react";
 
 export default function GaleriHero({ displayBulan = "Update Musim Tanam" }: { displayBulan?: string }) {
   return (
-    <section className="relative min-h-[600px] md:h-[650px] flex items-center justify-start text-left text-white overflow-hidden py-12 md:py-0">
-      {/* Background & Overlay */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/bgmelon.jpg')" }}
-        ></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/30 to-transparent"></div>
-      </div>
+    <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-[#fcfdfb] py-20 md:py-28 px-6 md:px-12 overflow-hidden">
+      {/* Decorative Background Blob */}
+      <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-poktan-accent/15 rounded-full blur-[120px] -z-10"></div>
+      
+      {/* Floating Organic Leaf 1 in the background */}
+      <motion.div
+        animate={{
+          y: [0, -25, 0],
+          x: [0, 15, 0],
+          rotate: [0, 20, 0]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute bottom-10 left-[8%] text-poktan-leaf/20 pointer-events-none hidden md:block"
+      >
+        <Leaf size={32} />
+      </motion.div>
+
+      {/* Floating Organic Leaf 2 in the background */}
+      <motion.div
+        animate={{
+          y: [0, 30, 0],
+          x: [0, -15, 0],
+          rotate: [0, -25, 0]
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute bottom-16 right-[12%] text-poktan-leaf/15 pointer-events-none hidden md:block"
+      >
+        <Leaf size={24} />
+      </motion.div>
 
       {/* Konten Utama */}
-      <div className="relative z-10 w-full max-w-6xl px-8 md:px-20 flex flex-col justify-center h-full mt-4 md:mt-0">
-        <div className="max-w-2xl">
-          <span className="bg-poktan-green px-3 py-1 rounded-md text-[10px] font-bold mb-4 inline-block uppercase tracking-wider shadow-sm">
-            {" "}
-            Media & Informasi
-          </span>
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col justify-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-4xl space-y-6"
+        >
+          <div>
+            <span className="bg-poktan-accent text-poktan-leaf px-4 py-1.5 rounded-full text-[10px] font-extrabold tracking-widest uppercase inline-block border border-poktan-leaf/5 mb-4">
+              Media & Informasi
+            </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight tracking-tight">
-            Jejak Digital <br />
-            Kelompok Tani <br />
-            <span className="text-[#10b981]">Banyu Urip</span>
-          </h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              Jejak Digital Kelompok Tani <br />
+              <span className="text-poktan-emerald">Banyu Urip</span>
+            </h1>
+          </div>
 
-          <p className="text-sm md:text-base mb-8 opacity-90 max-w-xl leading-relaxed text-white/80">
+          <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-2xl">
             Kumpulan dokumentasi kegiatan, informasi edukatif, serta kabar
             terbaru mengenai perkembangan pertanian melon modern di Tanggumong.
           </p>
-        </div>
 
-        {/* 4 Label Fitur Galeri */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 border-t border-white/10 pt-8 max-w-4xl">
-          <div className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
-              <Camera size={20} strokeWidth={2.5} />
+          {/* 4 Label Fitur Galeri */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-4 max-w-4xl">
+            <div className="flex items-center gap-3 group">
+              <div className="w-10 h-10 bg-white border border-[#f0f4f1] rounded-xl flex items-center justify-center text-poktan-leaf transition-transform group-hover:scale-105 shrink-0 shadow-sm">
+                <Camera size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="font-bold text-xs text-gray-700 leading-tight">Dokumentasi</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">Foto Kegiatan</p>
+              </div>
             </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">Dokumentasi Kegiatan</p>
-              <p className="text-[9px] text-white/60 leading-tight">Galeri Foto & Pelatihan</p>
+
+            <div className="flex items-center gap-3 group">
+              <div className="w-10 h-10 bg-white border border-[#f0f4f1] rounded-xl flex items-center justify-center text-poktan-leaf transition-transform group-hover:scale-105 shrink-0 shadow-sm">
+                <FileText size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="font-bold text-xs text-gray-700 leading-tight">Berita & Artikel</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">Info Terkini</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 group">
+              <div className="w-10 h-10 bg-white border border-[#f0f4f1] rounded-xl flex items-center justify-center text-poktan-leaf transition-transform group-hover:scale-105 shrink-0 shadow-sm">
+                <PlaySquare size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="font-bold text-xs text-gray-700 leading-tight">Video Edukasi</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">Profil Visual</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 group">
+              <div className="w-10 h-10 bg-white border border-[#f0f4f1] rounded-xl flex items-center justify-center text-poktan-leaf transition-transform group-hover:scale-105 shrink-0 shadow-sm">
+                <Calendar size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="font-bold text-xs text-gray-700 leading-tight">Jadwal Panen</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">{displayBulan}</p>
+              </div>
             </div>
           </div>
-
-          <div className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
-              <FileText size={20} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">Berita & Artikel</p>
-              <p className="text-[9px] text-white/60 leading-tight">Info Terkini Pertanian</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
-              <PlaySquare size={20} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">Video Dokumentasi</p>
-              <p className="text-[9px] text-white/60 leading-tight">Profil & Edukasi Visual</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-poktan-green rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110 shrink-0 shadow-sm shadow-poktan-green/10">
-              <Calendar size={20} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="font-bold text-[11px] md:text-xs leading-tight text-white">Jadwal Panen</p>
-              <p className="text-[9px] text-white/60 leading-tight">{displayBulan}</p>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

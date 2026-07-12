@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BudidayaHero from "@/components/public/BudidayaHero";
@@ -15,9 +18,12 @@ import {
   Scissors,
   Sparkles,
   Activity,
+  ChevronDown,
+  LayoutGrid,
 } from "lucide-react";
 
 export default function BudidayaPage() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const alurProses = [
     {
       no: "01",
@@ -205,84 +211,111 @@ export default function BudidayaPage() {
       </section>
 
       {/* 4. FAQ Akordeon Interaktif */}
-      <section className="py-20 px-6 md:px-12 bg-gray-50/50 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2 tracking-tight inline-block relative">
-              Pertanyaan <span className="text-[#10b981]">Sering Diajukan</span> (FAQ)
-              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-[#10b981]"></span>
-            </h2>
-            <p className="text-sm text-gray-500 max-w-xl mx-auto mt-8 leading-relaxed">
-              Temukan jawaban atas berbagai pertanyaan umum mengenai teknologi pertanian dan budidaya melon di Poktan Banyu Urip.
-            </p>
-          </div>
+      <section className="py-24 px-6 md:px-12 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            {/* Left Column (Info) */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Title */}
+              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                Pertanyaan yang <br />
+                <span className="text-[#10b981]">Sering Diajukan</span>
+              </h2>
 
-          <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm space-y-2">
-            {[
-              {
-                q: "Apa keunggulan sistem Irigasi Tetes (Drip Irrigation)?",
-                a: "Sistem irigasi tetes menyalurkan air dan nutrisi secara berkala langsung ke perakaran tanaman dalam volume yang tepat. Hal ini sangat menghemat penggunaan air, mencegah kelembaban berlebih pada daun yang memicu pertumbuhan spora jamur, dan memastikan distribusi nutrisi seragam."
-              },
-              {
-                q: "Mengapa hanya dipelihara 1 buah melon per pohon dan berapa berat rata-rata buahnya?",
-                a: "Dengan menyortir dan menyisakan satu buah melon terbaik per pohon, seluruh cadangan nutrisi tanaman dialokasikan penuh untuk membesarkan satu buah tersebut. Hal ini menjamin ukuran buah premium dengan berat rata-rata mencapai 3 kg dan maksimal mencapai 5 kg per buah dengan tingkat kemanisan yang tinggi."
-              },
-              {
-                q: "Berapa lama masa tanam melon Honey Globe dari bibit hingga panen?",
-                a: "Masa tumbuh tanaman melon Honey Globe berkisar antara 60 hingga 65 hari setelah pindah tanam (HST). Durasi ini relatif cepat dibandingkan dengan melon varietas konvensional berkat dukungan nutrisi optimal dari sistem fertigasi."
-              },
-              {
-                q: "Bagaimana cara mengukur tingkat kemanisan melon sebelum dipetik?",
-                a: "Kami menggunakan alat khusus bernama Hand Refractometer Brix. Petani akan mengambil sampel cairan melon untuk diuji tingkat kemanisannya. Melon Honey Globe hanya dipanen jika telah mencapai tingkat kemanisan standar premium kami yaitu 13 hingga 15 Brix."
-              },
-              {
-                q: "Mengapa tanaman melon memerlukan tiang ajir (lanjaran)?",
-                a: "Tiang ajir membantu menopang pertumbuhan tanaman secara vertikal. Hal ini menghemat ruang lahan, memastikan seluruh bagian tanaman mendapat sinar matahari merata, dan mencegah buah melon bersentuhan dengan tanah yang basah agar terhindar dari pembusukan."
-              },
-              {
-                q: "Bagaimana cara mengendalikan hama dan penyakit musiman pada budidaya melon?",
-                a: "Tantangan utama di musim kemarau adalah penyakit layu fusarium, sedangkan di musim hujan adalah embun bulu (downy mildew). Keduanya dikendalikan menggunakan pestisida secara intensif. Khusus pengobatan embun bulu di musim hujan memiliki efek samping membuat daun menjadi agak kering, namun pengobatan harus tetap diselesaikan agar tidak merambat dan menular ke daun atau tanaman lainnya."
-              },
-              {
-                q: "Kapan pupuk kandang harus mulai diaplikasikan pada lahan budidaya?",
-                a: "Pupuk kandang matang wajib dimasukkan ke tanah minimal 1 tahun sebelum masa tanam dimulai pada tahap pengolahan lahan. Rentang waktu fermentasi alami ini sangat memengaruhi kelimpahan unsur hara mikro tanah yang nantinya berpengaruh besar terhadap kualitas kekuatan bibit."
-              },
-              {
-                q: "Apa jenis benih (biji) melon yang digunakan?",
-                a: "Kami menggunakan biji hibrida (persilangan buatan unggul) khusus varietas Honey Globe. Penggunaan biji hibrida menjamin tanaman tumbuh seragam, memiliki ketahanan penyakit yang lebih tangguh, serta menghasilkan rasa manis dan ketebalan buah yang seragam."
-              }
-            ].map((faq, idx) => (
-              <details
-                key={idx}
-                className="group border-b border-gray-100 last:border-b-0 py-4 [&_summary::-webkit-details-marker]:hidden"
-              >
-                <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 outline-none">
-                  <h3 className="font-bold text-sm md:text-base text-gray-800 group-hover:text-[#10b981] transition-colors leading-tight">
-                    {faq.q}
-                  </h3>
-                  <div className="relative size-6 shrink-0">
-                    <span className="absolute inset-0 bg-emerald-50 rounded-full group-open:scale-110 transition-transform duration-300"></span>
-                    <svg
-                      className="absolute inset-0 size-6 text-[#10b981] transition-transform duration-300 group-open:-rotate-180"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+              {/* Description */}
+              <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-md">
+                Temukan jawaban atas berbagai pertanyaan umum mengenai teknologi pertanian dan budidaya melon di Poktan Banyu Urip.
+              </p>
+            </div>
+
+            {/* Right Column (Accordion List) */}
+            <div className="lg:col-span-7 space-y-4">
+              {[
+                {
+                  q: "Apa keunggulan sistem Irigasi Tetes (Drip Irrigation)?",
+                  a: "Sistem irigasi tetes menyalurkan air dan nutrisi secara berkala langsung ke perakaran tanaman dalam volume yang tepat. Hal ini sangat menghemat penggunaan air, mencegah kelembaban berlebih pada daun yang memicu pertumbuhan spora jamur, dan memastikan distribusi nutrisi seragam."
+                },
+                {
+                  q: "Mengapa hanya dipelihara 1 buah melon per pohon dan berapa berat rata-rata buahnya?",
+                  a: "Dengan menyortir dan menyisakan satu buah melon terbaik per pohon, seluruh cadangan nutrisi tanaman dialokasikan penuh untuk membesarkan satu buah tersebut. Hal ini menjamin ukuran buah premium dengan berat rata-rata mencapai 3 kg dan maksimal mencapai 5 kg per buah dengan tingkat kemanisan yang tinggi."
+                },
+                {
+                  q: "Berapa lama masa tanam melon Honey Globe dari bibit hingga panen?",
+                  a: "Masa tumbuh tanaman melon Honey Globe berkisar antara 60 hingga 65 hari setelah pindah tanam (HST). Durasi ini relatif cepat dibandingkan dengan melon varietas konvensional berkat dukungan nutrisi optimal dari sistem fertigasi."
+                },
+                {
+                  q: "Bagaimana cara mengukur tingkat kemanisan melon sebelum dipetik?",
+                  a: "Kami menggunakan alat khusus bernama Hand Refractometer Brix. Petani akan mengambil sampel cairan melon untuk diuji tingkat kemanisannya. Melon Honey Globe hanya dipanen jika telah mencapai tingkat kemanisan standar premium kami yaitu 13 hingga 15 Brix."
+                },
+                {
+                  q: "Mengapa tanaman melon memerlukan tiang ajir (lanjaran)?",
+                  a: "Tiang ajir membantu menopang pertumbuhan tanaman secara vertikal. Hal ini menghemat ruang lahan, memastikan seluruh bagian tanaman mendapat sinar matahari merata, dan mencegah buah melon bersentuhan dengan tanah yang basah agar terhindar dari pembusukan."
+                },
+                {
+                  q: "Bagaimana cara mengendalikan hama dan penyakit musiman pada budidaya melon?",
+                  a: "Tantangan utama di musim kemarau adalah penyakit layu fusarium, sedangkan di musim hujan adalah embun bulu (downy mildew). Keduanya dikendalikan menggunakan pestisida secara intensif. Khusus pengobatan embun bulu di musim hujan memiliki efek samping membuat daun menjadi agak kering, namun pengobatan harus tetap diselesaikan agar tidak merambat dan menular ke daun atau tanaman lainnya."
+                },
+                {
+                  q: "Kapan pupuk kandang harus mulai diaplikasikan pada lahan budidaya?",
+                  a: "Pupuk kandang matang wajib dimasukkan ke tanah minimal 1 tahun sebelum masa tanam dimulai pada tahap pengolahan lahan. Rentang waktu fermentasi alami ini sangat memengaruhi kelimpahan unsur hara mikro tanah yang nantinya berpengaruh besar terhadap kualitas kekuatan bibit."
+                },
+                {
+                  q: "Apa jenis benih (biji) melon yang digunakan?",
+                  a: "Kami menggunakan biji hibrida (persilangan buatan unggul) khusus varietas Honey Globe. Penggunaan biji hibrida menjamin tanaman tumbuh seragam, memiliki ketahanan penyakit yang lebih tangguh, serta menghasilkan rasa manis dan ketebalan buah yang seragam."
+                }
+              ].map((faq, idx) => {
+                const isOpen = openIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    className={`bg-[#f8fafc]/70 hover:bg-[#f8fafc] border rounded-[20px] transition-all duration-300 ${
+                      isOpen
+                        ? "border-[#10b981]/30 shadow-md shadow-[#10b981]/5"
+                        : "border-slate-100 shadow-sm"
+                    }`}
+                  >
+                    <button
+                      onClick={() => setOpenIndex(isOpen ? null : idx)}
+                      className="w-full flex items-center justify-between text-left p-6 md:p-7 cursor-pointer focus:outline-none"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2.5"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                      <span className="font-bold text-gray-900 text-sm md:text-base leading-tight pr-4">
+                        {faq.q}
+                      </span>
+                      <div
+                        className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 ${
+                          isOpen
+                            ? "bg-[#10b981] text-white shadow-md shadow-[#10b981]/20"
+                            : "bg-[#10b981]/80 hover:bg-[#10b981] text-white"
+                        }`}
+                      >
+                        <ChevronDown
+                          className={`w-5 h-5 transition-transform duration-300 ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </div>
+                    </button>
+                    
+                    {/* Animated answer height */}
+                    <div
+                      className={`grid transition-all duration-300 ease-in-out ${
+                        isOpen
+                          ? "grid-rows-[1fr] opacity-100"
+                          : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="pb-6 md:pb-7 px-6 md:px-7 text-xs md:text-sm text-gray-600 leading-relaxed pt-3 border-t border-slate-100/60">
+                          {faq.a}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </summary>
-                <div className="mt-4 text-xs md:text-sm text-gray-600 leading-relaxed pl-3 border-l-2 border-[#10b981]">
-                  <p>{faq.a}</p>
-                </div>
-              </details>
-            ))}
+                );
+              })}
+            </div>
+            
           </div>
         </div>
       </section>

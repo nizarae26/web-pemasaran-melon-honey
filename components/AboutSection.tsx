@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Users, Map, CalendarDays, Leaf } from "lucide-react";
+import { Users, Map, CalendarDays, Leaf, ArrowRight } from "lucide-react";
 
 
 export default function AboutSection() {
@@ -25,8 +25,12 @@ export default function AboutSection() {
               tim yang solid untuk menyejahterakan petani lokal.
             </p>
           </div>
-          <Link href="/profil" className="mt-8 inline-block border-2 border-poktan-green text-poktan-green px-6 py-2 rounded-lg font-bold hover:bg-poktan-green hover:text-white transition-all">
-            Selengkapnya Tentang Kami ↗
+          <Link 
+            href="/profil" 
+            className="mt-8 inline-flex items-center gap-2 border border-slate-200 hover:border-poktan-leaf text-gray-700 hover:text-poktan-green bg-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:bg-slate-50 active:scale-95 text-sm w-fit"
+          >
+            <span>Selengkapnya Tentang Kami</span>
+            <ArrowRight size={16} />
           </Link>
         </div>
 

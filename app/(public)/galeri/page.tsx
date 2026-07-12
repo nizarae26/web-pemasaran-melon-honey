@@ -208,10 +208,10 @@ export default function GaleriPage() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap cursor-pointer ${
+                className={`px-6 py-2.5 rounded-full text-xs font-extrabold transition-all duration-300 whitespace-nowrap cursor-pointer active:scale-95 border ${
                   activeTab === tab
-                    ? "bg-poktan-green text-white shadow-md shadow-poktan-green/10"
-                    : "text-gray-500 hover:bg-gray-50 bg-gray-50/50"
+                    ? "bg-poktan-leaf text-white border-poktan-leaf shadow-md shadow-poktan-leaf/10"
+                    : "text-gray-500 hover:bg-gray-50 bg-white border-slate-200"
                 }`}
               >
                 {tab.toUpperCase()}
@@ -350,9 +350,9 @@ export default function GaleriPage() {
                             
                             <button 
                               onClick={() => setSelectedArticle(item)}
-                              className="flex items-center gap-2 text-xs font-bold text-white bg-poktan-green hover:bg-poktan-leaf px-4.5 py-2.5 rounded-xl mt-4 self-start shadow-sm active:scale-95 transition-all duration-300 cursor-pointer"
+                              className="flex items-center gap-2 text-xs font-extrabold text-white bg-poktan-leaf hover:bg-poktan-green px-6 py-3 rounded-full mt-4 self-start shadow-md shadow-poktan-leaf/10 hover:shadow-lg hover:shadow-poktan-leaf/20 active:scale-95 transition-all duration-300 cursor-pointer uppercase tracking-wider"
                             >
-                              <span>BACA ARTIKEL</span>
+                              <span>Baca Artikel</span>
                               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                           </div>

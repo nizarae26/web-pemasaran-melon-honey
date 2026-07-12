@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Clock, XCircle, Flame, Star, Tag } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 
@@ -24,8 +27,8 @@ export default function ProductCard({
 }: ProductProps) {
   const statusConfig = {
     Tersedia: {
-      buttonColor: "bg-[#10b981]",
-      badgeColor: "bg-emerald-500",
+      buttonColor: "bg-poktan-leaf hover:bg-poktan-green text-white shadow-md shadow-poktan-leaf/10",
+      badgeColor: "bg-emerald-50 text-emerald-700 border border-emerald-100",
       icon: (
         <WhatsAppIcon
           size={14}
@@ -35,15 +38,15 @@ export default function ProductCard({
       label: "Pesan via WhatsApp",
     },
     "Pre-Order": {
-      buttonColor: "bg-orange-500",
-      badgeColor: "bg-orange-500",
-      icon: <Clock size={18} strokeWidth={2.5} />,
+      buttonColor: "bg-poktan-orange hover:opacity-95 text-white shadow-md shadow-poktan-orange/10",
+      badgeColor: "bg-orange-50 text-orange-700 border border-orange-100",
+      icon: <Clock size={16} strokeWidth={2.5} />,
       label: "Pre-Order Sekarang",
     },
     Habis: {
-      buttonColor: "bg-gray-400",
-      badgeColor: "bg-gray-500",
-      icon: <XCircle size={18} strokeWidth={2.5} />,
+      buttonColor: "bg-slate-100 text-slate-400 cursor-not-allowed",
+      badgeColor: "bg-slate-50 text-slate-400 border border-slate-100",
+      icon: <XCircle size={16} strokeWidth={2.5} />,
       label: "Stok Habis",
     },
   };
@@ -51,18 +54,18 @@ export default function ProductCard({
   // 1. Konfigurasi Promo Label (Pojok Kanan)
   const promoConfig = {
     Hot: {
-      color: "bg-rose-500",
-      icon: <Flame size={12} fill="currentColor" />,
+      color: "bg-rose-50 text-rose-600 border border-rose-100",
+      icon: <Flame size={12} fill="currentColor" className="text-rose-500" />,
       text: "HOT ITEM",
     },
     Terlaris: {
-      color: "bg-amber-500",
-      icon: <Star size={12} fill="currentColor" />,
+      color: "bg-amber-50 text-amber-600 border border-amber-100",
+      icon: <Star size={12} fill="currentColor" className="text-amber-500" />,
       text: "BEST SELLER",
     },
     Diskon: {
-      color: "bg-violet-600",
-      icon: <Tag size={12} fill="currentColor" />,
+      color: "bg-indigo-50 text-indigo-600 border border-indigo-100",
+      icon: <Tag size={12} fill="currentColor" className="text-indigo-500" />,
       text: "PROMO",
     },
   };
@@ -75,22 +78,24 @@ export default function ProductCard({
   const waLink = `https://wa.me/6287812345678?text=${encodeURIComponent(waMessage)}`;
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition group flex flex-col h-full">
-      <div className="relative h-48 bg-gray-100 overflow-hidden">
+    <motion.div 
+      whileHover={{ y: -8, transition: { duration: 0.3 } }}
+      className="bg-white rounded-[24px] border border-[#f0f4f1] hover:border-poktan-leaf/25 hover:shadow-xl hover:shadow-[#486e5c]/5 transition-all duration-300 group flex flex-col h-full overflow-hidden"
+    >
+      <div className="relative aspect-[4/3] bg-[#fcfdfb] overflow-hidden border-b border-[#f0f4f1]/50">
         {/* Badge Status (Kiri Atas) */}
         <span
-          className={`absolute top-3 left-3 text-white text-[9px] font-black px-2.5 py-1 rounded-lg z-10 shadow-sm ${current.badgeColor}`}
+          className={`absolute top-3.5 left-3.5 text-[9px] font-bold px-2.5 py-1 rounded-full z-10 ${current.badgeColor}`}
         >
           {status.toUpperCase()}
         </span>
 
-        {/* PROMO LABEL (Kanan Atas) - Muncul jika ada prop promo */}
+        {/* PROMO LABEL (Kanan Atas) */}
         {currentPromo && (
           <div
-            className={`absolute top-3 right-3 flex items-center gap-1.5 text-white text-[9px] font-black px-2.5 py-1 rounded-lg z-10 shadow-md ${currentPromo.color} animate-pulse`}
+            className={`absolute top-3.5 right-3.5 flex items-center gap-1.5 text-[9px] font-bold px-2.5 py-1 rounded-full z-10 ${currentPromo.color}`}
           >
             {currentPromo.icon}
-            {/* Jika promonya Diskon dan ada discountValue, tampilkan angkanya */}
             <span>
               {promo === "Diskon" && discountValue
                 ? `DISKON ${discountValue}`
@@ -104,59 +109,59 @@ export default function ProductCard({
           <img 
             src={imageUrl} 
             alt={name} 
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" 
           />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400 group-hover:scale-110 transition-transform duration-700 ease-in-out">
+          <div className="flex items-center justify-center h-full text-gray-400 group-hover:scale-105 transition-transform duration-700 ease-in-out">
             <span className="text-5xl">🍈</span>
           </div>
         )}
       </div>
 
-      <div className="p-5 text-left flex flex-col flex-grow">
-        <div className="h-12 flex items-center justify-start mb-1">
+      <div className="p-6 text-left flex flex-col flex-grow">
+        <div className="h-12 flex items-center justify-start mb-2">
           <h3 className={`font-bold text-gray-800 tracking-tight leading-tight line-clamp-2 ${
             name.length > 24 ? "text-sm md:text-base" : "text-base md:text-lg"
           }`}>
             {name}
           </h3>
         </div>
-        <p className="text-[12px] text-gray-500 mb-2 font-medium">
+        <p className="text-[11px] text-gray-500 mb-4 font-medium block">
           Varian: <span className="font-bold text-gray-700">{grade || "-"}</span> 
           <span className="mx-1.5 text-gray-300">|</span> 
-          <span className={status === "Habis" ? "text-red-500 font-bold" : "text-emerald-500 font-bold"}>
+          <span className={status === "Habis" ? "text-poktan-red font-bold" : "text-poktan-emerald font-bold"}>
             {status}
           </span>
         </p>
         
         <div className="mt-auto pt-2">
-          <p className="text-[#10b981] font-bold text-lg md:text-xl mb-3 tracking-tight leading-tight">
+          <p className="text-poktan-emerald font-extrabold text-xl mb-4 tracking-tight leading-tight">
             {price}
           </p>
 
           {status === "Habis" ? (
             <button
               disabled
-              className={`w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
-              transition-all shadow-lg active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed`}
+              className={`flex w-full ${current.buttonColor} py-3 rounded-full font-bold items-center justify-center gap-2 
+              transition-all text-sm`}
             >
               {current.icon}
-              <span className="text-sm">{current.label}</span>
+              <span>{current.label}</span>
             </button>
           ) : (
             <a
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className={`block w-full ${current.buttonColor} text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 
-              transition-all shadow-lg hover:brightness-110 active:scale-95 text-center`}
+              className={`flex w-full ${current.buttonColor} py-3 rounded-full font-bold items-center justify-center gap-2 
+              transition-all duration-300 text-center text-sm`}
             >
               {current.icon}
-              <span className="text-sm">{current.label}</span>
+              <span>{current.label}</span>
             </a>
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
