@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 import { Leaf, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function Hero() {
+interface HeroProps {
+  waNumber?: string;
+}
+
+export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
   return (
     <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-[#fcfdfb] py-20 md:py-28 px-6 md:px-12 overflow-hidden">
       {/* Decorative Background Blob */}
@@ -62,13 +66,13 @@ export default function Hero() {
               Petani <span className="text-poktan-emerald font-black">Tanggumong</span>
             </h1>
             <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-xl">
-              Dibudidayakan secara ramah lingkungan dengan sistem irigasi tetes pintar untuk menghasilkan buah melon dengan rasa manis alami brix tinggi, renyah, dan berair.
+             Dibudidayakan dengan sistem irigasi tetes pintar dan pemantauan pH tanah untuk menjaga kesuburan lahan, menghasilkan Melon Honey Globe premium yang manis alami, renyah, segar, dan berkualitas tinggi.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href="https://wa.me/6287812345678?text=Halo%2C%20saya%20tertarik%20untuk%20membeli%20Melon%20Honey%20Globe%20Banyu%20Urip"
+              href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20untuk%20membeli%20Melon%20Honey%20Globe%20Banyu%20Urip`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-full text-sm font-bold shadow-lg shadow-poktan-leaf/25 active:scale-95 transition-all duration-300 hover:scale-102"

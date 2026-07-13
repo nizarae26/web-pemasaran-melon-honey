@@ -157,7 +157,7 @@ export default function AdminGallery() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-6 md:space-y-8 relative">
+    <div className="space-y-6 md:space-y-8 relative">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-lg md:text-2xl font-black text-gray-900">Upload Galeri</h1>

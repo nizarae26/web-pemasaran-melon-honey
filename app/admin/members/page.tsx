@@ -13,8 +13,19 @@ import {
   X
 } from "lucide-react";
 
+interface Member {
+  id: number;
+  name: string;
+  role: string;
+  section: string;
+  description?: string;
+  is_primary: boolean;
+  sort_order: number;
+  created_at?: string;
+}
+
 export default function MembersPage() {
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   
@@ -31,10 +42,6 @@ export default function MembersPage() {
     is_primary: false,
     sort_order: 0,
   });
-
-  useEffect(() => {
-    fetchMembers();
-  }, []);
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -60,7 +67,12 @@ export default function MembersPage() {
     setLoading(false);
   };
 
-  const handleOpenModal = (member: any = null) => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchMembers();
+  }, []);
+
+  const handleOpenModal = (member: Member | null = null) => {
     if (member) {
       setEditingId(member.id);
       setFormData({
@@ -183,7 +195,7 @@ export default function MembersPage() {
   );
 
   return (
-    <div className="p-4 md:p-10 max-w-7xl mx-auto space-y-6 md:space-y-8">
+    <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight flex items-center gap-2">

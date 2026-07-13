@@ -1,3 +1,7 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Image from "next/image";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
@@ -44,7 +48,65 @@ const InstagramIcon = () => (
   </svg>
 );
 
-export default function Footer() {
+const sanitizeWaNumber = (num: string) => {
+  const clean = num.replace(/\D/g, "");
+  if (clean.startsWith("620")) {
+    return "62" + clean.substring(3);
+  }
+  return clean;
+};
+
+const formatPhoneNumber = (num: string) => {
+  const clean = sanitizeWaNumber(num);
+  if (clean.startsWith("62")) {
+    const withoutCountry = clean.substring(2);
+    if (withoutCountry.length >= 8) {
+      const part1 = withoutCountry.substring(0, 3);
+      const part2 = withoutCountry.substring(3, 7);
+      const part3 = withoutCountry.substring(7);
+      return `0${part1}-${part2}-${part3}`;
+    }
+    return `0${withoutCountry}`;
+  }
+  if (clean.startsWith("0")) {
+    const withoutZero = clean.substring(1);
+    if (withoutZero.length >= 8) {
+      const part1 = withoutZero.substring(0, 3);
+      const part2 = withoutZero.substring(3, 7);
+      const part3 = withoutZero.substring(7);
+      return `0${part1}-${part2}-${part3}`;
+    }
+  }
+  return num;
+};
+
+interface FooterProps {
+  waNumber?: string;
+}
+
+export default function Footer({ waNumber: propWaNumber }: FooterProps) {
+  const [waNumber, setWaNumber] = useState(
+    propWaNumber ? sanitizeWaNumber(propWaNumber) : "6287812345678"
+  );
+
+  useEffect(() => {
+    if (propWaNumber) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setWaNumber(sanitizeWaNumber(propWaNumber));
+      return;
+    }
+    async function fetchWa() {
+      const { data } = await supabase.from("settings").select("*");
+      if (data) {
+        const wa = data.find((s) => s.key === "wa_number");
+        if (wa?.value) {
+          setWaNumber(sanitizeWaNumber(wa.value));
+        }
+      }
+    }
+    fetchWa();
+  }, [propWaNumber]);
+
   return (
     <footer className="bg-poktan-green text-white pt-20 pb-10 px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-16">
@@ -96,10 +158,19 @@ export default function Footer() {
 
             {/* Telepon: items-center agar sejajar tengah */}
             <li className="flex items-center gap-4 group">
-              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
-                <Phone size={20} />
-              </div>
-              <span className="text-sm text-white/80">0878-1234-5678</span>
+              <a 
+                href={`https://wa.me/${waNumber}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 group cursor-pointer"
+              >
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:bg-white group-hover:text-poktan-green transition-colors">
+                  <Phone size={20} />
+                </div>
+                <span className="text-sm text-white/80 group-hover:text-white transition-colors">
+                  {formatPhoneNumber(waNumber)}
+                </span>
+              </a>
             </li>
 
           </ul>
@@ -130,14 +201,8 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="max-w-7xl mx-auto pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-white/40 font-medium tracking-wider">
-        <p>© 2024 KELOMPOK TANI BANYU URIP. ALL RIGHTS RESERVED.</p>
+        <p>© 2024 KELOMPOK TANI BANYU URIP.</p>
         <div className="flex gap-8 uppercase">
-          <Link href="#" className="hover:text-white transition-colors">
-            Privacy Policy
-          </Link>
-          <Link href="#" className="hover:text-white transition-colors">
-            Terms of Service
-          </Link>
         </div>
       </div>
     </footer>

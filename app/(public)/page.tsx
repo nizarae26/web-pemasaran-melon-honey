@@ -10,9 +10,17 @@ import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import ScrollReveal from "@/components/ScrollReveal";
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Disable caching so it always fetches fresh data
 
 export default async function Home() {
+  // Fetch latest settings (WhatsApp number)
+  const { data: settingsData } = await supabase.from("settings").select("*");
+  const wa = settingsData?.find((s) => s.key === "wa_number");
+  const rawWaNumber = wa?.value || "6287812345678";
+  const cleanWa = rawWaNumber.replace(/\D/g, "");
+  const waNumber = cleanWa.startsWith("620") ? "62" + cleanWa.substring(3) : cleanWa;
+
   // Fetch latest 6 gallery items (excluding videos, only photos)
   const { data: galleryItems } = await supabase
     .from("gallery")
@@ -68,7 +76,7 @@ export default async function Home() {
       <Navbar />
 
       {/* 2. Hero Section */}
-      <Hero />
+      <Hero waNumber={waNumber} />
 
       {/* 3. Katalog Melon Honey Globe  */}
       <section className="py-12 px-6 md:px-12 bg-[#fcfdfb]">
@@ -96,6 +104,7 @@ export default async function Home() {
                   weight={product.weight}
                   status={product.status}
                   imageUrl={product.imageUrl}
+                  waNumber={waNumber}
                 />
               ))}
             </div>
@@ -235,7 +244,7 @@ export default async function Home() {
 
             {/* Tombol WhatsApp Modern */}
             <a 
-              href="https://wa.me/6287812345678?text=Halo%2C%20saya%20tertarik%20dengan%20Melon%20Honey%20Globe%20Anda"
+              href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20dengan%20Melon%20Honey%20Globe%20Anda`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full md:w-auto bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-full font-bold shadow-md shadow-poktan-leaf/10 hover:scale-102 transition-all duration-300 text-sm flex items-center justify-center gap-3 shrink-0"
@@ -248,7 +257,7 @@ export default async function Home() {
       </section>
 
       {/* 7. Footer */}
-      <Footer />
+      <Footer waNumber={waNumber} />
     </main>
   );
 }

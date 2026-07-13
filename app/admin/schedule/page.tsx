@@ -14,10 +14,6 @@ export default function SchedulePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    fetchSchedule();
-  }, []);
-
   const fetchSchedule = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -42,6 +38,11 @@ export default function SchedulePage() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchSchedule();
+  }, []);
 
   const handleSave = async () => {
     setSaving(true);
@@ -99,7 +100,7 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="p-4 md:p-10 max-w-4xl space-y-6">
+    <div className="max-w-4xl space-y-6">
       <div>
         <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">
           Jadwal <span className="text-[#10b981]">Panen</span>

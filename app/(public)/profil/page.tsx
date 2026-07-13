@@ -131,10 +131,7 @@ export default function ProfilPage() {
                     Awal pembentukan kelompok tani kami dilandasi semangat untuk
                     meningkatkan kesejahteraan petani melalui pertanian modern,
                     kelompok tani ini terus belajar dan berinovasi. Saat ini kami
-                    fokus membudidayakan{" "}
-                    <span className="font-bold text-poktan-emerald bg-poktan-accent/50 px-2 py-0.5 rounded-md border border-poktan-accent">
-                      Melon Honey Globe & Golden Apollo
-                    </span>{" "}
+                    fokus membudidayakan Melon Honey Globe & Golden Apollo 
                     dengan sistem irigasi tetes pintar dan pengelolaan yang ramah
                     lingkungan.
                   </p>

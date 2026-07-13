@@ -13,6 +13,7 @@ interface ProductProps {
   promo?: "Hot" | "Terlaris" | "Diskon";
   discountValue?: string; 
   imageUrl?: string;
+  waNumber?: string;
 }
 
 export default function ProductCard({
@@ -24,6 +25,7 @@ export default function ProductCard({
   promo,
   discountValue,
   imageUrl,
+  waNumber = "6287812345678",
 }: ProductProps) {
   const statusConfig = {
     Tersedia: {
@@ -75,7 +77,7 @@ export default function ProductCard({
 
   // Format pesan WhatsApp
   const waMessage = `Halo, saya tertarik untuk membeli/pre-order ${name} (Grade ${grade})`;
-  const waLink = `https://wa.me/6287812345678?text=${encodeURIComponent(waMessage)}`;
+  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
 
   return (
     <motion.div 

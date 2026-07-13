@@ -26,10 +26,22 @@ export default function KatalogPage() {
   const [appliedMaxPrice, setAppliedMaxPrice] = useState<number | null>(null);
   // Data Melon
   const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [waNumber, setWaNumber] = useState("6287812345678");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProducts() {
+      // Fetch WhatsApp number from settings
+      const { data: settingsData } = await supabase.from("settings").select("*");
+      if (settingsData) {
+        const wa = settingsData.find((s) => s.key === "wa_number");
+        if (wa?.value) {
+          const rawWa = wa.value;
+          const cleanWa = rawWa.replace(/\D/g, "");
+          setWaNumber(cleanWa.startsWith("620") ? "62" + cleanWa.substring(3) : cleanWa);
+        }
+      }
+
       // Fetch Melon dari tabel products
       const { data: melonData } = await supabase
         .from("products")
@@ -83,10 +95,10 @@ export default function KatalogPage() {
     if (selectedWeights.length > 0) {
       const w = parseFloat(String(p.weight).replace(/[^\d.]/g, '')) || 0;
       matchWeight = selectedWeights.some(range => {
-        if (range === "< 1.0 kg") return w < 1.0;
-        if (range === "1.0 - 1.5 kg") return w >= 1.0 && w <= 1.5;
-        if (range === "1.5 - 2.5 kg") return w > 1.5 && w <= 2.5;
-        if (range === "> 2.5 kg") return w > 2.5;
+        if (range === "< 2 kg") return w < 2.0;
+        if (range === "2-3 kg") return w >= 2.0 && w <= 3.0;
+        if (range === "3-4 kg") return w > 3.0 && w <= 4.0;
+        if (range === "> 4 kg") return w > 4.0;
         return false;
       });
     }
@@ -133,7 +145,7 @@ export default function KatalogPage() {
             <div className="mb-6 border-t pt-4">
               <h5 className="font-bold text-sm text-gray-700 mb-3">Berat / Ukuran</h5>
               <div className="space-y-2">
-                {["< 1.0 kg", "1.0 - 1.5 kg", "1.5 - 2.5 kg", "> 2.5 kg"].map((ukuran, i) => (
+                {["< 2 kg", "2-3 kg", "3-4 kg", "> 4 kg"].map((ukuran, i) => (
                   <label key={i} className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="checkbox" 
@@ -247,6 +259,7 @@ export default function KatalogPage() {
                           weight={item.weight}
                           status={item.status}
                           imageUrl={item.imageUrl}
+                          waNumber={waNumber}
                         />
                       ))}
                   </div>
@@ -307,7 +320,7 @@ export default function KatalogPage() {
         </aside>
       </section>
 
-      <Footer />
+      <Footer waNumber={waNumber} />
     </main>
   );
 }
