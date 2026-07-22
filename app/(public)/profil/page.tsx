@@ -17,6 +17,13 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+const isFemale = (name: string) => {
+  if (!name) return false;
+  const femaleKeywords = ['AMINATUS', 'SALAWATI', 'JANNAH', 'HAYATI', 'MARIHA', 'SITI', 'ELIYUN', 'FATIMAH', 'NUR HAYATI', 'NUR JANNAH', 'PUTRI', 'AYU', 'DEWI', 'WATI'];
+  const upper = name.toUpperCase();
+  return femaleKeywords.some(kw => upper.includes(kw));
+};
+
 export default function ProfilPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [tentangKami, setTentangKami] = useState<string | null>(null);
@@ -457,7 +464,7 @@ function OrgCard({ name, role, desc, isPrimary = false }: { name: string, role: 
         <div className={`w-full h-full rounded-[22px] flex items-center justify-center font-black text-4xl shadow-inner ${
           isPrimary ? 'bg-white text-poktan-leaf' : 'bg-gradient-to-br from-white/10 to-white/5 text-poktan-accent border border-white/5'
         }`}>
-          {name.charAt(0)}
+          {isFemale(name) ? "🧕" : "🧑‍🌾"}
         </div>
       </div>
 
@@ -504,8 +511,8 @@ function SeksiItem({ role, name }: { role: string, name: string }) {
     <div className="flex flex-col gap-1 md:gap-1.5 group/item">
       <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{role}</span>
       <div className="flex items-center gap-2 md:gap-3">
-        <div className="w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-white/5 flex items-center justify-center text-poktan-accent font-black text-xs border border-white/5 group-hover/item:bg-poktan-leaf group-hover/item:text-white transition-colors duration-300">
-          {name.charAt(0)}
+        <div className="w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-white/5 flex items-center justify-center text-poktan-accent font-black text-sm border border-white/5 group-hover/item:bg-poktan-leaf group-hover/item:text-white transition-colors duration-300">
+          {isFemale(name) ? "🧕" : "🧑‍🌾"}
         </div>
         <span className="text-sm font-bold text-white/80 group-hover/item:text-white">{name}</span>
       </div>

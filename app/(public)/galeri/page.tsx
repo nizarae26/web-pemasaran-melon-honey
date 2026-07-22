@@ -19,11 +19,15 @@ export default function GaleriPage() {
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [scheduleData, setScheduleData] = useState({
-    start_date: new Date().toISOString().split('T')[0],
-    end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
-    status: "PANEN"
-  });
+  const [schedules, setSchedules] = useState<any[]>([
+    {
+      id: "1",
+      title: "Panen Utama",
+      start_date: new Date().toISOString().split('T')[0],
+      end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
+      status: "PANEN"
+    }
+  ]);
 
   const [categorizedVideos, setCategorizedVideos] = useState<{
     landscape: any[];
@@ -71,18 +75,43 @@ export default function GaleriPage() {
         })));
       }
 
-      // Fetch Settings for Schedule
-      const { data: scheduleSetting } = await supabase
+      // Fetch Settings for Schedule (Try multi first, then fallback to single)
+      const { data: scheduleMultiSetting } = await supabase
         .from("settings")
         .select("value")
-        .eq("key", "jadwal_panen")
+        .eq("key", "jadwal_panen_multi")
         .single();
         
-      if (scheduleSetting?.value) {
+      if (scheduleMultiSetting?.value) {
         try {
-          setScheduleData(JSON.parse(scheduleSetting.value));
+          const parsed = JSON.parse(scheduleMultiSetting.value);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setSchedules(parsed);
+          }
         } catch (e) {
-          console.error("Error parsing schedule:", e);
+          console.error("Error parsing schedule_multi:", e);
+        }
+      } else {
+        // Fallback
+        const { data: scheduleSetting } = await supabase
+          .from("settings")
+          .select("value")
+          .eq("key", "jadwal_panen")
+          .single();
+          
+        if (scheduleSetting?.value) {
+          try {
+            const parsed = JSON.parse(scheduleSetting.value);
+            setSchedules([{
+              id: "1",
+              title: "Panen",
+              start_date: parsed.start_date,
+              end_date: parsed.end_date || parsed.start_date,
+              status: parsed.status || "PANEN"
+            }]);
+          } catch (e) {
+            console.error("Error parsing schedule:", e);
+          }
         }
       }
 
@@ -146,15 +175,19 @@ export default function GaleriPage() {
   );
 
   // Logika Kalender Real-Time (Fix Timezone & Multi-Month)
-  const [sYear, sMonth, sDay] = scheduleData.start_date.split('-').map(Number);
-  const startDateObj = new Date(sYear, sMonth - 1, sDay);
+  let minDateObj = new Date();
+  let maxDateObj = new Date();
 
-  const [eYear, eMonth, eDay] = scheduleData.end_date.split('-').map(Number);
-  const endDateObj = new Date(eYear, eMonth - 1, eDay);
+  if (schedules.length > 0) {
+    const startDates = schedules.map(s => new Date(s.start_date));
+    const endDates = schedules.map(s => new Date(s.end_date));
+    minDateObj = new Date(Math.min(...startDates.map(d => d.getTime())));
+    maxDateObj = new Date(Math.max(...endDates.map(d => d.getTime())));
+  }
 
   const today = new Date();
-  const minDateObj = startDateObj < today ? startDateObj : today;
-  const maxDateObj = endDateObj > today ? endDateObj : today;
+  if (minDateObj > today) minDateObj = today;
+  if (maxDateObj < today) maxDateObj = today;
 
   const monthsToDisplay = [];
   let currYear = minDateObj.getFullYear();
@@ -177,13 +210,29 @@ export default function GaleriPage() {
 
   const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
   
+  const GRADIENTS = [
+    "from-[#10b981] to-[#059669]", // emerald
+    "from-[#f59e0b] to-[#d97706]", // amber
+    "from-[#3b82f6] to-[#2563eb]", // blue
+    "from-[#8b5cf6] to-[#7c3aed]", // violet
+    "from-[#f43f5e] to-[#e11d48]"  // rose
+  ];
+  
+  const BG_COLORS = [
+    "bg-[#10b981]",
+    "bg-[#f59e0b]",
+    "bg-[#3b82f6]",
+    "bg-[#8b5cf6]",
+    "bg-[#f43f5e]"
+  ];
+
   let displayBulan = "";
   if (monthsToDisplay.length === 1) {
-    displayBulan = `${monthNames[startDateObj.getMonth()]} ${startDateObj.getFullYear()}`;
-  } else if (startDateObj.getFullYear() === endDateObj.getFullYear()) {
-    displayBulan = `${monthNames[startDateObj.getMonth()]} - ${monthNames[endDateObj.getMonth()]} ${startDateObj.getFullYear()}`;
+    displayBulan = `${monthNames[minDateObj.getMonth()]} ${minDateObj.getFullYear()}`;
+  } else if (minDateObj.getFullYear() === maxDateObj.getFullYear()) {
+    displayBulan = `${monthNames[minDateObj.getMonth()]} - ${monthNames[maxDateObj.getMonth()]} ${minDateObj.getFullYear()}`;
   } else {
-    displayBulan = `${monthNames[startDateObj.getMonth()]} ${startDateObj.getFullYear()} - ${monthNames[endDateObj.getMonth()]} ${endDateObj.getFullYear()}`;
+    displayBulan = `${monthNames[minDateObj.getMonth()]} ${minDateObj.getFullYear()} - ${monthNames[maxDateObj.getMonth()]} ${maxDateObj.getFullYear()}`;
   }
 
   return (
@@ -473,6 +522,24 @@ export default function GaleriPage() {
                 <span>JADWAL MUSIM PANEN</span>
               </h4>
               <div className="flex flex-col gap-6">
+                {/* Daftar Keseluruhan Lahan */}
+                {schedules.length > 0 && (
+                  <div className="flex flex-col gap-3 mb-2 bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100/50">
+                    <span className="text-[10px] font-black text-emerald-800 uppercase tracking-widest border-b border-emerald-200/50 pb-2">Daftar Lahan / Jadwal Panen:</span>
+                    {schedules.map(s => {
+                      const sIdx = schedules.findIndex(x => x.id === s.id);
+                      return (
+                      <div key={s.id} className="flex justify-between items-center bg-white p-2.5 rounded-xl border border-emerald-100 shadow-sm">
+                        <span className="text-xs font-bold text-gray-800">{s.title}</span>
+                        <div className="text-right">
+                          <span className={`text-[9px] text-white px-2 py-0.5 rounded-full font-bold shadow-sm ${BG_COLORS[sIdx % BG_COLORS.length]}`}>{s.status || "PANEN"}</span>
+                          <p className="text-[9px] text-gray-400 mt-1 font-semibold">{new Date(s.start_date).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})} - {new Date(s.end_date).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}</p>
+                        </div>
+                      </div>
+                    )})}
+                  </div>
+                )}
+
                 {monthsToDisplay.map(({ year, month }) => {
                   const daysInMonth = new Date(year, month + 1, 0).getDate();
                   const firstDay = new Date(year, month, 1).getDay();
@@ -480,15 +547,33 @@ export default function GaleriPage() {
                   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
                   const monthLabel = `${monthNames[month]} ${year}`;
 
+                  const monthStart = new Date(year, month, 1);
+                  const monthEnd = new Date(year, month + 1, 0);
+                  
+                  const activeSchedulesInMonth = schedules.filter(s => {
+                    const sStart = new Date(s.start_date);
+                    sStart.setHours(0,0,0,0);
+                    const sEnd = new Date(s.end_date);
+                    sEnd.setHours(0,0,0,0);
+                    return sStart <= monthEnd && sEnd >= monthStart;
+                  });
+
                   return (
                     <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100/50">
-                      <div className="flex justify-between items-center mb-4">
+                      <div className="flex justify-between items-start mb-4">
                         <span className="text-xs font-black text-[#064e3b]">
                           {monthLabel}
                         </span>
-                        <span className="text-[9px] bg-[#10b981] text-white px-2 py-0.5 rounded-full font-black">
-                          {scheduleData.status}
-                        </span>
+                        <div className="flex flex-col gap-1 items-end">
+                          {activeSchedulesInMonth.map((s) => {
+                            const sIdx = schedules.findIndex(x => x.id === s.id);
+                            return (
+                              <span key={s.id} className={`text-[9px] text-white px-2 py-0.5 rounded-full font-black ${BG_COLORS[sIdx % BG_COLORS.length]}`}>
+                                {s.title}
+                              </span>
+                            );
+                          })}
+                        </div>
                       </div>
                       <div className="grid grid-cols-7 gap-y-2 gap-x-1 text-center mt-2">
                         {["M", "S", "S", "R", "K", "J", "S"].map((d, index) => (
@@ -504,24 +589,37 @@ export default function GaleriPage() {
                         ))}
                         {days.map((day) => {
                           const currentDate = new Date(year, month, day);
-                          const isHighlighted = currentDate >= startDateObj && currentDate <= endDateObj;
                           const today = new Date();
                           const isToday = currentDate.getDate() === today.getDate() && currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear();
+                          
+                          const matchedSchedules = schedules.filter(s => {
+                            const sDate = new Date(s.start_date);
+                            const eDate = new Date(s.end_date);
+                            sDate.setHours(0,0,0,0);
+                            eDate.setHours(0,0,0,0);
+                            currentDate.setHours(0,0,0,0);
+                            return currentDate >= sDate && currentDate <= eDate;
+                          });
+                          
+                          const isHighlighted = matchedSchedules.length > 0;
+                          const firstMatchedIdx = isHighlighted ? schedules.findIndex(x => x.id === matchedSchedules[0].id) : 0;
                           
                           return (
                             <div key={day} className="flex justify-center items-center relative">
                               <span
                                 className={`w-7 h-7 flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
-                                  isHighlighted
-                                    ? "bg-gradient-to-br from-[#10b981] to-[#059669] text-white rounded-xl shadow-lg shadow-emerald-500/30 scale-110"
+                                  isHighlighted && isToday
+                                    ? `bg-gradient-to-br ${GRADIENTS[firstMatchedIdx % GRADIENTS.length]} text-white rounded-xl shadow-lg scale-110 ring-2 ring-yellow-400 ring-offset-2`
+                                    : isHighlighted
+                                    ? `bg-gradient-to-br ${GRADIENTS[firstMatchedIdx % GRADIENTS.length]} text-white rounded-xl shadow-lg scale-110`
                                     : isToday
-                                    ? "border border-[#10b981] text-[#10b981] rounded-full"
+                                    ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm"
                                     : "text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-xl"
                                 }`}
                               >
                                 {day}
                                 {isHighlighted && (
-                                  <span className="absolute -top-1.5 -right-1.5 text-[10px] leading-none drop-shadow-md z-20" title="Jadwal Panen">🍈</span>
+                                  <span className="absolute -top-1.5 -right-1.5 text-[10px] leading-none drop-shadow-md z-20" title={matchedSchedules.map(s => s.title).join(", ")}>🍈</span>
                                 )}
                               </span>
                             </div>
