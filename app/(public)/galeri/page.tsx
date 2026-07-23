@@ -522,24 +522,6 @@ export default function GaleriPage() {
                 <span>JADWAL MUSIM PANEN</span>
               </h4>
               <div className="flex flex-col gap-6">
-                {/* Daftar Keseluruhan Lahan */}
-                {schedules.length > 0 && (
-                  <div className="flex flex-col gap-3 mb-2 bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100/50">
-                    <span className="text-[10px] font-black text-emerald-800 uppercase tracking-widest border-b border-emerald-200/50 pb-2">Daftar Lahan / Jadwal Panen:</span>
-                    {schedules.map(s => {
-                      const sIdx = schedules.findIndex(x => x.id === s.id);
-                      return (
-                      <div key={s.id} className="flex justify-between items-center bg-white p-2.5 rounded-xl border border-emerald-100 shadow-sm">
-                        <span className="text-xs font-bold text-gray-800">{s.title}</span>
-                        <div className="text-right">
-                          <span className={`text-[9px] text-white px-2 py-0.5 rounded-full font-bold shadow-sm ${BG_COLORS[sIdx % BG_COLORS.length]}`}>{s.status || "PANEN"}</span>
-                          <p className="text-[9px] text-gray-400 mt-1 font-semibold">{new Date(s.start_date).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})} - {new Date(s.end_date).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}</p>
-                        </div>
-                      </div>
-                    )})}
-                  </div>
-                )}
-
                 {monthsToDisplay.map(({ year, month }) => {
                   const daysInMonth = new Date(year, month + 1, 0).getDate();
                   const firstDay = new Date(year, month, 1).getDay();

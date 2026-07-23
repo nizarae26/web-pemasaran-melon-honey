@@ -56,9 +56,10 @@ export default function GaleriHero({ displayBulan = "Update Musim Tanam" }: { di
               Media & Informasi
             </span>
 
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              Jejak Digital Kelompok Tani <br />
-              <span className="text-poktan-emerald">Banyu Urip</span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.15]">
+              <span className="block">Jejak Digital</span>
+              <span className="block">Kelompok Tani</span>
+              <span className="block text-poktan-emerald">Banyu Urip</span>
             </h1>
           </div>
 

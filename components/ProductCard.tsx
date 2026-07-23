@@ -82,12 +82,12 @@ export default function ProductCard({
   return (
     <motion.div 
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="bg-white rounded-[24px] border border-[#f0f4f1] hover:border-poktan-leaf/25 hover:shadow-xl hover:shadow-[#486e5c]/5 transition-all duration-300 group flex flex-col h-full overflow-hidden"
+      className="bg-white rounded-2xl sm:rounded-[24px] border border-[#f0f4f1] hover:border-poktan-leaf/25 hover:shadow-xl hover:shadow-[#486e5c]/5 transition-all duration-300 group flex flex-col h-full overflow-hidden"
     >
       <div className="relative aspect-[4/3] bg-[#fcfdfb] overflow-hidden border-b border-[#f0f4f1]/50">
         {/* Badge Status (Kiri Atas) */}
         <span
-          className={`absolute top-3.5 left-3.5 text-[9px] font-bold px-2.5 py-1 rounded-full z-10 ${current.badgeColor}`}
+          className={`absolute top-2 left-2 sm:top-3.5 sm:left-3.5 text-[8px] sm:text-[9px] font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full z-10 ${current.badgeColor}`}
         >
           {status.toUpperCase()}
         </span>
@@ -120,32 +120,32 @@ export default function ProductCard({
         )}
       </div>
 
-      <div className="p-6 text-left flex flex-col flex-grow">
-        <div className="h-12 flex items-center justify-start mb-2">
+      <div className="p-3 sm:p-6 text-left flex flex-col flex-grow">
+        <div className="min-h-[2rem] sm:h-12 flex items-center justify-start mb-1 sm:mb-2">
           <h3 className={`font-bold text-gray-800 tracking-tight leading-tight line-clamp-2 ${
-            name.length > 24 ? "text-sm md:text-base" : "text-base md:text-lg"
+            name.length > 24 ? "text-xs sm:text-sm md:text-base" : "text-sm sm:text-base md:text-lg"
           }`}>
             {name}
           </h3>
         </div>
-        <p className="text-[11px] text-gray-500 mb-4 font-medium block">
+        <p className="text-[9px] sm:text-[11px] text-gray-500 mb-2 sm:mb-4 font-medium block">
           Varian: <span className="font-bold text-gray-700">{grade || "-"}</span> 
-          <span className="mx-1.5 text-gray-300">|</span> 
+          <span className="mx-1 sm:mx-1.5 text-gray-300">|</span> 
           <span className={status === "Habis" ? "text-poktan-red font-bold" : "text-poktan-emerald font-bold"}>
             {status}
           </span>
         </p>
         
-        <div className="mt-auto pt-2">
-          <p className="text-poktan-emerald font-extrabold text-xl mb-4 tracking-tight leading-tight">
+        <div className="mt-auto pt-1 sm:pt-2">
+          <p className="text-poktan-emerald font-extrabold text-base sm:text-xl mb-2 sm:mb-4 tracking-tight leading-tight">
             {price}
           </p>
 
           {status === "Habis" ? (
             <button
               disabled
-              className={`flex w-full ${current.buttonColor} py-3 rounded-full font-bold items-center justify-center gap-2 
-              transition-all text-sm`}
+              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-full font-bold items-center justify-center gap-1.5 sm:gap-2 
+              transition-all text-[11px] sm:text-sm`}
             >
               {current.icon}
               <span>{current.label}</span>
@@ -155,8 +155,8 @@ export default function ProductCard({
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex w-full ${current.buttonColor} py-3 rounded-full font-bold items-center justify-center gap-2 
-              transition-all duration-300 text-center text-sm`}
+              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-full font-bold items-center justify-center gap-1.5 sm:gap-2 
+              transition-all duration-300 text-center text-[11px] sm:text-sm`}
             >
               {current.icon}
               <span>{current.label}</span>

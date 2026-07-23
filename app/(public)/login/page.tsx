@@ -16,20 +16,20 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
-      
+
       if (error) throw error;
-      
+
       if (data.session) {
         // Set cookie for proxy
         document.cookie = "admin_session=true; path=/; max-age=86400; SameSite=Strict";
         toast.success("Login berhasil! Mengalihkan...");
-        
+
         setTimeout(() => {
           router.push("/admin");
         }, 800);
@@ -54,7 +54,7 @@ export default function LoginPage() {
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#1A5319]/10 to-emerald-50 border border-emerald-100 flex items-center justify-center mb-6 shadow-md shadow-emerald-900/5">
           <span className="text-2xl">🍈</span>
         </div>
-        
+
         <h1 className="text-2xl font-black text-gray-900 tracking-tight text-center">Admin Panel</h1>
         <p className="text-gray-400 text-xs mt-1.5 mb-8 text-center leading-relaxed font-medium">
           Masuk dengan kredensial administrator Poktan Banyu Urip.
