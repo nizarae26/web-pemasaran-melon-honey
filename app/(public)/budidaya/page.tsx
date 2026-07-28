@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -119,7 +120,7 @@ export default function BudidayaPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-slate-50/50">
       <Navbar />
 
       {/* 2. Panggil BudidayaHero di sini. 

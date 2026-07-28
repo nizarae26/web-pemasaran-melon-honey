@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -42,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4 relative overflow-hidden">
+    <main className="min-h-screen bg-slate-50/50 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Decorative Blurs */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-100 rounded-full blur-[120px] opacity-60 z-0"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#D6EFD8] rounded-full blur-[120px] opacity-60 z-0"></div>

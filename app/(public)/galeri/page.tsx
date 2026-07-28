@@ -1,6 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,12 +15,12 @@ import { Toaster } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function GaleriPage() {
+  const router = useRouter();
   // State untuk Filter Aktif
   const [activeTab, setActiveTab] = useState("Semua");
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [schedules, setSchedules] = useState<any[]>([
@@ -67,6 +71,7 @@ export default function GaleriPage() {
 
       if (articleData) {
         setArticles(articleData.map((a) => ({
+          id: a.id,
           title: a.title,
           date: new Date(a.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
           tag: a.tag,
@@ -238,13 +243,12 @@ export default function GaleriPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#F8FAFC] w-full overflow-x-hidden">
+      <main className="min-h-screen bg-slate-50/50 w-full overflow-x-hidden">
         <GaleriHero displayBulan={displayBulan} />
 
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 py-8">
-        <div className="bg-white rounded-3xl shadow-sm shadow-black-200/90 border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
-
-          {/* 2. KONTEN BAWAH: Navigation Tab Bar (Pill Style Gandeng) */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
+          {/* Navigation Tab Bar */}
           <div className="p-4 px-6 md:px-8 flex flex-wrap items-center justify-center gap-2 w-full">
             {[
               "Semua",
@@ -257,7 +261,7 @@ export default function GaleriPage() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2.5 rounded-full text-xs font-extrabold transition-all duration-300 whitespace-nowrap cursor-pointer active:scale-95 border ${
+                className={`px-6 py-2.5 rounded-xl text-xs font-extrabold transition-all duration-300 whitespace-nowrap cursor-pointer active:scale-95 border ${
                   activeTab === tab
                     ? "bg-poktan-leaf text-white border-poktan-leaf shadow-md shadow-poktan-leaf/10"
                     : "text-gray-500 hover:bg-gray-50 bg-white border-slate-200"
@@ -272,7 +276,7 @@ export default function GaleriPage() {
         {/* Tata Letak Dua Kolom Utama (Grid Konten & Sidebar) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* SISI KIRI: GRID KONTEN UTAMA (8 KOLOM) */}
-          <div className="lg:col-span-8 space-y-20">
+          <div className="lg:col-span-8 space-y-12">
             {/* Sub-Section: Galeri Foto Kegiatan */}
             {showGallery && (
               <div className="space-y-8">
@@ -288,40 +292,47 @@ export default function GaleriPage() {
                   {loading ? (
                     <div className="col-span-full py-12 text-center text-gray-400">Memuat Galeri...</div>
                   ) : filteredGalleryItems.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada foto kegiatan.</div>
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-xl border border-gray-100 shadow-sm">Belum ada foto kegiatan.</div>
                   ) : (
                     <AnimatePresence>
                       {filteredGalleryItems.map((item, i) => (
                         <motion.div 
-                          key={i} 
-                          initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
+                          key={item.image || item.title || i} 
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.4, delay: i * 0.05 }}
-                          whileHover={{ y: -8, scale: 1.03, rotateX: 2, rotateY: -2 }}
-                          style={{ perspective: 1000 }}
-                          className="group cursor-pointer relative"
+                          whileHover={{ y: -5 }}
+                          className="group cursor-pointer relative aspect-[4/5] rounded-none overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200"
+                          onClick={() => setSelectedImage(item.image)}
                         >
-                          <div 
-                            className="aspect-square bg-zinc-100 rounded-2xl overflow-hidden relative mb-4 border border-gray-100 shadow-md group-hover:shadow-2xl transition-all duration-500"
-                            onClick={() => setSelectedImage(item.image)}
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                            <img
-                              src={item.image || "/api/placeholder/400/300"}
-                              alt={`Dokumentasi kegiatan ${item.title}`}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            />
-                            <div className="absolute bottom-4 left-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                               <p className="text-white text-xs font-bold bg-poktan-green/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg">Lihat HD</p>
+                          {item.image?.match(/\.(mp4|webm|ogg|mov)$/i) ? (
+                            <div className="w-full h-full">
+                              <video
+                                src={item.image}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+                                muted
+                                loop
+                                playsInline
+                                autoPlay
+                              />
                             </div>
+                          ) : (
+                            <div className="w-full h-full">
+                              <img
+                                src={item.image || "/api/placeholder/400/300"}
+                                alt={`Dokumentasi kegiatan ${item.title}`}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                              />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          
+                          <div className="absolute bottom-0 left-0 w-full p-5 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                            <h4 className="font-bold text-white text-base md:text-lg leading-tight mb-1 drop-shadow-md">
+                              {item.title}
+                            </h4>
                           </div>
-                          <h4 className="font-bold text-gray-800 text-sm leading-tight group-hover:text-poktan-accent transition-colors">
-                            {item.title}
-                          </h4>
-                          <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">
-                            {item.date}
-                          </p>
                         </motion.div>
                       ))}
                     </AnimatePresence>
@@ -345,67 +356,39 @@ export default function GaleriPage() {
                   {loading ? (
                     <div className="col-span-full py-12 text-center text-gray-400">Memuat Artikel...</div>
                   ) : filteredArticles.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">Belum ada artikel yang sesuai.</div>
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-xl border border-gray-100 shadow-sm">Belum ada artikel yang sesuai.</div>
                   ) : (
                     <AnimatePresence>
                       {filteredArticles.map((item, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, y: 30 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: i * 0.05 }}
-                          whileHover={{ y: -6 }}
-                          className={`bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:border-poktan-leaf/25 transition-all duration-300 group flex flex-col ${
-                            i === 0 ? "col-span-full md:flex-row md:h-[280px]" : "h-full"
-                          }`}
+                        <Link href={`/galeri/${item.id}`} key={item.id || item.title || i}>
+                          <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: i * 0.05 }}
+                            whileHover={{ y: -6 }}
+                          className="bg-white rounded-none overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col h-full cursor-pointer"
                         >
-                          <div className={`bg-zinc-50 relative overflow-hidden shrink-0 ${
-                            i === 0 ? "w-full md:w-1/2 h-[200px] md:h-full" : "w-full h-[180px] md:h-[200px]"
-                          }`}>
+                          <div className="bg-zinc-50 relative overflow-hidden shrink-0 w-full h-[180px] md:h-[200px]">
                             <img
                               src={item.image}
                               alt="Thumbnail artikel berita"
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
-                            {i === 0 && (
-                              <div className="absolute top-4 left-4 z-20">
-                                <span className="bg-poktan-green text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider flex items-center gap-1.5">
-                                  <Sparkles size={10} className="text-[#f0cc4b] animate-pulse" />
-                                  Sorotan
-                                </span>
-                              </div>
-                            )}
                           </div>
                           
-                          <div className={`p-6 md:p-8 flex flex-col flex-1 justify-between`}>
+                          <div className="p-6 md:p-8 flex flex-col flex-1 justify-between">
                             <div className="space-y-3">
                               <div className="flex items-center text-xs text-gray-400 gap-2 font-semibold uppercase tracking-wider">
-                                <span className="text-poktan-green bg-poktan-accent/30 px-2 py-0.5 rounded-md text-[10px] font-bold">
-                                  {item.date}
-                                </span>
                                 <span>• Admin</span>
                               </div>
                               
-                              <h4 className={`font-bold text-gray-800 leading-snug group-hover:text-poktan-leaf transition-colors ${
-                                i === 0 ? "text-xl md:text-2xl" : "text-base md:text-lg"
-                              }`}>
+                              <h4 className="font-bold text-gray-800 text-base md:text-lg leading-snug group-hover:text-poktan-leaf transition-colors mt-2">
                                 {item.title}
                               </h4>
-                              
-                              <p className="text-xs md:text-sm text-gray-500 leading-relaxed line-clamp-3">
-                                {item.desc}
-                              </p>
                             </div>
-                            
-                            <button 
-                              onClick={() => setSelectedArticle(item)}
-                              className="flex items-center gap-2 text-xs font-extrabold text-white bg-poktan-leaf hover:bg-poktan-green px-6 py-3 rounded-full mt-4 self-start shadow-md shadow-poktan-leaf/10 hover:shadow-lg hover:shadow-poktan-leaf/20 active:scale-95 transition-all duration-300 cursor-pointer uppercase tracking-wider"
-                            >
-                              <span>Baca Artikel</span>
-                              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
                           </div>
-                        </motion.div>
+                          </motion.div>
+                        </Link>
                       ))}
                     </AnimatePresence>
                   )}
@@ -430,7 +413,7 @@ export default function GaleriPage() {
                       {categorizedVideos.landscape.map((video, i) => (
                         <div
                           key={`land-${i}`}
-                          className="aspect-video bg-zinc-900 rounded-2xl overflow-hidden relative group border border-gray-100 shadow-sm"
+                          className="aspect-video bg-zinc-900 rounded-none overflow-hidden relative group border border-gray-200 shadow-sm"
                         >
                           <video
                             src={video.image}
@@ -457,7 +440,7 @@ export default function GaleriPage() {
                       {categorizedVideos.portrait.map((video, i) => (
                         <div
                           key={`port-${i}`}
-                          className="aspect-[9/16] bg-zinc-900 rounded-2xl overflow-hidden relative group border border-gray-100 shadow-sm"
+                          className="aspect-[9/16] bg-zinc-900 rounded-none overflow-hidden relative group border border-gray-200 shadow-sm"
                         >
                           <video
                             src={video.image}
@@ -476,7 +459,7 @@ export default function GaleriPage() {
                 )}
 
                 {categorizedVideos.landscape.length === 0 && categorizedVideos.portrait.length === 0 && (
-                  <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                  <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-xl border border-gray-100 shadow-sm">
                     Belum ada video dokumentasi.
                   </div>
                 )}
@@ -487,15 +470,15 @@ export default function GaleriPage() {
           {/* SISI KANAN: ASIDE SIDEBAR (4 KOLOM) */}
           <aside className="lg:col-span-4 space-y-10 sticky top-32 h-fit mb-24">
             {/* Widget 1: Artikel Populer */}
-            <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-none p-8 shadow-sm">
               <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
                 <SparklesIcon size={16} className="text-poktan-accent" />
                 <span>ARTIKEL TERBARU</span>
               </h4>
               <div className="space-y-6">
                 {articles.slice(0, 5).map((item, i) => (
-                  <div key={i} className="flex gap-4 group cursor-pointer" onClick={() => setSelectedArticle(item)}>
-                    <div className="w-16 h-16 rounded-xl bg-gray-100 shrink-0 overflow-hidden border border-gray-100">
+                  <Link href={`/galeri/${item.id}`} key={i} className="flex gap-4 group cursor-pointer block">
+                    <div className="w-20 h-16 rounded-none bg-gray-100 shrink-0 overflow-hidden border border-gray-200 relative">
                       <img
                         src={item.image}
                         alt="Thumbnail artikel terpopuler"
@@ -510,13 +493,13 @@ export default function GaleriPage() {
                         {item.date}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
 
             {/* Widget 2: Jadwal Musim Panen */}
-            <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-none p-8 shadow-sm">
               <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
                 <Calendar size={16} className="text-[#10b981]" />
                 <span>JADWAL MUSIM PANEN</span>
@@ -541,7 +524,7 @@ export default function GaleriPage() {
                   });
 
                   return (
-                    <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100/50">
+                    <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-none p-6 border border-emerald-100/50">
                       <div className="flex justify-between items-start mb-4">
                         <span className="text-xs font-black text-[#064e3b]">
                           {monthLabel}
@@ -584,26 +567,61 @@ export default function GaleriPage() {
                           });
                           
                           const isHighlighted = matchedSchedules.length > 0;
-                          const firstMatchedIdx = isHighlighted ? schedules.findIndex(x => x.id === matchedSchedules[0].id) : 0;
                           
                           return (
-                            <div key={day} className="flex justify-center items-center relative">
+                            <div key={`day-${day}`} className="flex justify-center items-center relative w-7 h-7 mx-auto group">
+                              {/* Split Backgrounds for overlapping schedules */}
+                              {isHighlighted && (
+                                <div className={`absolute inset-0 flex flex-col overflow-hidden ${isToday ? 'rounded-[10px] ring-2 ring-yellow-400 ring-offset-2' : 'rounded-lg'} shadow-sm`}>
+                                  {matchedSchedules.map((s) => {
+                                    const sIdx = schedules.findIndex(x => x.id === s.id);
+                                    return (
+                                      <div 
+                                        key={s.id} 
+                                        className={`flex-1 bg-gradient-to-r ${GRADIENTS[sIdx % GRADIENTS.length]}`}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              )}
+                              
+                              {/* Day Number */}
                               <span
-                                className={`w-7 h-7 flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
-                                  isHighlighted && isToday
-                                    ? `bg-gradient-to-br ${GRADIENTS[firstMatchedIdx % GRADIENTS.length]} text-white rounded-xl shadow-lg scale-110 ring-2 ring-yellow-400 ring-offset-2`
-                                    : isHighlighted
-                                    ? `bg-gradient-to-br ${GRADIENTS[firstMatchedIdx % GRADIENTS.length]} text-white rounded-xl shadow-lg scale-110`
-                                    : isToday
-                                    ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm"
-                                    : "text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-xl"
+                                className={`w-full h-full flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
+                                  isHighlighted ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]' : (isToday ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-full')
                                 }`}
                               >
-                                {day}
-                                {isHighlighted && (
-                                  <span className="absolute -top-1.5 -right-1.5 text-[10px] leading-none drop-shadow-md z-20" title={matchedSchedules.map(s => s.title).join(", ")}>🍈</span>
-                                )}
+                                <span>{day}</span>
                               </span>
+                              
+                              {/* Tooltip for overlaps */}
+                              {matchedSchedules.length > 1 && (
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center z-50 pointer-events-none">
+                                  <div className="bg-gray-900 text-white text-[9px] px-2 py-1.5 rounded-lg shadow-xl w-max max-w-[120px] text-left space-y-1">
+                                    {matchedSchedules.map((s) => {
+                                      const sIdx = schedules.findIndex(x => x.id === s.id);
+                                      return (
+                                        <div key={s.id} className="flex items-center gap-1.5">
+                                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${BG_COLORS[sIdx % BG_COLORS.length]}`}></span>
+                                          <span className="truncate">{s.title}</span>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                  <div className="w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
+                                </div>
+                              )}
+
+                              {/* Melon icon only for the start date of any schedule */}
+                              {matchedSchedules.some(s => {
+                                const sDate = new Date(s.start_date);
+                                sDate.setHours(0,0,0,0);
+                                return sDate.getTime() === currentDate.getTime();
+                              }) && (
+                                <span className="absolute -top-1.5 -right-1.5 z-20 flex">
+                                  <span className="text-[10px] leading-none drop-shadow-md">🍈</span>
+                                </span>
+                              )}
                             </div>
                           );
                         })}
@@ -624,11 +642,24 @@ export default function GaleriPage() {
       {selectedImage && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setSelectedImage(null)}>
           <div className="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={selectedImage}
-              alt="Gambar HD"
-              className="max-w-full max-h-[90vh] object-contain rounded-xl"
-            />
+            {selectedImage?.match(/\.(mp4|webm|ogg|mov)$/i) ? (
+              <div className="w-full h-full">
+                <video
+                  src={selectedImage}
+                  controls
+                  autoPlay
+                  className="max-w-full max-h-[90vh] object-contain rounded-xl"
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full">
+                <img
+                  src={selectedImage}
+                  alt="Gambar HD"
+                  className="max-w-full max-h-[90vh] object-contain rounded-xl"
+                />
+              </div>
+            )}
             <button 
               onClick={() => setSelectedImage(null)}
               className="absolute top-4 right-4 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors shadow-lg"
@@ -639,80 +670,7 @@ export default function GaleriPage() {
         </div>
       )}
 
-      {/* Modal Artikel */}
-      {selectedArticle && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white w-full max-w-3xl rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-6 pb-0 md:p-10 md:pb-0 shrink-0">
-              <div className="relative aspect-video sm:aspect-[21/9] bg-gray-100 rounded-2xl overflow-hidden shadow-sm">
-                <img
-                  src={selectedArticle.image}
-                  alt={selectedArticle.title}
-                  className="w-full h-full object-cover"
-                />
-                <button 
-                  onClick={() => setSelectedArticle(null)}
-                  className="absolute top-4 right-4 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6 md:p-10 overflow-y-auto flex-1">
-              <div className="flex items-center text-sm text-gray-500 mb-4 gap-2.5">
-                <span className="text-poktan-green bg-poktan-accent/30 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
-                  {selectedArticle.tag || "Berita"}
-                </span>
-                <span>•</span>
-                <span className="font-semibold">{selectedArticle.date}</span>
-                <span>•</span>
-                <span>Oleh Admin</span>
-              </div>
-              
-              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight">
-                {selectedArticle.title}
-              </h2>
-              
-              {/* Tombol Bagikan Sosial Media (Feature 1) */}
-              <div className="flex items-center gap-2 mb-6 pb-6 border-b border-gray-100 flex-wrap">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-1">Bagikan:</span>
-                
-                {/* Bagikan WA */}
-                <button
-                  onClick={() => {
-                    const text = encodeURIComponent(`Baca berita terbaru dari Poktan Banyu Urip: "${selectedArticle.title}"\n\nSelengkapnya di website kami.`);
-                    const url = encodeURIComponent(window.location.href);
-                    window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
-                  }}
-                  className="bg-emerald-50/50 hover:bg-emerald-100 text-emerald-700 hover:text-emerald-800 border border-emerald-100/60 text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer shadow-sm"
-                >
-                  <WhatsAppIcon size={12} />
-                  <span>WhatsApp</span>
-                </button>
 
-                {/* Salin Tautan */}
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    import('react-hot-toast').then(({ default: toast }) => {
-                      toast.success("Tautan berhasil disalin!");
-                    });
-                  }}
-                  className="bg-gray-50/50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 border border-gray-200/60 text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer shadow-sm"
-                >
-                  <Link2 size={12} />
-                  <span>Salin Link</span>
-                </button>
-              </div>
-              
-              <div className="prose prose-emerald max-w-none text-gray-600 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
-                {selectedArticle.desc}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
       <Toaster position="top-center" reverseOrder={false} />

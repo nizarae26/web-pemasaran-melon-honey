@@ -77,7 +77,7 @@ export default function AdminLayout({
                       A
                     </div>
                     <div className="text-left">
-                      <p className="text-[10px] font-black text-gray-800 leading-tight">Welcome, Admin</p>
+                      <p className="text-[10px] font-black text-gray-800 leading-tight">Selamat Datang, Admin</p>
                       <p className="text-[8px] text-gray-400 font-bold uppercase tracking-wider leading-none">Administrator</p>
                     </div>
                   </div>

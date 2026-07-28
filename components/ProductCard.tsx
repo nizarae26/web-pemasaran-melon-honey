@@ -82,9 +82,9 @@ export default function ProductCard({
   return (
     <motion.div 
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="bg-white rounded-2xl sm:rounded-[24px] border border-[#f0f4f1] hover:border-poktan-leaf/25 hover:shadow-xl hover:shadow-[#486e5c]/5 transition-all duration-300 group flex flex-col h-full overflow-hidden"
+      className="bg-white rounded-xl sm:rounded-2xl border border-[#f0f4f1] hover:border-poktan-leaf/25 hover:shadow-xl hover:shadow-[#486e5c]/5 transition-all duration-300 group flex flex-col h-full overflow-hidden"
     >
-      <div className="relative aspect-[4/3] bg-[#fcfdfb] overflow-hidden border-b border-[#f0f4f1]/50">
+      <div className="relative aspect-[4/3] bg-slate-50/50 overflow-hidden border-b border-[#f0f4f1]/50">
         {/* Badge Status (Kiri Atas) */}
         <span
           className={`absolute top-2 left-2 sm:top-3.5 sm:left-3.5 text-[8px] sm:text-[9px] font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full z-10 ${current.badgeColor}`}
@@ -144,7 +144,7 @@ export default function ProductCard({
           {status === "Habis" ? (
             <button
               disabled
-              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-full font-bold items-center justify-center gap-1.5 sm:gap-2 
+              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1.5 sm:gap-2 
               transition-all text-[11px] sm:text-sm`}
             >
               {current.icon}
@@ -155,7 +155,7 @@ export default function ProductCard({
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-full font-bold items-center justify-center gap-1.5 sm:gap-2 
+              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1.5 sm:gap-2 
               transition-all duration-300 text-center text-[11px] sm:text-sm`}
             >
               {current.icon}

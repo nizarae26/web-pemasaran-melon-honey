@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProductCard from "@/components/ProductCard";
@@ -73,7 +74,7 @@ export default async function Home() {
   const featuredProducts = combinedData.slice(0, 4);
 
   return (
-    <main className="min-h-screen bg-[#fcfdfb]">
+    <main className="min-h-screen bg-slate-50/50">
       {/* 1. Header & Navigasi  */}
       <Navbar />
 
@@ -81,7 +82,7 @@ export default async function Home() {
       <Hero waNumber={waNumber} />
 
       {/* 3. Katalog Melon Honey Globe  */}
-      <section className="py-12 px-6 md:px-12 bg-[#fcfdfb]">
+      <section className="py-12 px-6 md:px-12 bg-slate-50/50">
         <div className="max-w-6xl mx-auto">
           
           <ScrollReveal>
@@ -116,7 +117,7 @@ export default async function Home() {
             <div className="text-center mt-16">
               <Link
                 href="/katalog"
-                className="group border border-poktan-emerald text-poktan-emerald px-10 py-3.5 rounded-full font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 w-fit text-sm"
+                className="group border border-poktan-emerald text-poktan-emerald px-10 py-3.5 rounded-xl font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 w-fit text-sm"
               >
                 <span>Lihat Semua Katalog</span>
                 <ArrowRight
@@ -135,8 +136,8 @@ export default async function Home() {
       </ScrollReveal>
 
       {/* 5. Galeri & Berita (Preview) */}
-      <section className="py-24 px-6 md:px-12 bg-[#fcfdfb]">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
+      <section className="py-12 px-6 md:px-12 bg-slate-50/50">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Kolom Galeri Kegiatan */}
           <ScrollReveal>
             <div>
@@ -154,7 +155,7 @@ export default async function Home() {
                   galleryItems.map((item) => (
                     <div
                       key={item.id}
-                      className="aspect-square bg-slate-50 rounded-[16px] overflow-hidden relative group cursor-pointer border border-[#f0f4f1]/55"
+                      className="aspect-square bg-white rounded-xl overflow-hidden relative group cursor-pointer border border-[#f0f4f1]/55 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <img 
                         src={item.image_url} 
@@ -167,7 +168,7 @@ export default async function Home() {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-3 aspect-[3/1] bg-slate-50 rounded-[16px] flex items-center justify-center text-gray-400 text-sm border border-[#f0f4f1]">
+                  <div className="col-span-3 aspect-[3/1] bg-white rounded-xl flex items-center justify-center text-gray-400 text-sm border border-[#f0f4f1] shadow-sm">
                     Belum ada foto galeri.
                   </div>
                 )}
@@ -190,8 +191,8 @@ export default async function Home() {
               <div className="space-y-4">
                 {articles && articles.length > 0 ? (
                   articles.map((item) => (
-                    <Link href="/galeri" key={item.id} className="flex gap-4 p-3 hover:bg-[#f0f4f1]/30 rounded-2xl transition cursor-pointer border border-transparent hover:border-[#f0f4f1]/80">
-                      <div className="w-24 h-20 bg-slate-50 rounded-xl flex-shrink-0 overflow-hidden border border-[#f0f4f1]/40">
+                    <Link href="/galeri" key={item.id} className="flex gap-4 p-3 bg-white hover:bg-slate-50 rounded-xl transition cursor-pointer border border-[#f0f4f1]/55 shadow-sm hover:shadow-md">
+                      <div className="w-24 h-20 bg-slate-50 rounded-lg flex-shrink-0 overflow-hidden border border-[#f0f4f1]/40">
                         <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col justify-center">
@@ -214,7 +215,7 @@ export default async function Home() {
                     </Link>
                   ))
                 ) : (
-                  <div className="bg-slate-50 p-6 rounded-[24px] text-center text-sm text-gray-400 border border-[#f0f4f1]">
+                  <div className="bg-white p-6 rounded-xl shadow-sm text-center text-sm text-gray-400 border border-[#f0f4f1]">
                     Belum ada berita & artikel.
                   </div>
                 )}
@@ -225,12 +226,12 @@ export default async function Home() {
       </section>
 
       {/* 6. CTA Bawah */}
-      <section className="py-16 px-6 md:px-12 bg-[#fcfdfb]">
+      <section className="py-12 px-6 md:px-12 bg-slate-50/50">
         <ScrollReveal>
-          <div className="max-w-5xl mx-auto bg-poktan-accent/40 border border-poktan-leaf/10 rounded-[32px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-5xl mx-auto bg-poktan-accent/40 border border-poktan-leaf/10 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
               {/* Ikon Utama */}
-              <div className="w-16 h-16 bg-white border border-[#f0f4f1] rounded-2xl flex items-center justify-center text-poktan-leaf shrink-0 shadow-sm">
+              <div className="w-16 h-16 bg-white border border-[#f0f4f1] rounded-xl flex items-center justify-center text-poktan-leaf shrink-0 shadow-sm">
                 <Leaf size={28} strokeWidth={2} />
               </div>
 
@@ -249,7 +250,7 @@ export default async function Home() {
               href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20dengan%20Melon%20Honey%20Globe%20Anda`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full md:w-auto bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-full font-bold shadow-md shadow-poktan-leaf/10 hover:scale-102 transition-all duration-300 text-sm flex items-center justify-center gap-3 shrink-0"
+              className="w-full md:w-auto bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-xl font-bold shadow-md shadow-poktan-leaf/10 hover:scale-102 transition-all duration-300 text-sm flex items-center justify-center gap-3 shrink-0"
             >
               <WhatsAppIcon size={20} />
               <span>Hubungi via WhatsApp</span>

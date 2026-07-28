@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const handleLogout = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ export default function Sidebar() {
   };
 
   const mainGroup = [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Dasbor", href: "/admin", icon: LayoutDashboard },
     { name: "Produk Melon", href: "/admin/products", icon: Package },
     { name: "Galeri", href: "/admin/gallery", icon: ImageIcon },
     { name: "Artikel", href: "/admin/articles", icon: Newspaper },
@@ -51,7 +51,7 @@ export default function Sidebar() {
 
   // Mobile Bottom Bar has 5 slots: 4 primary links + 1 "More" menu
   const mobilePrimaryItems = [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Dasbor", href: "/admin", icon: LayoutDashboard },
     { name: "Produk", href: "/admin/products", icon: Package },
     { name: "Galeri", href: "/admin/gallery", icon: ImageIcon },
     { name: "Artikel", href: "/admin/articles", icon: Newspaper },
@@ -67,101 +67,82 @@ export default function Sidebar() {
           </div>
           <span className="font-black text-sm text-gray-800 tracking-tight leading-none">Banyu Urip Admin</span>
         </div>
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-extrabold text-[9px]">
-            A
-          </div>
-          <button
-            onClick={handleLogout}
-            className="p-1.5 text-red-500 hover:bg-red-55/10 rounded-lg transition-colors cursor-pointer"
-            title="Keluar"
+        <div className="relative flex items-center gap-2.5">
+          <button 
+            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+            className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-extrabold text-[10px] cursor-pointer hover:ring-2 hover:ring-emerald-200 transition-all"
           >
-            <LogOut size={16} />
+            A
           </button>
+          
+          {/* Popup Menu */}
+          {isProfileMenuOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-40"
+                onClick={() => setIsProfileMenuOpen(false)}
+              ></div>
+              <div className="absolute top-10 right-0 w-48 bg-white border border-gray-100 shadow-xl rounded-2xl p-2 z-50 flex flex-col gap-1 transform origin-top-right transition-all">
+                <div className="px-3 py-2 border-b border-gray-50 mb-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Menu</p>
+                </div>
+                {othersGroup.map((item) => {
+                  const isActive = pathname.startsWith(item.href);
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setIsProfileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                        isActive 
+                          ? "bg-emerald-50 text-[#10b981]" 
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                    >
+                      <item.icon size={16} />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+                <div className="h-[1px] bg-gray-50 my-1"></div>
+                <button 
+                  onClick={(e) => {
+                    setIsProfileMenuOpen(false);
+                    handleLogout(e);
+                  }} 
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-red-500 hover:bg-red-50 transition-colors w-full text-left"
+                >
+                  <LogOut size={16} />
+                  Keluar
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation Bar (5 slots, Spacious) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-[0_-8px_20px_rgba(0,0,0,0.04)] z-40 px-2 py-1.5 flex justify-around pb-safe">
+      {/* Mobile Bottom Navigation Bar (4 slots) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.06)] z-40 px-4 py-2 flex justify-between items-center pb-safe">
         {mobilePrimaryItems.map((item) => {
           const isActive = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
           return (
             <Link
               key={item.name}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1 transition-all w-16 ${
+              className={`flex flex-col items-center justify-center w-full py-1.5 transition-all ${
                 isActive ? "text-[#10b981]" : "text-gray-400 hover:text-gray-600"
               }`}
             >
-              <div className={`p-1 rounded-full mb-0.5 transition-all ${isActive ? 'bg-emerald-50/70' : 'bg-transparent'}`}>
-                <item.icon size={20} className={isActive ? "fill-emerald-100/30" : ""} />
+              <div className={`p-1.5 rounded-xl mb-1 transition-all duration-300 ${isActive ? 'bg-emerald-50/80 scale-110' : 'bg-transparent'}`}>
+                <item.icon size={22} className={isActive ? "fill-emerald-100/50" : ""} />
               </div>
-              <span className={`text-[9px] leading-none tracking-tight ${isActive ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-[10px] leading-tight tracking-tight ${isActive ? 'font-extrabold' : 'font-semibold'}`}>
                 {item.name}
               </span>
             </Link>
           );
         })}
-
-        {/* Slot 5: "Lainnya" (More menu drawer) */}
-        <button
-          onClick={() => setIsMoreOpen(true)}
-          className={`flex flex-col items-center justify-center py-1 transition-all w-16 cursor-pointer ${
-            isMoreOpen ? "text-[#10b981]" : "text-gray-400"
-          }`}
-        >
-          <div className={`p-1 rounded-full mb-0.5 transition-all ${isMoreOpen ? 'bg-emerald-50/70' : 'bg-transparent'}`}>
-            <Menu size={20} />
-          </div>
-          <span className={`text-[9px] leading-none tracking-tight ${isMoreOpen ? 'font-bold' : 'font-medium'}`}>
-            Lainnya
-          </span>
-        </button>
       </div>
-
-      {/* Mobile Menu "Lainnya" Bottom Sheet */}
-      {isMoreOpen && (
-        <>
-          {/* Backdrop overlay */}
-          <div 
-            onClick={() => setIsMoreOpen(false)}
-            className="md:hidden fixed inset-0 bg-black/45 backdrop-blur-xs z-50 transition-opacity"
-          />
-          {/* Bottom Sheet Drawer */}
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[28px] z-55 p-5 pb-8 space-y-5 shadow-2xl border-t border-gray-50 transition-all duration-300 transform translate-y-0">
-            {/* Drag Handle Indicator */}
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto -mt-2"></div>
-            
-            <div className="px-1">
-              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Menu Lainnya</h4>
-              <p className="text-sm font-black text-gray-800 mt-0.5">Kelola data administrasi</p>
-            </div>
-
-            {/* Menu options grid */}
-            <div className="grid grid-cols-3 gap-3">
-              {othersGroup.map((item) => {
-                const isActive = pathname.startsWith(item.href);
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setIsMoreOpen(false)}
-                    className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all border ${
-                      isActive 
-                        ? "bg-emerald-50 border-emerald-100 text-[#10b981]" 
-                        : "bg-gray-50/50 border-transparent text-gray-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    <item.icon size={20} className="mb-1.5" />
-                    <span className="text-[10px] font-bold text-center leading-tight">{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-
-          </div>
-        </>
-      )}
 
       {/* Desktop Sidebar (Persistent) */}
       <aside className="hidden md:flex w-64 bg-white border-r border-gray-100 flex-col h-screen sticky top-0 shrink-0">
@@ -181,7 +162,7 @@ export default function Sidebar() {
         <div className="flex-1 py-6 px-4 space-y-6 overflow-y-auto">
           {/* Main Menu Group */}
           <div className="space-y-1.5">
-            <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Main</p>
+            <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Utama</p>
             <nav className="space-y-0.5">
               {mainGroup.map((item) => {
                 const isActive = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
@@ -208,7 +189,7 @@ export default function Sidebar() {
 
           {/* Others Menu Group */}
           <div className="space-y-1.5">
-            <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Others</p>
+            <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lainnya</p>
             <nav className="space-y-0.5">
               {othersGroup.map((item) => {
                 const isActive = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);

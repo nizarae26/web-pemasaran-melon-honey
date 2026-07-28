@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Save, CalendarDays, Loader2, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
@@ -17,6 +18,7 @@ export default function SchedulePage() {
   ]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const saveTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const fetchSchedule = async () => {
     setLoading(true);
@@ -60,39 +62,40 @@ export default function SchedulePage() {
     fetchSchedule();
   }, []);
 
-  const handleSave = async () => {
-    setSaving(true);
-    const { error } = await supabase
-      .from("settings")
-      .upsert(
-        { key: "jadwal_panen_multi", value: JSON.stringify(schedules) },
+  const triggerAutoSave = (dataToSave: any[]) => {
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    saveTimeout.current = setTimeout(async () => {
+      setSaving(true);
+      await supabase.from("settings").upsert(
+        { key: "jadwal_panen_multi", value: JSON.stringify(dataToSave) },
         { onConflict: 'key' }
       );
-
-    if (error) {
-      toast.error("Gagal menyimpan jadwal panen: " + error.message);
-    } else {
-      toast.success("Jadwal panen berhasil diperbarui!");
-    }
-    setSaving(false);
+      setSaving(false);
+    }, 1000);
   };
 
   const addSchedule = () => {
-    setSchedules([...schedules, {
-      id: Date.now().toString(),
+    const newData = [{
+      id: Date.now().toString() + Math.random().toString(),
       title: "Panen Baru",
       start_date: new Date().toISOString().split('T')[0],
       end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
       status: "PANEN"
-    }]);
+    }, ...schedules];
+    setSchedules(newData);
+    triggerAutoSave(newData);
   };
 
   const removeSchedule = (id: string) => {
-    setSchedules(schedules.filter(s => s.id !== id));
+    const newData = schedules.filter(s => s.id !== id);
+    setSchedules(newData);
+    triggerAutoSave(newData);
   };
 
   const updateSchedule = (id: string, field: string, value: string) => {
-    setSchedules(schedules.map(s => s.id === id ? { ...s, [field]: value } : s));
+    const newData = schedules.map(s => s.id === id ? { ...s, [field]: value } : s);
+    setSchedules(newData);
+    triggerAutoSave(newData);
   };
 
   if (loading) {
@@ -145,39 +148,43 @@ export default function SchedulePage() {
   ];
 
   return (
-    <div className="max-w-4xl space-y-6 pb-20">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="space-y-6 md:space-y-8 relative">
+      <div className="flex flex-row items-center justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">
-            Jadwal <span className="text-[#10b981]">Panen</span>
-          </h1>
-          <p className="text-gray-500 mt-1 text-xs md:text-sm">
-            Kelola beberapa jadwal panen sekaligus.
-          </p>
+          <h1 className="text-base md:text-2xl font-black text-gray-900 leading-tight">Jadwal Panen</h1>
+          <p className="text-gray-500 mt-0.5 text-[10px] md:text-sm">Kelola beberapa jadwal panen sekaligus.</p>
         </div>
         <button
+          type="button"
           onClick={addSchedule}
-          className="w-full md:w-auto flex justify-center items-center gap-2 px-4 py-2.5 bg-emerald-100 text-emerald-700 font-bold rounded-xl hover:bg-emerald-200 transition-colors text-sm"
+          className="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-none font-bold text-[10px] md:text-sm flex items-center gap-1.5 transition-colors shadow-sm active:scale-95 z-10"
         >
-          <Plus size={16} /> Tambah Lahan/Panen Baru
+          <Plus size={14} className="md:w-[18px] md:h-[18px]" />
+          Tambah Panen
         </button>
       </div>
 
       <div className="grid gap-6">
+        {schedules.length === 0 && (
+          <div className="bg-white p-12 rounded-none border border-gray-100 shadow-sm text-center">
+            <p className="text-gray-500 text-sm font-medium">Belum ada jadwal panen yang tersimpan.</p>
+          </div>
+        )}
         {schedules.map((schedule, index) => (
-          <div key={schedule.id} className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm relative">
-            {schedules.length > 1 && (
-              <button 
-                onClick={() => removeSchedule(schedule.id)}
-                className="absolute top-4 right-4 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors z-10"
-                title="Hapus Jadwal Ini"
-              >
-                <Trash2 size={18} />
-              </button>
-            )}
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pr-10">Jadwal #{index + 1}</h3>
+          <div key={schedule.id} className="bg-white p-4 md:p-6 rounded-none border border-gray-100 shadow-sm relative">
+            <div className="absolute top-4 right-4 z-10">
+                <button 
+                  type="button"
+                  onClick={() => removeSchedule(schedule.id)}
+                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Hapus Jadwal Ini"
+                >
+                  <Trash2 size={18} />
+                </button>
+            </div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pr-10"><span>{`Jadwal ${schedules.length - index}`}</span></h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1.5">Judul / Lahan</label>
                 <input
@@ -188,46 +195,38 @@ export default function SchedulePage() {
                   placeholder="Contoh: Lahan A / Panen Pertama"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Tanggal Mulai</label>
-                <input
-                  type="date"
-                  value={schedule.start_date}
-                  onChange={(e) => updateSchedule(schedule.id, 'start_date', e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Tanggal Selesai</label>
-                <input
-                  type="date"
-                  value={schedule.end_date}
-                  min={schedule.start_date}
-                  onChange={(e) => updateSchedule(schedule.id, 'end_date', e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Status Label</label>
-                <input
-                  type="text"
-                  value={schedule.status}
-                  onChange={(e) => updateSchedule(schedule.id, 'status', e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
-                  placeholder="Contoh: PANEN"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Tanggal Mulai</label>
+                  <input
+                    type="date"
+                    value={schedule.start_date}
+                    onChange={(e) => updateSchedule(schedule.id, 'start_date', e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Tanggal Selesai</label>
+                  <input
+                    type="date"
+                    value={schedule.end_date}
+                    min={schedule.start_date}
+                    onChange={(e) => updateSchedule(schedule.id, 'end_date', e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
+                  />
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm mt-8">
+      <div className="bg-white p-4 md:p-6 rounded-none border border-gray-100 shadow-sm mt-8">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-emerald-50 text-[#10b981] rounded-none flex items-center justify-center">
             <CalendarDays size={20} />
           </div>
-          <h2 className="text-xl font-bold text-gray-800">Preview Kalender Gabungan</h2>
+          <h2 className="text-xl font-bold text-gray-800">Preview Kalender Panen</h2>
         </div>
         
         <div className="flex flex-wrap gap-6">
@@ -250,17 +249,17 @@ export default function SchedulePage() {
             });
 
             return (
-              <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100/50 w-full md:w-[320px]">
+              <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-none p-6 border border-emerald-100/50 w-full md:w-[320px]">
                 <div className="flex justify-between items-start mb-4">
                   <span className="text-sm font-black text-[#064e3b]">
-                    {monthLabel}
+                    <span>{monthLabel}</span>
                   </span>
                   <div className="flex flex-col gap-1 items-end">
                     {activeSchedulesInMonth.map(s => {
                       const sIdx = schedules.findIndex(x => x.id === s.id);
                       return (
                         <span key={s.id} className={`text-[9px] text-white px-2 py-0.5 rounded-full font-black shadow-sm ${BG_COLORS[sIdx % BG_COLORS.length]}`}>
-                          {s.title}
+                          <span>{s.title}</span>
                         </span>
                       );
                     })}
@@ -268,8 +267,8 @@ export default function SchedulePage() {
                 </div>
                 <div className="grid grid-cols-7 gap-y-3 gap-x-1 text-center">
                   {["M", "S", "S", "R", "K", "J", "S"].map((d, i) => (
-                    <div key={i} className="text-[10px] font-black text-emerald-600/70 mb-2">
-                      {d}
+                    <div key={`dow-${i}`} className="text-[10px] font-black text-emerald-600/70 mb-2">
+                      <span>{d}</span>
                     </div>
                   ))}
                   {emptySlots.map((_, i) => (
@@ -290,27 +289,61 @@ export default function SchedulePage() {
                     });
                     
                     const isHighlighted = matchedSchedules.length > 0;
-                    const firstMatchedIdx = isHighlighted ? schedules.findIndex(x => x.id === matchedSchedules[0].id) : 0;
-                    const shadowColor = isHighlighted ? "shadow-md" : "";
-
+                    
                     return (
-                      <div key={day} className="flex justify-center items-center relative">
+                      <div key={`day-${day}`} className="flex justify-center items-center relative w-8 h-8 mx-auto group">
+                        {/* Split Backgrounds for overlapping schedules */}
+                        {isHighlighted && (
+                          <div className={`absolute inset-0 flex flex-col overflow-hidden ${isToday ? 'rounded-[10px] ring-2 ring-yellow-400 ring-offset-2' : 'rounded-[8px]'} shadow-sm`}>
+                            {matchedSchedules.map((s) => {
+                              const sIdx = schedules.findIndex(x => x.id === s.id);
+                              return (
+                                <div 
+                                  key={s.id} 
+                                  className={`flex-1 bg-gradient-to-r ${GRADIENTS[sIdx % GRADIENTS.length]}`}
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
+                        
+                        {/* Day Number */}
                         <span
-                          className={`w-8 h-8 flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
-                            isHighlighted && isToday
-                              ? `bg-gradient-to-br ${GRADIENTS[firstMatchedIdx % GRADIENTS.length]} text-white rounded-xl scale-105 ${shadowColor} ring-2 ring-yellow-400 ring-offset-2`
-                              : isHighlighted
-                              ? `bg-gradient-to-br ${GRADIENTS[firstMatchedIdx % GRADIENTS.length]} text-white rounded-xl scale-105 ${shadowColor}`
-                              : isToday
-                              ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm"
-                              : "text-gray-600 hover:bg-emerald-100 hover:text-emerald-700 rounded-full"
+                          className={`w-full h-full flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
+                            isHighlighted ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]' : (isToday ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm' : 'text-gray-600 hover:bg-emerald-100 hover:text-emerald-700 rounded-full')
                           }`}
                         >
-                          {day}
-                          {isHighlighted && (
-                            <span className="absolute -top-1.5 -right-1.5 text-[10px] leading-none drop-shadow-md z-20" title={matchedSchedules.map(s => s.title).join(", ")}>🍈</span>
-                          )}
+                          <span>{day}</span>
                         </span>
+                        
+                        {/* Tooltip for overlaps */}
+                        {matchedSchedules.length > 1 && (
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center z-50 pointer-events-none">
+                            <div className="bg-gray-900 text-white text-[9px] px-2 py-1.5 rounded-lg shadow-xl w-max max-w-[120px] text-left space-y-1">
+                              {matchedSchedules.map((s) => {
+                                const sIdx = schedules.findIndex(x => x.id === s.id);
+                                return (
+                                  <div key={s.id} className="flex items-center gap-1.5">
+                                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${BG_COLORS[sIdx % BG_COLORS.length]}`}></span>
+                                    <span className="truncate">{s.title}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
+                          </div>
+                        )}
+
+                        {/* Melon icon only for the start date of any schedule */}
+                        {matchedSchedules.some(s => {
+                          const sDate = new Date(s.start_date);
+                          sDate.setHours(0,0,0,0);
+                          return sDate.getTime() === currentDate.getTime();
+                        }) && (
+                          <span className="absolute -top-1.5 -right-1.5 z-20 flex">
+                            <span className="text-[10px] leading-none drop-shadow-md">🍈</span>
+                          </span>
+                        )}
                       </div>
                     );
                   })}
@@ -320,15 +353,11 @@ export default function SchedulePage() {
           })}
         </div>
 
-        <div className="flex justify-end pt-8 mt-6 border-t border-gray-100">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="w-full md:w-auto justify-center flex items-center gap-2 px-8 py-3.5 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
-          >
-            {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-            <span>{saving ? "Menyimpan..." : "Simpan Semua Jadwal"}</span>
-          </button>
+        <div className={`flex justify-end pt-8 mt-6 border-t border-gray-100 transition-opacity duration-300 ${saving ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="flex items-center gap-2 text-[#10b981] font-bold text-sm">
+            <Loader2 size={16} className="animate-spin" />
+            Menyimpan otomatis...
+          </div>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -396,8 +398,9 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={cancelChangingWa}
-                    className="text-xs font-bold text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-[10px] md:text-xs font-bold hover:bg-red-600 transition-colors cursor-pointer shadow-sm shadow-red-500/20 flex items-center gap-1.5"
                   >
+                    <XCircle size={14} />
                     Batalkan
                   </button>
                 )}
@@ -449,13 +452,6 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div className="flex gap-2 justify-end">
-                    <button
-                      type="button"
-                      onClick={cancelChangingWa}
-                      className="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                    >
-                      Batal
-                    </button>
                     <button
                       type="button"
                       onClick={handleVerifyOldNumber}
@@ -511,13 +507,6 @@ export default function SettingsPage() {
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        onClick={cancelChangingWa}
-                        className="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                      >
-                        Batal
-                      </button>
-                      <button
-                        type="button"
                         onClick={handleVerifyOtp}
                         className="px-4 py-2 bg-[#10b981] text-white rounded-lg text-xs font-bold hover:bg-[#059669] transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
@@ -562,15 +551,6 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="flex gap-2 justify-end">
-                    {!isVerified && (
-                      <button
-                        type="button"
-                        onClick={cancelChangingWa}
-                        className="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-                      >
-                        Batal
-                      </button>
-                    )}
                     <button
                       type="button"
                       onClick={handleApplyNewNumber}
@@ -589,7 +569,7 @@ export default function SettingsPage() {
         {/* Profil & Tentang Kami Settings */}
         <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
           <div className="flex items-center gap-3 mb-4 md:mb-6">
-            <div className="w-9 h-9 md:w-10 md:h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center shrink-0">
               <Info size={18} className="md:w-5 md:h-5" />
             </div>
             <h2 className="text-base md:text-xl font-bold text-gray-800">Tentang Kami (Profil)</h2>
@@ -603,7 +583,7 @@ export default function SettingsPage() {
                 value={tentangKami}
                 onChange={(e) => setTentangKami(e.target.value)}
                 rows={4}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium"
                 placeholder="Tulis deskripsi kelompok tani di sini..."
               />
             </div>

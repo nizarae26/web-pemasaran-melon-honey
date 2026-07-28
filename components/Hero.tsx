@@ -10,7 +10,7 @@ interface HeroProps {
 
 export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
   return (
-    <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-[#fcfdfb] py-20 md:py-28 px-6 md:px-12 overflow-hidden">
+    <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-slate-50/50 py-20 md:py-28 px-6 md:px-12 overflow-hidden">
       {/* Decorative Background Blob */}
       <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-poktan-accent/15 rounded-full blur-[120px] -z-10"></div>
       
@@ -75,14 +75,14 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
               href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20untuk%20membeli%20Melon%20Honey%20Globe%20Banyu%20Urip`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-full text-sm font-bold shadow-lg shadow-poktan-leaf/25 active:scale-95 transition-all duration-300 hover:scale-102"
+              className="inline-flex items-center gap-2 bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-xl text-sm font-bold shadow-lg shadow-poktan-leaf/25 active:scale-95 transition-all duration-300 hover:scale-102"
             >
               <span>Pesan Sekarang</span>
               <ArrowRight size={16} />
             </a>
             <Link
               href="/katalog"
-              className="inline-flex items-center gap-2 border border-slate-200 hover:border-poktan-leaf text-gray-700 hover:text-poktan-green bg-white px-8 py-4 rounded-full text-sm font-bold transition-all duration-300 hover:bg-slate-50 active:scale-95"
+              className="inline-flex items-center gap-2 border border-slate-200 hover:border-poktan-leaf text-gray-700 hover:text-poktan-green bg-white px-8 py-4 rounded-xl text-sm font-bold transition-all duration-300 hover:bg-slate-50 active:scale-95"
             >
               Lihat Katalog
             </Link>

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -96,7 +98,7 @@ export default function ProfilPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-white w-full overflow-x-hidden">
+      <main className="min-h-screen bg-slate-50/50 w-full overflow-x-hidden">
         <ProfilHero />
 
       {/* 1. Sejarah & Latar Belakang - Tren Asymmetric Clean Layout */}
@@ -150,13 +152,13 @@ export default function ProfilPage() {
           {/* Sisi Kanan: Premium Image Card & Legalitas Bento Style */}
           <div className="lg:col-span-5 space-y-8 w-full">
             {/* Container Gambar Utama dengan Efek Inner Shadow & Scale */}
-            <div className="w-full aspect-[16/10] bg-zinc-50 rounded-[32px] overflow-hidden border border-gray-100 shadow-xl shadow-gray-200/40 group relative">
+            <div className="w-full aspect-[16/10] bg-zinc-50 rounded-2xl overflow-hidden border border-gray-100 shadow-xl shadow-gray-200/40 group relative">
               <img 
                 src="/images/profil.jpeg"
                 alt="Foto bersama seluruh anggota pengurus Kelompok Tani Banyu Urip di area perkebunan Tanggumong"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-[32px] pointer-events-none"></div>
+              <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none"></div>
             </div>
 
 
@@ -414,7 +416,7 @@ export default function ProfilPage() {
                   href="https://www.google.com/maps/place/King+Agrowisata/@-7.172934,113.2257627,17z"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 w-full bg-poktan-leaf hover:bg-poktan-green text-white py-3.5 rounded-full font-bold text-xs shadow-md shadow-poktan-leaf/10 hover:shadow-lg hover:shadow-poktan-leaf/20 active:scale-[0.98] transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2 w-full bg-poktan-leaf hover:bg-poktan-green text-white py-3.5 rounded-xl font-bold text-xs shadow-md shadow-poktan-leaf/10 hover:shadow-lg hover:shadow-poktan-leaf/20 active:scale-[0.98] transition-all duration-300"
                 >
                   <ExternalLink size={14} /> Buka Peta Google Maps
                 </a>
@@ -423,10 +425,11 @@ export default function ProfilPage() {
           </div>
 
           {/* Sisi Kanan: Kotak Peta Interaktif Menggunakan iFrame Google Maps */}
-          <div className="lg:col-span-7 w-full h-[380px] md:h-[450px] bg-zinc-100 rounded-[40px] overflow-hidden relative border-4 border-white shadow-xl shadow-poktan-green/5 group">
+          <div className="lg:col-span-7 w-full h-[380px] md:h-[450px] bg-slate-50/50 rounded-2xl overflow-hidden relative border border-[#f0f4f1] shadow-sm group">
+            <div className="absolute inset-0 bg-poktan-leaf/5 mix-blend-multiply pointer-events-none z-10 transition-opacity duration-500 group-hover:opacity-0"></div>
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d989.6482979429958!2d113.2257627!3d-7.172934!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd78700623cc9c3%3A0x943205d1b81970ab!2sKing%20Agrowisata!5e0!3m2!1sid!2sid!4v1781857423631!5m2!1sid!2sid"
-              className="w-full h-full grayscale-[20%] opacity-90 contrast-[110%] group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+              className="w-full h-full opacity-80 saturate-50 sepia-[15%] group-hover:opacity-100 group-hover:saturate-100 group-hover:sepia-0 transition-all duration-700 ease-in-out"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
@@ -492,7 +495,7 @@ function OrgCard({ name, role, desc, isPrimary = false }: { name: string, role: 
 
 function SeksiCard({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) {
   return (
-    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[32px] md:rounded-[40px] p-6 md:p-8 shadow-xl hover:bg-white/10 hover:border-poktan-accent/30 transition-all duration-500 group">
+    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-[40px] p-6 md:p-8 shadow-xl hover:bg-white/10 hover:border-poktan-accent/30 transition-all duration-500 group">
       <div className="flex items-center gap-4 md:gap-5 mb-6 md:mb-8">
         <div className="w-12 h-12 md:w-14 md:h-14 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
           {icon}

@@ -5,7 +5,7 @@ import { Star, ShieldCheck, ShoppingBag, Leaf } from "lucide-react";
 
 export default function KatalogHero() {
   return (
-    <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-[#fcfdfb] py-20 md:py-28 px-6 md:px-12 overflow-hidden">
+    <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-slate-50/50 py-20 md:py-28 px-6 md:px-12 overflow-hidden">
       {/* Decorative Background Blob */}
       <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-poktan-accent/15 rounded-full blur-[120px] -z-10"></div>
       
