@@ -14,33 +14,35 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Disable caching so it always fetches fresh data
 
 export default async function Home() {
-  // Fetch latest settings (WhatsApp number)
-  const { data: settingsData } = await supabase.from("settings").select("*");
+  // Fetch semua data secara paralel agar tidak memblokir render
+  const [
+    { data: settingsData },
+    { data: galleryItems },
+    { data: articles },
+    { data: melonData }
+  ] = await Promise.all([
+    supabase.from("settings").select("*"),
+    supabase
+      .from("gallery")
+      .select("*")
+      .neq("category", "Video Dokumentasi")
+      .order("created_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("articles")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false })
+  ]);
+
   const wa = settingsData?.find((s) => s.key === "wa_number");
   const rawWaNumber = wa?.value || "6287812345678";
   const cleanWa = rawWaNumber.replace(/\D/g, "");
   const waNumber = cleanWa.startsWith("620") ? "62" + cleanWa.substring(3) : cleanWa;
-
-  // Fetch latest 6 gallery items (excluding videos, only photos)
-  const { data: galleryItems } = await supabase
-    .from("gallery")
-    .select("*")
-    .neq("category", "Video Dokumentasi")
-    .order("created_at", { ascending: false })
-    .limit(6);
-
-  // Fetch latest 6 articles
-  const { data: articles } = await supabase
-    .from("articles")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(6);
-
-  // Fetch Melon dari tabel products
-  const { data: melonData } = await supabase
-    .from("products")
-    .select("*")
-    .order("created_at", { ascending: false });
 
   let combinedData: any[] = [];
 

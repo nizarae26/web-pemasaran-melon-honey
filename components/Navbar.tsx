@@ -68,18 +68,6 @@ export default function Navbar() {
 
         {/* 3. Action Buttons */}
         <div className="flex items-center gap-2 md:gap-4 relative z-[110]">
-          <Link
-            href="/monitoring"
-            className={`h-10 w-10 md:w-auto md:px-6 rounded-full font-extrabold text-xs md:text-sm flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.96] duration-300 ${
-              pathname === "/monitoring"
-                ? "bg-poktan-leaf text-white shadow-poktan-leaf/20"
-                : "bg-poktan-green text-white hover:bg-[#059669] shadow-poktan-green/10"
-            }`}
-          >
-            <MonitorSmartphone size={18} className="shrink-0" />
-            <span className="hidden md:inline">Monitoring</span>
-          </Link>
-
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}

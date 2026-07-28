@@ -200,7 +200,7 @@ export default function Footer({ waNumber: propWaNumber }: FooterProps) {
       </div>
 
       {/* Copyright */}
-      <div className="max-w-7xl mx-auto pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-white/40 font-medium tracking-wider">
+      <div className="max-w-7xl mx-auto pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-white font-medium tracking-wider">
         <p>© 2024 KELOMPOK TANI BANYU URIP.</p>
         <div className="flex gap-8 uppercase">
         </div>
