@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  /* Palet Warna Banyu Urip */
+  --poktan-green: #1A5319;   /* Hijau Utama/Identitas [cite: 13] */
+  --poktan-leaf: #508D4E;    /* Tombol Aksi [cite: 17] */
+  --poktan-orange: #f0cc4b;  /* Status Pre-Order [cite: 24] */
+  --poktan-red: #E74C3C;     /* Status Stok Habis [cite: 35] */
+  --poktan-accent: #D6EFD8;  /* Background Ringan */
+  --poktan-emerald: #10b981; /* Hijau Terang / Highlight */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Mendaftarkan Utility Class Baru */
+  --color-poktan-green: var(--poktan-green);
+  --color-poktan-leaf: var(--poktan-leaf);
+  --color-poktan-orange: var(--poktan-orange);
+  --color-poktan-red: var(--poktan-red);
+  --color-poktan-accent: var(--poktan-accent);
+  --color-poktan-emerald: var(--poktan-emerald);
+  
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+@keyframes wave-flow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-wave-slow {
+  animation: wave-flow 24s linear infinite;
+}
+
+.animate-wave-mid {
+  animation: wave-flow 16s linear infinite;
+}
+
+.animate-wave-fast {
+  animation: wave-flow 10s linear infinite;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
