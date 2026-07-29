@@ -16,6 +16,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Banyu Urip | Melon Honey Globe Premium",
   description: "Website resmi Kelompok Tani Banyu Urip Tanggumong - Menyediakan varietas unggulan Melon Honey Globe premium dan edukasi smart farming.",
+  keywords: ["melon honey globe", "melon premium", "pertanian", "kelompok tani", "banyu urip", "tanggumong", "sampang", "madura", "smart farming", "buah melon"],
+  openGraph: {
+    title: "Banyu Urip | Melon Honey Globe Premium",
+    description: "Website resmi Kelompok Tani Banyu Urip Tanggumong - Menyediakan varietas unggulan Melon Honey Globe premium.",
+    url: "https://melon-honey.vercel.app",
+    siteName: "Poktan Banyu Urip",
+    images: [
+      {
+        url: "/images/logo-utama.png",
+        width: 800,
+        height: 600,
+        alt: "Logo Banyu Urip",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
   icons: [
     {
       rel: 'icon',
