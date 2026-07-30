@@ -26,7 +26,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 relative z-[110]">
           <div className="w-9 h-9 md:w-12 md:h-12 flex items-center justify-center">
             <Image 
-              src="/images/logo-utama.png" 
+              src="/images/logoutama_removebg.png" 
               alt="Logo KING Agro Wisata" 
               width={48} 
               height={48} 

@@ -10,7 +10,7 @@ export const metadata = {
       rel: 'icon',
       media: '(prefers-color-scheme: light)',
       type: 'image/png',
-      url: '/images/logo-utama.png',
+      url: '/images/logoutama_removebg.png',
     },
     {
       rel: 'icon',

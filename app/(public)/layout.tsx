@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "Poktan Banyu Urip",
     images: [
       {
-        url: "/images/logo-utama.png",
+        url: "/images/logoutama_removebg.png",
         width: 800,
         height: 600,
         alt: "Logo Banyu Urip",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
       rel: 'icon',
       media: '(prefers-color-scheme: light)',
       type: 'image/png',
-      url: '/images/logo-utama.png',
+      url: '/images/logoutama_removebg.png',
     },
     {
       rel: 'icon',
