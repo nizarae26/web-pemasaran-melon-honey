@@ -23,21 +23,15 @@ export default function Navbar() {
       <div className="w-full px-4 md:px-12 py-4 flex items-center justify-between relative h-20">
         
         {/* 1. Logo Section */}
-        <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 relative z-[110]">
-          <div className="w-9 h-9 md:w-12 md:h-12 flex items-center justify-center">
-            <Image 
-              src="/images/logoutama_removebg.png" 
-              alt="Logo KING Agro Wisata" 
-              width={48} 
-              height={48} 
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <span className="font-bold text-poktan-green leading-tight text-[12px] md:text-base">
-            Kelompok Tani
-            <br />
-            Banyu Urip
-          </span>
+        <Link href="/" className="flex items-center shrink-0 relative z-[110]">
+          <Image 
+            src="/images/logoutama_removebg.png" 
+            alt="Logo Poktan Banyu Urip" 
+            width={240} 
+            height={48} 
+            className="w-auto h-8 md:h-12 object-contain"
+            priority
+          />
         </Link>
 
         {/* 2. Navigasi Desktop dengan Animasi Pergeseran */}
