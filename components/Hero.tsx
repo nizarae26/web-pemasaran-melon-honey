@@ -130,7 +130,7 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
             className="w-full max-w-sm aspect-square relative flex items-center justify-center cursor-pointer group"
           >
             <img
-              src="/images/hero-melon.png"
+              src="/images/melon-hero-removebg.png"
               alt="Melon Honey Globe Premium Banyu Urip"
               className="w-full h-full object-contain filter drop-shadow-[0_15px_30px_rgba(72,110,92,0.18)] group-hover:scale-105 transition-transform duration-500"
             />
