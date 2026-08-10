@@ -71,15 +71,13 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <a
-              href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20untuk%20membeli%20Melon%20Honey%20Globe%20Banyu%20Urip`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/"
               className="inline-flex items-center gap-2 bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-xl text-sm font-bold shadow-lg shadow-poktan-leaf/25 active:scale-95 transition-all duration-300 hover:scale-102"
             >
               <span>Pesan Sekarang</span>
               <ArrowRight size={16} />
-            </a>
+            </Link>
             <Link
               href="/katalog"
               className="inline-flex items-center gap-2 border border-slate-200 hover:border-poktan-leaf text-gray-700 hover:text-poktan-green bg-white px-8 py-4 rounded-xl text-sm font-bold transition-all duration-300 hover:bg-slate-50 active:scale-95"

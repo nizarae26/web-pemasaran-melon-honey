@@ -25,6 +25,8 @@ Dashboard khusus admin untuk mengelola konten website dengan fitur:
 - **Styling:** Tailwind CSS (Modern, Clean, UI/UX Animations)
 - **Icons:** Lucide React
 - **Animations:** Framer Motion
+- **Database & Storage:** Supabase (PostgreSQL, Storage, Auth)
+- **Notifikasi:** SweetAlert2 & React Hot Toast
 
 ## 💻 Menjalankan Proyek Secara Lokal
 
@@ -32,11 +34,16 @@ Dashboard khusus admin untuk mengelola konten website dengan fitur:
    ```bash
    npm install
    ```
-2. Jalankan server pengembangan (development):
+2. Buat file `.env.local` di root folder dan tambahkan environment variable berikut (dapatkan dari project Supabase Anda):
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+3. Jalankan server pengembangan (development):
    ```bash
    npm run dev
    ```
-3. Buka browser dan arahkan ke [http://localhost:3000](http://localhost:3000).
+4. Buka browser dan arahkan ke [http://localhost:3000](http://localhost:3000).
 
 ---
 *Didedikasikan untuk memajukan sektor pertanian lokal di era digital.*

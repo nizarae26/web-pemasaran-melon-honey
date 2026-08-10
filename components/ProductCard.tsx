@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Clock, XCircle, Flame, Star, Tag } from "lucide-react";
+import { Clock, XCircle, Flame, Star, Tag, ShoppingCart } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 interface ProductProps {
@@ -151,16 +151,28 @@ export default function ProductCard({
               <span>{current.label}</span>
             </button>
           ) : (
-            <a
-              href={waLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1.5 sm:gap-2 
-              transition-all duration-300 text-center text-[11px] sm:text-sm`}
-            >
-              {current.icon}
-              <span>{current.label}</span>
-            </a>
+            <div className="flex gap-2 w-full">
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={current.label}
+                className={`flex flex-1 ${current.buttonColor} py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+                transition-all duration-300 text-center text-[10px] sm:text-[13px]`}
+              >
+                {current.icon}
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href="/"
+                title="Pesan via Website"
+                className={`flex flex-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+                transition-all duration-300 text-center text-[10px] sm:text-[13px]`}
+              >
+                <ShoppingCart size={14} className="sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
+                <span>Website</span>
+              </a>
+            </div>
           )}
         </div>
       </div>
