@@ -56,20 +56,13 @@ export default async function Home() {
       name: `${item.name} (${item.weight ? (String(item.weight).toLowerCase().includes('kg') ? item.weight : item.weight + ' kg') : "1 kg"})`,
       grade: item.type_melon || "Honey Globe",
       price: `Rp.${Number(item.price).toLocaleString('id-ID')}`,
-      status: item.stock > 0 ? "Tersedia" : "Habis",
+      status: "Tersedia",
       weight: item.weight || "1.0 kg",
       imageUrl: item.image_url,
       date: new Date(item.created_at).getTime(),
     }));
     combinedData = [...combinedData, ...mappedMelon];
   }
-
-  // Urutkan agar produk yang "Tersedia" tampil di atas
-  combinedData.sort((a, b) => {
-    if (a.status === "Tersedia" && b.status === "Habis") return -1;
-    if (a.status === "Habis" && b.status === "Tersedia") return 1;
-    return 0;
-  });
 
   const featuredProducts = combinedData.slice(0, 4);
 

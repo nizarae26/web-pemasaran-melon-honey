@@ -14,7 +14,7 @@ function ProductFormContent() {
   const editingId = searchParams.get("id");
 
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [formData, setFormData] = useState({ name: "", type_melon: "Honey Globe", price: "", stock: "", weight: "" });
+  const [formData, setFormData] = useState({ name: "", type_melon: "Honey Globe", price: "", weight: "" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [pageLoading, setPageLoading] = useState(!!editingId);
@@ -29,7 +29,6 @@ function ProductFormContent() {
             name: data.name,
             type_melon: data.type_melon || "Honey Globe",
             price: String(data.price),
-            stock: String(data.stock),
             weight: data.weight || ""
           });
           setPreviewUrl(data.image_url);
@@ -81,7 +80,6 @@ function ProductFormContent() {
           name: formData.name,
           type_melon: formData.type_melon,
           price: Number(formData.price),
-          stock: Number(formData.stock),
           weight: formData.weight,
           image_url: image_url,
         }).eq("id", editingId);
@@ -98,7 +96,6 @@ function ProductFormContent() {
           name: formData.name,
           type_melon: formData.type_melon,
           price: Number(formData.price),
-          stock: Number(formData.stock),
           weight: formData.weight,
           image_url: image_url,
         });
@@ -175,7 +172,7 @@ function ProductFormContent() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+          <div className="grid grid-cols-2 gap-4 md:gap-5">
             <div className="space-y-2">
               <label className="text-sm font-bold text-slate-800">Harga (Rp)</label>
               <input
@@ -188,21 +185,8 @@ function ProductFormContent() {
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               />
             </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-800">Stok</label>
-              <input
-                type="number"
-                required
-                min="0"
-                placeholder="100"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm text-slate-700 placeholder-gray-400"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-              />
-            </div>
             
-            <div className="space-y-2 col-span-2 md:col-span-1">
+            <div className="space-y-2">
               <label className="text-sm font-bold text-slate-800">Berat</label>
               <input
                 type="text"

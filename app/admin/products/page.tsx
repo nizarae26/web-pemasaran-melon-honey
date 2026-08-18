@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Plus, Trash2, Edit, Package, X, Upload, Loader2 } from "lucide-react";
+import { Plus, Trash2, Edit, Package } from "lucide-react";
 import Swal from "sweetalert2";
 
 export default function AdminProducts() {
@@ -13,7 +13,6 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(true);
 
   async function fetchProducts() {
-
     const { data, error } = await supabase
       .from("products")
       .select("*")
@@ -90,18 +89,17 @@ export default function AdminProducts() {
               <tr className="bg-gray-50/50 border-b border-gray-100">
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Produk</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Harga</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Stok</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-sm text-gray-400">Memuat...</td>
+                  <td colSpan={3} className="px-6 py-8 text-center text-sm text-gray-400">Memuat...</td>
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-sm text-gray-400">Belum ada produk.</td>
+                  <td colSpan={3} className="px-6 py-8 text-center text-sm text-gray-400">Belum ada produk.</td>
                 </tr>
               ) : (
                 products.map((p) => (
@@ -124,19 +122,11 @@ export default function AdminProducts() {
                           {p.type_melon && (
                             <span className="text-xs text-emerald-600 font-bold mt-0.5">{p.type_melon}</span>
                           )}
-                          {p.stock <= 0 && (
-                            <span className="text-[10px] text-red-500 font-bold mt-0.5">Sedang Kosong / Pre-Order</span>
-                          )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm font-medium text-gray-600">
                       Rp {Number(p.price).toLocaleString('id-ID')}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${p.stock > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
-                        {p.stock > 0 ? `${p.stock} Tersedia` : 'Habis'}
-                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
@@ -188,9 +178,6 @@ export default function AdminProducts() {
                       {p.type_melon && (
                         <span className="text-[10px] text-emerald-600 font-bold">{p.type_melon}</span>
                       )}
-                      <span className={`px-1.5 py-0.5 rounded-none text-[9px] font-bold ${p.stock > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
-                        {p.stock > 0 ? `${p.stock} Pcs` : 'Habis'}
-                      </span>
                     </div>
                     <span className="text-xs font-black text-gray-900 mt-2">
                       Rp {Number(p.price).toLocaleString('id-ID')}
@@ -221,5 +208,3 @@ export default function AdminProducts() {
     </div>
   );
 }
-
-

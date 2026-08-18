@@ -49,7 +49,7 @@ export default function ProductCard({
       buttonColor: "bg-slate-100 text-slate-400 cursor-not-allowed",
       badgeColor: "bg-slate-50 text-slate-400 border border-slate-100",
       icon: <XCircle size={16} strokeWidth={2.5} />,
-      label: "Stok Habis",
+      label: "Habis",
     },
   };
 
@@ -120,15 +120,18 @@ export default function ProductCard({
         )}
       </div>
 
-      <div className="p-3 sm:p-6 text-left flex flex-col flex-grow">
-        <div className="min-h-[2rem] sm:h-12 flex items-center justify-start mb-1 sm:mb-2">
-          <h3 className={`font-bold text-gray-800 tracking-tight leading-tight line-clamp-2 ${
-            name.length > 24 ? "text-xs sm:text-sm md:text-base" : "text-sm sm:text-base md:text-lg"
-          }`}>
+      <div className="p-3 sm:p-5 text-left flex flex-col flex-grow">
+        <div className="flex items-center justify-start mb-1 sm:mb-2">
+          <h3 
+            title={name}
+            className={`font-bold text-gray-800 tracking-tight leading-tight truncate ${
+              name.length > 20 ? "text-xs sm:text-sm" : "text-xs sm:text-sm md:text-base"
+            }`}
+          >
             {name}
           </h3>
         </div>
-        <p className="text-[9px] sm:text-[11px] text-gray-500 mb-2 sm:mb-4 font-medium block">
+        <p className="text-[9px] sm:text-[11px] text-gray-500 mb-2 sm:mb-3 font-medium block truncate">
           Varian: <span className="font-bold text-gray-700">{grade || "-"}</span> 
           <span className="mx-1 sm:mx-1.5 text-gray-300">|</span> 
           <span className={status === "Habis" ? "text-poktan-red font-bold" : "text-poktan-emerald font-bold"}>
@@ -137,40 +140,40 @@ export default function ProductCard({
         </p>
         
         <div className="mt-auto pt-1 sm:pt-2">
-          <p className="text-poktan-emerald font-extrabold text-base sm:text-xl mb-2 sm:mb-4 tracking-tight leading-tight">
+          <p className="text-poktan-emerald font-extrabold text-base sm:text-lg mb-2 sm:mb-3 tracking-tight leading-tight">
             {price}
           </p>
 
           {status === "Habis" ? (
             <button
               disabled
-              className={`flex w-full ${current.buttonColor} py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1.5 sm:gap-2 
-              transition-all text-[11px] sm:text-sm`}
+              className={`flex w-full ${current.buttonColor} py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1.5 
+              transition-all text-xs`}
             >
               {current.icon}
               <span>{current.label}</span>
             </button>
           ) : (
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-1.5 sm:gap-2 w-full">
               <a
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 title={current.label}
-                className={`flex flex-1 ${current.buttonColor} py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
-                transition-all duration-300 text-center text-[10px] sm:text-[13px]`}
+                className={`flex flex-1 min-w-0 ${current.buttonColor} px-2 py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+                transition-all duration-300 text-center text-[10px] sm:text-xs whitespace-nowrap`}
               >
-                {current.icon}
-                <span>WhatsApp</span>
+                <WhatsAppIcon size={14} className="shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <span className="truncate">WhatsApp</span>
               </a>
               <a
                 href="/"
                 title="Pesan via Website"
-                className={`flex flex-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md py-2 sm:py-3 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
-                transition-all duration-300 text-center text-[10px] sm:text-[13px]`}
+                className={`flex flex-1 min-w-0 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md px-2 py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+                transition-all duration-300 text-center text-[10px] sm:text-xs whitespace-nowrap`}
               >
-                <ShoppingCart size={14} className="sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
-                <span>Website</span>
+                <ShoppingCart size={14} className="shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <span className="truncate">Website</span>
               </a>
             </div>
           )}

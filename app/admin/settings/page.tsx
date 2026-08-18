@@ -344,7 +344,7 @@ export default function SettingsPage() {
 
       <div className="space-y-6 md:space-y-8">
         {/* WA Settings */}
-        <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
+        <div className="bg-white p-4 md:p-6 border border-gray-100 shadow-sm rounded-none">
           <div className="flex items-center gap-3 mb-4 md:mb-6">
             <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center shrink-0">
               <Phone size={18} className="md:w-5 md:h-5" />
@@ -567,7 +567,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Profil & Tentang Kami Settings */}
-        <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
+        <div className="bg-white p-4 md:p-6 border border-gray-100 shadow-sm space-y-4 rounded-none">
           <div className="flex items-center gap-3 mb-4 md:mb-6">
             <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center shrink-0">
               <Info size={18} className="md:w-5 md:h-5" />
@@ -588,22 +588,22 @@ export default function SettingsPage() {
               />
             </div>
           </div>
-        </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end pt-2">
-          <button
-            onClick={handleSave}
-            disabled={saving || isChangingWa}
-            className="w-full md:w-auto justify-center flex items-center gap-2 px-6 py-2.5 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20 active:scale-95 text-xs md:text-sm cursor-pointer"
-          >
-            {saving ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Save size={16} />
-            )}
-            <span>{saving ? "Menyimpan..." : "Simpan Pengaturan"}</span>
-          </button>
+          {/* Save Button inside Card */}
+          <div className="pt-2">
+            <button
+              onClick={handleSave}
+              disabled={saving || isChangingWa}
+              className="w-full justify-center flex items-center gap-2 px-6 py-3 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20 active:scale-95 text-xs md:text-sm cursor-pointer"
+            >
+              {saving ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Save size={16} />
+              )}
+              <span>{saving ? "Menyimpan..." : "Simpan Pengaturan"}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

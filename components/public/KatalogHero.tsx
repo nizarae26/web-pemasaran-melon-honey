@@ -87,7 +87,7 @@ export default function KatalogHero() {
               <div className="w-10 h-10 bg-white border border-[#f0f4f1] rounded-xl flex items-center justify-center text-poktan-leaf transition-transform group-hover:scale-105 shrink-0 shadow-sm">
                 <ShoppingBag size={18} strokeWidth={2.5} />
               </div>
-              <p className="font-bold text-xs text-gray-700">Stok Terjaga</p>
+              <p className="font-bold text-xs text-gray-700">Kualitas Terjaga</p>
             </div>
           </div>
         </motion.div>
