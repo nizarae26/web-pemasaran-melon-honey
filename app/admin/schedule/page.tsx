@@ -1,21 +1,20 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/purity */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Save, CalendarDays, Loader2, Plus, Trash2 } from "lucide-react";
+import { CalendarDays, Loader2, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import toast from "react-hot-toast";
+
+interface ScheduleItem {
+  id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+}
 
 export default function SchedulePage() {
-  const [schedules, setSchedules] = useState([
-    {
-      id: "1",
-      title: "Panen Utama",
-      start_date: new Date().toISOString().split('T')[0],
-      end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
-      status: "PANEN"
-    }
-  ]);
+  const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -34,8 +33,8 @@ export default function SchedulePage() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           setSchedules(parsed);
         }
-      } catch (e) {
-        console.error("Error parsing schedule JSON:", e);
+      } catch (err) {
+        console.error("Error parsing schedule JSON:", err);
       }
     } else {
       // Fallback to old schedule format if multi doesn't exist
@@ -52,7 +51,18 @@ export default function SchedulePage() {
               status: parsed.status || "PANEN"
             }]);
           }
-        } catch(e) {}
+        } catch {}
+      } else {
+        const today = new Date();
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        setSchedules([{
+          id: "1",
+          title: "Panen Utama",
+          start_date: today.toISOString().split('T')[0],
+          end_date: nextWeek.toISOString().split('T')[0],
+          status: "PANEN"
+        }]);
       }
     }
     setLoading(false);
@@ -62,7 +72,7 @@ export default function SchedulePage() {
     fetchSchedule();
   }, []);
 
-  const triggerAutoSave = (dataToSave: any[]) => {
+  const triggerAutoSave = (dataToSave: ScheduleItem[]) => {
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(async () => {
       setSaving(true);
@@ -75,11 +85,14 @@ export default function SchedulePage() {
   };
 
   const addSchedule = () => {
-    const newData = [{
-      id: Date.now().toString() + Math.random().toString(),
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
+    const newData: ScheduleItem[] = [{
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       title: "Panen Baru",
-      start_date: new Date().toISOString().split('T')[0],
-      end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
+      start_date: today.toISOString().split('T')[0],
+      end_date: nextWeek.toISOString().split('T')[0],
       status: "PANEN"
     }, ...schedules];
     setSchedules(newData);

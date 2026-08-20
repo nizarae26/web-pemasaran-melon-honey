@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./../globals.css";
@@ -14,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://melon-honey.vercel.app"),
   title: "Banyu Urip | Melon Honey Globe Premium",
   description: "Website resmi Kelompok Tani Banyu Urip Tanggumong - Menyediakan varietas unggulan Melon Honey Globe premium dan edukasi smart farming.",
   keywords: ["melon honey globe", "melon premium", "pertanian", "kelompok tani", "banyu urip", "tanggumong", "sampang", "madura", "smart farming", "buah melon"],

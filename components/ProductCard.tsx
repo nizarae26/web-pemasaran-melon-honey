@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Clock, XCircle, Flame, Star, Tag, ShoppingCart } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
@@ -133,6 +134,12 @@ export default function ProductCard({
         </div>
         <p className="text-[9px] sm:text-[11px] text-gray-500 mb-2 sm:mb-3 font-medium block truncate">
           Varian: <span className="font-bold text-gray-700">{grade || "-"}</span> 
+          {weight && (
+            <>
+              <span className="mx-1 sm:mx-1.5 text-gray-300">|</span> 
+              <span>{weight}</span>
+            </>
+          )}
           <span className="mx-1 sm:mx-1.5 text-gray-300">|</span> 
           <span className={status === "Habis" ? "text-poktan-red font-bold" : "text-poktan-emerald font-bold"}>
             {status}
@@ -166,7 +173,7 @@ export default function ProductCard({
                 <WhatsAppIcon size={14} className="shrink-0 group-hover:translate-x-0.5 transition-transform" />
                 <span className="truncate">WhatsApp</span>
               </a>
-              <a
+              <Link
                 href="/"
                 title="Pesan via Website"
                 className={`flex flex-1 min-w-0 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md px-2 py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
@@ -174,7 +181,7 @@ export default function ProductCard({
               >
                 <ShoppingCart size={14} className="shrink-0 group-hover:translate-x-0.5 transition-transform" />
                 <span className="truncate">Website</span>
-              </a>
+              </Link>
             </div>
           )}
         </div>
@@ -182,3 +189,4 @@ export default function ProductCard({
     </motion.div>
   );
 }
+

@@ -9,7 +9,7 @@ import { Plus, Trash2, Edit, Package } from "lucide-react";
 import Swal from "sweetalert2";
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function fetchProducts() {
@@ -25,7 +25,6 @@ export default function AdminProducts() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProducts();
   }, []);
 
@@ -51,7 +50,6 @@ export default function AdminProducts() {
         icon: "success",
         confirmButtonColor: "#10b981",
       });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchProducts();
     } else {
       Swal.fire({

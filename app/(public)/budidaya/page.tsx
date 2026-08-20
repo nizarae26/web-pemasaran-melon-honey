@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,6 @@ import Footer from "@/components/Footer";
 import BudidayaHero from "@/components/public/BudidayaHero";
 import {
   Sprout,
-  Settings2,
   Layers,
   Droplets,
   Flower2,
@@ -16,11 +14,8 @@ import {
   Home,
   Trees,
   Leaf,
-  Scissors,
-  Sparkles,
   Activity,
   ChevronDown,
-  LayoutGrid,
 } from "lucide-react";
 
 export default function BudidayaPage() {

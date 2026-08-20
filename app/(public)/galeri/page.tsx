@@ -3,48 +3,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GaleriHero from "@/components/public/GaleriHero";
-import { ArrowRight, Calendar, Camera, Filter, GraduationCap, Newspaper, PlaySquare, Search, Users, X, Link2, Sparkles } from "lucide-react";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { Calendar, Camera, GraduationCap, Newspaper, Users, X } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function GaleriPage() {
-  const router = useRouter();
-  // State untuk Filter Aktif
   const [activeTab, setActiveTab] = useState("Semua");
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [schedules, setSchedules] = useState<any[]>([
-    {
-      id: "1",
-      title: "Panen Utama",
-      start_date: new Date().toISOString().split('T')[0],
-      end_date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
-      status: "PANEN"
-    }
-  ]);
-
+  const [schedules, setSchedules] = useState<any[]>([]);
   const [categorizedVideos, setCategorizedVideos] = useState<{
     landscape: any[];
     portrait: any[];
   }>({ landscape: [], portrait: [] });
-
-  // Definisi data statistik media
-  const stats = [
-    { icon: <Camera size={22} />, label: "Dokumentasi", value: loading ? "..." : galleryItems.length },
-    { icon: <Newspaper size={22} />, label: "Berita & Artikel", value: loading ? "..." : articles.length },
-    { icon: <GraduationCap size={22} />, label: "Pelatihan", value: loading ? "..." : galleryItems.filter(g => g.cat === "Pelatihan").length },
-    { icon: <Users size={22} />, label: "Petani Terlibat", value: "25+" },
-  ];
 
   useEffect(() => {
     async function fetchData() {

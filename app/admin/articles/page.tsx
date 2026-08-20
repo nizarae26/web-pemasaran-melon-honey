@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Plus, Trash2, Edit, Loader2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 
 export default function AdminArticles() {
@@ -27,7 +27,6 @@ export default function AdminArticles() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchItems();
   }, []);
 
@@ -53,7 +52,6 @@ export default function AdminArticles() {
         icon: "success",
         confirmButtonColor: "#10b981",
       });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchItems();
     } else {
       Swal.fire({

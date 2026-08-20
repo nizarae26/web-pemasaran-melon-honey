@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -7,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, Calendar, Tag, Link2, Sparkles } from "lucide-react";
+import { ArrowLeft, Calendar, Tag, Link2 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { Toaster, toast } from "react-hot-toast";
 

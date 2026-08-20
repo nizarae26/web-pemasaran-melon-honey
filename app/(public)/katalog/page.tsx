@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -9,16 +8,11 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import KatalogHero from "@/components/public/KatalogHero";
 import {
-  Search,
   Filter,
-  Calendar,
   Sparkles,
-  ArrowUpDown,
   CheckCircle2,
   X,
-  SlidersHorizontal,
 } from "lucide-react";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function KatalogPage() {
   // State untuk Filter
@@ -29,7 +23,7 @@ export default function KatalogPage() {
   const [appliedMinPrice, setAppliedMinPrice] = useState<number | null>(null);
   const [appliedMaxPrice, setAppliedMaxPrice] = useState<number | null>(null);
   // Data Melon
-  const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [waNumber, setWaNumber] = useState("6287812345678");
   const [loading, setLoading] = useState(true);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -53,7 +47,7 @@ export default function KatalogPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      let combinedData: any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */ = [];
+      let combinedData: any[] = [];
 
       if (melonData) {
         const mappedMelon = melonData.map((item) => ({
@@ -75,7 +69,6 @@ export default function KatalogPage() {
       setProducts(combinedData);
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProducts();
   }, []);
 
