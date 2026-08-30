@@ -240,7 +240,7 @@ export default async function Home() {
 
             {/* Tombol WhatsApp Modern */}
             <a 
-              href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20dengan%20Melon%20Honey%20Globe%20Anda`}
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Halo Admin Poktan Banyu Urip, saya tertarik dengan Melon Honey Globe & Golden Apollo Anda. Boleh minta info katalog dan ketersediaan panen terbaru? Terima kasih!")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full md:w-auto bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-xl font-bold shadow-md shadow-poktan-leaf/10 hover:scale-102 transition-all duration-300 text-sm flex items-center justify-center gap-3 shrink-0"

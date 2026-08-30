@@ -76,8 +76,8 @@ export default function ProductCard({
   const current = statusConfig[status];
   const currentPromo = promo ? promoConfig[promo] : null;
 
-  // Format pesan WhatsApp
-  const waMessage = `Halo, saya tertarik untuk membeli/pre-order ${name} (Grade ${grade})`;
+  // Format pesan WhatsApp khusus Poktan Banyu Urip
+  const waMessage = `Halo Admin Poktan Banyu Urip, saya tertarik untuk memesan/menanyakan produk melon:\n\n*Produk:* ${name}\n*Varietas/Grade:* ${grade || "-"}\n*Harga:* ${price}\n\nMohon info ketersediaan stok dan cara pemesanannya. Terima kasih!`;
   const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
 
   return (

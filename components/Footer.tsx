@@ -120,7 +120,7 @@ export default function Footer({ waNumber: propWaNumber }: FooterProps) {
             {/* Telepon: items-center agar sejajar tengah */}
             <li className="flex items-center gap-4 group">
               <a 
-                href={`https://wa.me/${waNumber}`} 
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Halo Admin Poktan Banyu Urip, saya ingin bertanya seputar produk melon dan informasi perkebunan. Terima kasih!")}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 group cursor-pointer"
