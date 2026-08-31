@@ -64,7 +64,7 @@ export default async function Home() {
     combinedData = [...combinedData, ...mappedMelon];
   }
 
-  const featuredProducts = combinedData.slice(0, 4);
+  const featuredProducts = combinedData.slice(0, 6);
 
   return (
     <main className="min-h-screen bg-slate-50/50">
@@ -75,7 +75,7 @@ export default async function Home() {
       <Hero waNumber={waNumber} />
 
       {/* 3. Katalog Melon Honey Globe  */}
-      <section className="py-12 px-6 md:px-12 bg-slate-50/50">
+      <section className="py-12 px-4 sm:px-6 md:px-12 bg-slate-50/50">
         <div className="max-w-6xl mx-auto">
           
           <ScrollReveal>
@@ -90,7 +90,7 @@ export default async function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 md:gap-6 lg:gap-8">
               {featuredProducts.map((product, index) => (
                 <ProductCard 
                   key={index} 

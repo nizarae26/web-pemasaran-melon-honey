@@ -266,9 +266,9 @@ export default function ProfilPage() {
             </div>
 
             {/* Tingkat 2: Sekretaris & Bendahara */}
-            <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-[280px] lg:gap-[360px] pt-6 md:pt-20 relative z-10">
+            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 lg:gap-[320px] pt-6 md:pt-20 relative z-10">
                {/* Garis Horizontal Penghubung dengan border-radius */}
-              <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-[280px] lg:w-[360px] h-10 border-t-2 border-l-2 border-r-2 border-emerald-800/50 rounded-t-3xl"></div>
+              <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-[320px] h-10 border-t-2 border-l-2 border-r-2 border-emerald-800/50 rounded-t-3xl"></div>
 
               <OrgCard
                 name={sekretaris.name}

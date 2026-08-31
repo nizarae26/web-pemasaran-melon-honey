@@ -162,70 +162,84 @@ export default function SchedulePage() {
 
   return (
     <div className="space-y-6 md:space-y-8 relative">
-      <div className="flex flex-row items-center justify-between gap-2 md:gap-4">
+      <div className="flex flex-row items-center justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-base md:text-2xl font-black text-gray-900 leading-tight">Jadwal Panen</h1>
-          <p className="text-gray-500 mt-0.5 text-[10px] md:text-sm">Kelola beberapa jadwal panen sekaligus.</p>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg md:text-2xl font-black text-gray-900 tracking-tight leading-tight">Jadwal Panen</h1>
+            {saving && (
+              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">
+                <Loader2 size={12} className="animate-spin" />
+                Menyimpan...
+              </span>
+            )}
+          </div>
+          <p className="text-gray-500 mt-0.5 text-xs md:text-sm">Kelola beberapa rentang waktu panen melon sekaligus.</p>
         </div>
         <button
           type="button"
           onClick={addSchedule}
-          className="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-none font-bold text-[10px] md:text-sm flex items-center gap-1.5 transition-colors shadow-sm active:scale-95 z-10"
+          className="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer z-10"
         >
-          <Plus size={14} className="md:w-[18px] md:h-[18px]" />
-          Tambah Panen
+          <Plus size={16} />
+          <span>Tambah Panen</span>
         </button>
       </div>
 
-      <div className="grid gap-6">
+      {/* Daftar Jadwal Input Cards */}
+      <div className="grid gap-3 sm:gap-4">
         {schedules.length === 0 && (
-          <div className="bg-white p-12 rounded-none border border-gray-100 shadow-sm text-center">
-            <p className="text-gray-500 text-sm font-medium">Belum ada jadwal panen yang tersimpan.</p>
+          <div className="bg-white p-8 sm:p-12 rounded-2xl border border-gray-100 shadow-2xs text-center">
+            <p className="text-gray-400 text-xs sm:text-sm font-medium">Belum ada jadwal panen yang tersimpan. Klik &quot;Tambah Panen&quot; di atas.</p>
           </div>
         )}
         {schedules.map((schedule, index) => (
-          <div key={schedule.id} className="bg-white p-4 md:p-6 rounded-none border border-gray-100 shadow-sm relative">
-            <div className="absolute top-4 right-4 z-10">
-                <button 
-                  type="button"
-                  onClick={() => removeSchedule(schedule.id)}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                  title="Hapus Jadwal Ini"
-                >
-                  <Trash2 size={18} />
-                </button>
+          <div key={schedule.id} className="bg-white p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 shadow-2xs relative transition-all">
+            <div className="flex items-center justify-between mb-3.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-emerald-700 bg-emerald-50 border border-emerald-100/60 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  Jadwal {schedules.length - index}
+                </span>
+                <span className="text-xs font-bold text-gray-700 hidden sm:inline">{schedule.title || "Tanpa Judul"}</span>
+              </div>
+              <button 
+                type="button"
+                onClick={() => removeSchedule(schedule.id)}
+                className="p-1.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                title="Hapus Jadwal Ini"
+              >
+                <Trash2 size={16} />
+              </button>
             </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pr-10"><span>{`Jadwal ${schedules.length - index}`}</span></h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Judul / Lahan</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-gray-700">Judul / Blok Lahan</label>
                 <input
                   type="text"
                   value={schedule.title}
                   onChange={(e) => updateSchedule(schedule.id, 'title', e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
-                  placeholder="Contoh: Lahan A / Panen Pertama"
+                  className="w-full px-3.5 py-2 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-800 placeholder-gray-400 shadow-2xs"
+                  placeholder="Contoh: Panen Raya / Greenhouse 1"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Tanggal Mulai</label>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-gray-700">Tanggal Mulai</label>
                   <input
                     type="date"
                     value={schedule.start_date}
                     onChange={(e) => updateSchedule(schedule.id, 'start_date', e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-800 shadow-2xs"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Tanggal Selesai</label>
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-gray-700">Tanggal Selesai</label>
                   <input
                     type="date"
                     value={schedule.end_date}
                     min={schedule.start_date}
                     onChange={(e) => updateSchedule(schedule.id, 'end_date', e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] transition-all"
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-800 shadow-2xs"
                   />
                 </div>
               </div>
@@ -234,15 +248,34 @@ export default function SchedulePage() {
         ))}
       </div>
 
-      <div className="bg-white p-4 md:p-6 rounded-none border border-gray-100 shadow-sm mt-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-emerald-50 text-[#10b981] rounded-none flex items-center justify-center">
-            <CalendarDays size={20} />
+      {/* Preview Kalender Panen */}
+      <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-100 shadow-2xs">
+        <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100/50 shrink-0">
+              <CalendarDays size={18} />
+            </div>
+            <div>
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 leading-tight">Preview Kalender Panen</h2>
+              <p className="text-[11px] sm:text-xs text-gray-500">Tampilan kalender di sisi publik pengunjung website</p>
+            </div>
           </div>
-          <h2 className="text-xl font-bold text-gray-800">Preview Kalender Panen</h2>
+
+          <div className="flex items-center gap-2">
+            {saving ? (
+              <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
+                <Loader2 size={13} className="animate-spin" />
+                <span>Menyimpan...</span>
+              </span>
+            ) : (
+              <span className="hidden sm:inline-flex text-[11px] font-bold text-gray-400">
+                Tersimpan Otomatis
+              </span>
+            )}
+          </div>
         </div>
         
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {monthsToDisplay.map(({ year, month }) => {
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const firstDay = new Date(year, month, 1).getDay();
@@ -262,115 +295,104 @@ export default function SchedulePage() {
             });
 
             return (
-              <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-none p-6 border border-emerald-100/50 w-full md:w-[320px]">
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-sm font-black text-[#064e3b]">
-                    <span>{monthLabel}</span>
-                  </span>
-                  <div className="flex flex-col gap-1 items-end">
-                    {activeSchedulesInMonth.map(s => {
-                      const sIdx = schedules.findIndex(x => x.id === s.id);
+              <div key={`${year}-${month}`} className="bg-slate-50/70 rounded-2xl p-4 sm:p-5 border border-slate-100 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-3.5">
+                    <span className="text-xs sm:text-sm font-black text-emerald-950">
+                      {monthLabel}
+                    </span>
+                    <div className="flex flex-col gap-1 items-end">
+                      {activeSchedulesInMonth.map(s => {
+                        const sIdx = schedules.findIndex(x => x.id === s.id);
+                        return (
+                          <span key={s.id} className={`text-[8.5px] sm:text-[9px] text-white px-2 py-0.5 rounded-full font-bold shadow-2xs ${BG_COLORS[sIdx % BG_COLORS.length]}`}>
+                            {s.title}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-7 gap-y-2.5 gap-x-1 text-center">
+                    {["M", "S", "S", "R", "K", "J", "S"].map((d, i) => (
+                      <div key={`dow-${i}`} className="text-[10px] font-black text-emerald-700/60 mb-1">
+                        {d}
+                      </div>
+                    ))}
+                    {emptySlots.map((_, i) => (
+                      <div key={`empty-${i}`}></div>
+                    ))}
+                    {days.map((day) => {
+                      const currentDate = new Date(year, month, day);
+                      const today = new Date();
+                      const isToday = currentDate.getDate() === today.getDate() && currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear();
+                      
+                      const matchedSchedules = schedules.filter(s => {
+                        const sDate = new Date(s.start_date);
+                        const eDate = new Date(s.end_date);
+                        sDate.setHours(0,0,0,0);
+                        eDate.setHours(0,0,0,0);
+                        currentDate.setHours(0,0,0,0);
+                        return currentDate >= sDate && currentDate <= eDate;
+                      });
+                      
+                      const isHighlighted = matchedSchedules.length > 0;
+                      
                       return (
-                        <span key={s.id} className={`text-[9px] text-white px-2 py-0.5 rounded-full font-black shadow-sm ${BG_COLORS[sIdx % BG_COLORS.length]}`}>
-                          <span>{s.title}</span>
-                        </span>
+                        <div key={`day-${day}`} className="flex justify-center items-center relative w-7 h-7 sm:w-8 sm:h-8 mx-auto group">
+                          {/* Split Backgrounds for overlapping schedules */}
+                          {isHighlighted && (
+                            <div className={`absolute inset-0 flex flex-col overflow-hidden ${isToday ? 'rounded-xl ring-2 ring-amber-400 ring-offset-1' : 'rounded-xl'} shadow-xs`}>
+                              {matchedSchedules.map((s) => {
+                                const sIdx = schedules.findIndex(x => x.id === s.id);
+                                return (
+                                  <div 
+                                    key={s.id} 
+                                    className={`flex-1 bg-gradient-to-r ${GRADIENTS[sIdx % GRADIENTS.length]}`}
+                                  />
+                                );
+                              })}
+                            </div>
+                          )}
+                          
+                          {/* Day Number & Centered Melon Icon */}
+                          <span
+                            className={`w-full h-full flex flex-col items-center justify-center text-[10px] sm:text-[11px] font-bold transition-all relative z-10 ${
+                              isHighlighted 
+                                ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]' 
+                                : (isToday ? 'bg-amber-100 text-amber-900 border border-amber-300 rounded-xl font-black shadow-2xs' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-xl')
+                            }`}
+                          >
+                            <span>{day}</span>
+                            {isHighlighted && (
+                              <span className="text-[7px] leading-none -mt-0.5">🍈</span>
+                            )}
+                          </span>
+                          
+                          {/* Tooltip for overlaps */}
+                          {matchedSchedules.length > 1 && (
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center z-50 pointer-events-none">
+                              <div className="bg-gray-900 text-white text-[9px] px-2 py-1.5 rounded-lg shadow-xl w-max max-w-[120px] text-left space-y-1">
+                                {matchedSchedules.map((s) => {
+                                  const sIdx = schedules.findIndex(x => x.id === s.id);
+                                  return (
+                                    <div key={s.id} className="flex items-center gap-1.5">
+                                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${BG_COLORS[sIdx % BG_COLORS.length]}`}></span>
+                                      <span className="truncate">{s.title}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              <div className="w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
                 </div>
-                <div className="grid grid-cols-7 gap-y-3 gap-x-1 text-center">
-                  {["M", "S", "S", "R", "K", "J", "S"].map((d, i) => (
-                    <div key={`dow-${i}`} className="text-[10px] font-black text-emerald-600/70 mb-2">
-                      <span>{d}</span>
-                    </div>
-                  ))}
-                  {emptySlots.map((_, i) => (
-                    <div key={`empty-${i}`}></div>
-                  ))}
-                  {days.map((day) => {
-                    const currentDate = new Date(year, month, day);
-                    const today = new Date();
-                    const isToday = currentDate.getDate() === today.getDate() && currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear();
-                    
-                    const matchedSchedules = schedules.filter(s => {
-                      const sDate = new Date(s.start_date);
-                      const eDate = new Date(s.end_date);
-                      sDate.setHours(0,0,0,0);
-                      eDate.setHours(0,0,0,0);
-                      currentDate.setHours(0,0,0,0);
-                      return currentDate >= sDate && currentDate <= eDate;
-                    });
-                    
-                    const isHighlighted = matchedSchedules.length > 0;
-                    
-                    return (
-                      <div key={`day-${day}`} className="flex justify-center items-center relative w-8 h-8 mx-auto group">
-                        {/* Split Backgrounds for overlapping schedules */}
-                        {isHighlighted && (
-                          <div className={`absolute inset-0 flex flex-col overflow-hidden ${isToday ? 'rounded-[10px] ring-2 ring-yellow-400 ring-offset-2' : 'rounded-[8px]'} shadow-sm`}>
-                            {matchedSchedules.map((s) => {
-                              const sIdx = schedules.findIndex(x => x.id === s.id);
-                              return (
-                                <div 
-                                  key={s.id} 
-                                  className={`flex-1 bg-gradient-to-r ${GRADIENTS[sIdx % GRADIENTS.length]}`}
-                                />
-                              );
-                            })}
-                          </div>
-                        )}
-                        
-                        {/* Day Number */}
-                        <span
-                          className={`w-full h-full flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
-                            isHighlighted ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]' : (isToday ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm' : 'text-gray-600 hover:bg-emerald-100 hover:text-emerald-700 rounded-full')
-                          }`}
-                        >
-                          <span>{day}</span>
-                        </span>
-                        
-                        {/* Tooltip for overlaps */}
-                        {matchedSchedules.length > 1 && (
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center z-50 pointer-events-none">
-                            <div className="bg-gray-900 text-white text-[9px] px-2 py-1.5 rounded-lg shadow-xl w-max max-w-[120px] text-left space-y-1">
-                              {matchedSchedules.map((s) => {
-                                const sIdx = schedules.findIndex(x => x.id === s.id);
-                                return (
-                                  <div key={s.id} className="flex items-center gap-1.5">
-                                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${BG_COLORS[sIdx % BG_COLORS.length]}`}></span>
-                                    <span className="truncate">{s.title}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                            <div className="w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
-                          </div>
-                        )}
-
-                        {/* Melon icon only for the start date of any schedule */}
-                        {matchedSchedules.some(s => {
-                          const sDate = new Date(s.start_date);
-                          sDate.setHours(0,0,0,0);
-                          return sDate.getTime() === currentDate.getTime();
-                        }) && (
-                          <span className="absolute -top-1.5 -right-1.5 z-20 flex">
-                            <span className="text-[10px] leading-none drop-shadow-md">🍈</span>
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
             );
           })}
-        </div>
-
-        <div className={`flex justify-end pt-8 mt-6 border-t border-gray-100 transition-opacity duration-300 ${saving ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="flex items-center gap-2 text-[#10b981] font-bold text-sm">
-            <Loader2 size={16} className="animate-spin" />
-            Menyimpan otomatis...
-          </div>
         </div>
       </div>
     </div>

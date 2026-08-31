@@ -225,53 +225,51 @@ export default function GaleriPage() {
       <main className="min-h-screen bg-slate-50/50 w-full overflow-x-hidden">
         <GaleriHero displayBulan={displayBulan} />
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 py-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 mb-12 flex flex-col gap-0 overflow-hidden">
-          {/* Navigation Tab Bar */}
-          <div className="p-4 px-6 md:px-8 flex flex-wrap items-center justify-center gap-2 w-full">
-            {[
-              "Semua",
-              "Berita & Artikel",
-              "Video Dokumentasi",
-              "Panen",
-              "Smart Farming",
-            ].map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2.5 rounded-xl text-xs font-extrabold transition-all duration-300 whitespace-nowrap cursor-pointer active:scale-95 border ${
-                  activeTab === tab
-                    ? "bg-poktan-leaf text-white border-poktan-leaf shadow-md shadow-poktan-leaf/10"
-                    : "text-gray-500 hover:bg-gray-50 bg-white border-slate-200"
-                }`}
-              >
-                {tab.toUpperCase()}
-              </button>
-            ))}
-          </div>
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 relative z-20 py-6 md:py-8">
+        {/* Navigation Tab Bar - Rata Kiri & Bersih Tanpa Card Besar */}
+        <div className="mb-6 md:mb-10 flex flex-wrap items-center justify-start gap-1.5 sm:gap-2 md:gap-2.5 w-full">
+          {[
+            "Semua",
+            "Berita & Artikel",
+            "Video Dokumentasi",
+            "Panen",
+            "Smart Farming",
+          ].map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 md:py-2.5 rounded-xl text-[10px] sm:text-[11px] md:text-xs font-extrabold transition-all duration-300 whitespace-nowrap cursor-pointer active:scale-95 border ${
+                activeTab === tab
+                  ? "bg-poktan-leaf text-white border-poktan-leaf shadow-sm shadow-poktan-leaf/20"
+                  : "text-gray-600 hover:bg-gray-100/80 bg-white border-gray-200/80 shadow-2xs"
+              }`}
+            >
+              {tab.toUpperCase()}
+            </button>
+          ))}
         </div>
 
         {/* Tata Letak Dua Kolom Utama (Grid Konten & Sidebar) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* SISI KIRI: GRID KONTEN UTAMA (8 KOLOM) */}
-          <div className="lg:col-span-8 space-y-12">
+          <div className="lg:col-span-8 space-y-10 md:space-y-12">
             {/* Sub-Section: Galeri Foto Kegiatan */}
             {showGallery && (
-              <div className="space-y-8">
+              <div className="space-y-6 md:space-y-8">
                 {activeTab === "Semua" && (
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                    <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-3 md:pb-4">
+                    <h3 className="text-base sm:text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">
                       Galeri Foto Kegiatan
                     </h3>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                   {loading ? (
                     <div className="col-span-full py-12 text-center text-gray-400">Memuat Galeri...</div>
                   ) : filteredGalleryItems.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-xl border border-gray-100 shadow-sm">Belum ada foto kegiatan.</div>
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-2xl border border-gray-100 shadow-sm">Belum ada foto kegiatan.</div>
                   ) : (
                     <AnimatePresence>
                       {filteredGalleryItems.map((item, i) => (
@@ -282,7 +280,7 @@ export default function GaleriPage() {
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.4, delay: i * 0.05 }}
                           whileHover={{ y: -5 }}
-                          className="group cursor-pointer relative aspect-[4/5] rounded-none overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200"
+                          className="group cursor-pointer relative aspect-[4/5] rounded-xl sm:rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-500 border border-gray-100"
                           onClick={() => setSelectedImage(item.image)}
                         >
                           {item.image?.match(/\.(mp4|webm|ogg|mov)$/i) ? (
@@ -307,8 +305,8 @@ export default function GaleriPage() {
                           )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
                           
-                          <div className="absolute bottom-0 left-0 w-full p-5 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                            <h4 className="font-bold text-white text-base md:text-lg leading-tight mb-1 drop-shadow-md">
+                          <div className="absolute bottom-0 left-0 w-full p-3 sm:p-4 md:p-5 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                            <h4 className="font-bold text-white text-xs sm:text-sm md:text-base leading-tight mb-1 drop-shadow-md line-clamp-2">
                               {item.title}
                             </h4>
                           </div>
@@ -322,20 +320,20 @@ export default function GaleriPage() {
 
             {/* Sub-Section: Berita & Artikel Terbaru */}
             {showArticles && (
-              <div className="space-y-8">
+              <div className="space-y-6 md:space-y-8">
                 {activeTab === "Semua" && (
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                    <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-3 md:pb-4">
+                    <h3 className="text-base sm:text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">
                       Berita & Artikel Terbaru
                     </h3>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
                   {loading ? (
                     <div className="col-span-full py-12 text-center text-gray-400">Memuat Artikel...</div>
                   ) : filteredArticles.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-xl border border-gray-100 shadow-sm">Belum ada artikel yang sesuai.</div>
+                    <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-2xl border border-gray-100 shadow-sm">Belum ada artikel yang sesuai.</div>
                   ) : (
                     <AnimatePresence>
                       {filteredArticles.map((item, i) => (
@@ -345,9 +343,9 @@ export default function GaleriPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: i * 0.05 }}
                             whileHover={{ y: -6 }}
-                          className="bg-white rounded-none overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col h-full cursor-pointer"
+                          className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-xs hover:shadow-lg transition-all duration-300 group flex flex-col h-full cursor-pointer"
                         >
-                          <div className="bg-zinc-50 relative overflow-hidden shrink-0 w-full h-[180px] md:h-[200px]">
+                          <div className="bg-zinc-50 relative overflow-hidden shrink-0 w-full h-[150px] sm:h-[180px] md:h-[200px]">
                             <img
                               src={item.image}
                               alt="Thumbnail artikel berita"
@@ -355,13 +353,14 @@ export default function GaleriPage() {
                             />
                           </div>
                           
-                          <div className="p-6 md:p-8 flex flex-col flex-1 justify-between">
-                            <div className="space-y-3">
-                              <div className="flex items-center text-xs text-gray-400 gap-2 font-semibold uppercase tracking-wider">
+                          <div className="p-4 sm:p-5 md:p-6 flex flex-col flex-1 justify-between">
+                            <div className="space-y-2">
+                              <div className="flex items-center text-[10px] sm:text-xs text-gray-400 gap-2 font-semibold uppercase tracking-wider">
                                 <span>• Admin</span>
+                                {item.date && <span>• {item.date}</span>}
                               </div>
                               
-                              <h4 className="font-bold text-gray-800 text-base md:text-lg leading-snug group-hover:text-poktan-leaf transition-colors mt-2">
+                              <h4 className="font-bold text-gray-800 text-sm sm:text-base md:text-lg leading-snug group-hover:text-poktan-leaf transition-colors line-clamp-2">
                                 {item.title}
                               </h4>
                             </div>
@@ -447,28 +446,28 @@ export default function GaleriPage() {
           </div>
 
           {/* SISI KANAN: ASIDE SIDEBAR (4 KOLOM) */}
-          <aside className="lg:col-span-4 space-y-10 sticky top-32 h-fit mb-24">
+          <aside className="lg:col-span-4 space-y-8 sticky top-32 h-fit mb-24">
             {/* Widget 1: Artikel Populer */}
-            <div className="bg-white border border-gray-200 rounded-none p-8 shadow-sm">
-              <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
-                <SparklesIcon size={16} className="text-poktan-accent" />
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-xs">
+              <h4 className="font-black text-xs sm:text-sm text-gray-900 uppercase tracking-wider mb-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+                <Newspaper size={16} className="text-poktan-leaf" />
                 <span>ARTIKEL TERBARU</span>
               </h4>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {articles.slice(0, 5).map((item, i) => (
-                  <Link href={`/galeri/${item.id}`} key={i} className="flex gap-4 group cursor-pointer block">
-                    <div className="w-20 h-16 rounded-none bg-gray-100 shrink-0 overflow-hidden border border-gray-200 relative">
+                  <Link href={`/galeri/${item.id}`} key={i} className="flex gap-3.5 group cursor-pointer">
+                    <div className="w-16 h-14 rounded-xl bg-gray-100 shrink-0 overflow-hidden border border-gray-100 relative">
                       <img
                         src={item.image}
                         alt="Thumbnail artikel terpopuler"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </div>
-                    <div className="flex-1 flex flex-col justify-center">
+                    <div className="flex-1 flex flex-col justify-center min-w-0">
                       <h5 className="text-xs font-bold text-gray-800 leading-snug group-hover:text-poktan-leaf transition-colors line-clamp-2">
                         {item.title}
                       </h5>
-                      <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">
+                      <p className="text-[10px] text-gray-400 mt-1 uppercase font-semibold tracking-wider">
                         {item.date}
                       </p>
                     </div>
@@ -478,12 +477,12 @@ export default function GaleriPage() {
             </div>
 
             {/* Widget 2: Jadwal Musim Panen */}
-            <div className="bg-white border border-gray-200 rounded-none p-8 shadow-sm">
-              <h4 className="font-black text-sm text-gray-900 uppercase tracking-widest mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-xs">
+              <h4 className="font-black text-xs sm:text-sm text-gray-900 uppercase tracking-wider mb-5 pb-3 border-b border-gray-100 flex items-center gap-2">
                 <Calendar size={16} className="text-[#10b981]" />
                 <span>JADWAL MUSIM PANEN</span>
               </h4>
-              <div className="flex flex-col gap-6">
+              <div className={`grid gap-5 ${monthsToDisplay.length > 1 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-1' : 'grid-cols-1'}`}>
                 {monthsToDisplay.map(({ year, month }) => {
                   const daysInMonth = new Date(year, month + 1, 0).getDate();
                   const firstDay = new Date(year, month, 1).getDay();
@@ -503,7 +502,7 @@ export default function GaleriPage() {
                   });
 
                   return (
-                    <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-none p-6 border border-emerald-100/50">
+                    <div key={`${year}-${month}`} className="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100/50">
                       <div className="flex justify-between items-start mb-4">
                         <span className="text-xs font-black text-[#064e3b]">
                           {monthLabel}
@@ -548,10 +547,10 @@ export default function GaleriPage() {
                           const isHighlighted = matchedSchedules.length > 0;
                           
                           return (
-                            <div key={`day-${day}`} className="flex justify-center items-center relative w-7 h-7 mx-auto group">
+                            <div key={`day-${day}`} className="flex justify-center items-center relative w-8 h-8 mx-auto group">
                               {/* Split Backgrounds for overlapping schedules */}
                               {isHighlighted && (
-                                <div className={`absolute inset-0 flex flex-col overflow-hidden ${isToday ? 'rounded-[10px] ring-2 ring-yellow-400 ring-offset-2' : 'rounded-lg'} shadow-sm`}>
+                                <div className={`absolute inset-0 flex flex-col overflow-hidden ${isToday ? 'rounded-xl ring-2 ring-yellow-400 ring-offset-1' : 'rounded-xl'} shadow-sm`}>
                                   {matchedSchedules.map((s) => {
                                     const sIdx = schedules.findIndex(x => x.id === s.id);
                                     return (
@@ -564,13 +563,18 @@ export default function GaleriPage() {
                                 </div>
                               )}
                               
-                              {/* Day Number */}
+                              {/* Day Number + Melon di Tengah saat Panen */}
                               <span
-                                className={`w-full h-full flex items-center justify-center text-[11px] font-bold transition-all relative z-10 ${
-                                  isHighlighted ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]' : (isToday ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-full font-black scale-110 shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-full')
+                                className={`w-full h-full flex flex-col items-center justify-center transition-all relative z-10 ${
+                                  isHighlighted 
+                                    ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] font-black' 
+                                    : (isToday ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-400 rounded-xl font-black shadow-sm' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-xl font-bold')
                                 }`}
                               >
-                                <span>{day}</span>
+                                <span className="leading-none text-[10px]">{day}</span>
+                                {isHighlighted && (
+                                  <span className="text-[9px] leading-none select-none drop-shadow-xs -mb-0.5 mt-0.5" title="Panen">🍈</span>
+                                )}
                               </span>
                               
                               {/* Tooltip for overlaps */}
@@ -589,17 +593,6 @@ export default function GaleriPage() {
                                   </div>
                                   <div className="w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
                                 </div>
-                              )}
-
-                              {/* Melon icon only for the start date of any schedule */}
-                              {matchedSchedules.some(s => {
-                                const sDate = new Date(s.start_date);
-                                sDate.setHours(0,0,0,0);
-                                return sDate.getTime() === currentDate.getTime();
-                              }) && (
-                                <span className="absolute -top-1.5 -right-1.5 z-20 flex">
-                                  <span className="text-[10px] leading-none drop-shadow-md">🍈</span>
-                                </span>
                               )}
                             </div>
                           );

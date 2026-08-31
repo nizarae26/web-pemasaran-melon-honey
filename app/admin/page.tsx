@@ -299,42 +299,36 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      {/* Top Welcome Title & Live Date */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-xl md:text-3xl font-black text-gray-900 tracking-tight">Dasbor</h1>
-          <p className="text-gray-500 text-xs md:text-sm">Ringkasan performa perkebunan dan manajemen Poktan.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="bg-white border border-gray-200 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 shadow-sm flex items-center gap-2">
-            <Clock size={14} className="text-emerald-600" />
-            <span>{currentDateString || "Memuat tanggal..."}</span>
-          </div>
-        </div>
+      {/* Top Welcome Title */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-xl md:text-3xl font-black text-gray-900 tracking-tight">Beranda</h1>
+        <p className="text-gray-500 text-xs md:text-sm">Ringkasan performa perkebunan dan manajemen Poktan.</p>
       </div>
 
-      {/* Stats Cards Row (Real counts from database) */}
+      {/* Stats Cards Row (2 Kolom Mobile & Teks Terlihat Lengkap) */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
         {stats.map((stat, idx) => (
           <div 
             key={idx} 
             onClick={() => router.push(stat.path)}
-            className="bg-white p-4 md:p-5 rounded-2xl border border-gray-100/90 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-emerald-200 transition-all cursor-pointer group"
+            className="bg-white p-3.5 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl border border-gray-100/90 shadow-2xs hover:shadow-xs flex flex-col justify-between hover:border-emerald-200 transition-all cursor-pointer group min-w-0"
           >
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider line-clamp-1">{stat.title}</span>
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-transform group-hover:scale-110 ${stat.theme}`}>
-                <stat.icon size={16} />
+            <div className="flex items-center justify-between gap-2 mb-2.5">
+              <span className="text-[10px] sm:text-[11px] md:text-xs font-bold text-gray-500 uppercase tracking-tight leading-snug">
+                {stat.title}
+              </span>
+              <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 border transition-transform group-hover:scale-105 ${stat.theme}`}>
+                <stat.icon size={15} />
               </div>
             </div>
 
             <div>
-              <p className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">
+              <p className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 leading-tight tracking-tight">
                 {loading ? "..." : stat.value}
               </p>
-              <p className="text-[10px] md:text-xs text-gray-500 font-medium mt-1 flex items-center justify-between">
+              <p className="text-[9.5px] sm:text-[10.5px] md:text-xs text-gray-400 font-medium mt-1 flex items-center justify-between leading-snug">
                 <span>{stat.subtext}</span>
-                <ArrowRight size={12} className="text-gray-300 group-hover:text-emerald-600 transition-colors" />
+                <ArrowRight size={12} className="text-gray-300 group-hover:text-emerald-600 transition-colors shrink-0 ml-1" />
               </p>
             </div>
           </div>

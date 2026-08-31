@@ -121,41 +121,33 @@ export default function ProductCard({
         )}
       </div>
 
-      <div className="p-3 sm:p-5 text-left flex flex-col flex-grow">
-        <div className="flex items-center justify-start mb-1 sm:mb-2">
+      <div className="p-2.5 sm:p-4 md:p-5 text-left flex flex-col flex-grow">
+        <div className="flex items-start justify-start mb-1 sm:mb-1.5 min-h-[32px] sm:min-h-[38px]">
           <h3 
             title={name}
-            className={`font-bold text-gray-800 tracking-tight leading-tight truncate ${
-              name.length > 20 ? "text-xs sm:text-sm" : "text-xs sm:text-sm md:text-base"
-            }`}
+            className="font-bold text-gray-800 tracking-tight leading-snug line-clamp-2 text-xs sm:text-sm md:text-base"
           >
             {name}
           </h3>
         </div>
-        <p className="text-[9px] sm:text-[11px] text-gray-500 mb-2 sm:mb-3 font-medium block truncate">
-          Varian: <span className="font-bold text-gray-700">{grade || "-"}</span> 
-          {weight && (
-            <>
-              <span className="mx-1 sm:mx-1.5 text-gray-300">|</span> 
-              <span>{weight}</span>
-            </>
-          )}
-          <span className="mx-1 sm:mx-1.5 text-gray-300">|</span> 
+        <div className="text-[9px] sm:text-[11px] text-gray-500 mb-2 sm:mb-3 font-medium leading-tight flex flex-wrap items-center gap-x-1 gap-y-0.5">
+          <span>Varian: <strong className="text-gray-700 font-bold">{grade || "-"}</strong></span>
+          <span className="text-gray-300">|</span> 
           <span className={status === "Habis" ? "text-poktan-red font-bold" : "text-poktan-emerald font-bold"}>
             {status}
           </span>
-        </p>
+        </div>
         
         <div className="mt-auto pt-1 sm:pt-2">
-          <p className="text-poktan-emerald font-extrabold text-base sm:text-lg mb-2 sm:mb-3 tracking-tight leading-tight">
+          <p className="text-poktan-emerald font-extrabold text-sm sm:text-base md:text-lg mb-2 sm:mb-3 tracking-tight leading-tight">
             {price}
           </p>
 
           {status === "Habis" ? (
             <button
               disabled
-              className={`flex w-full ${current.buttonColor} py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1.5 
-              transition-all text-xs`}
+              className={`flex w-full ${current.buttonColor} py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+              transition-all text-[10px] sm:text-xs`}
             >
               {current.icon}
               <span>{current.label}</span>
@@ -167,20 +159,20 @@ export default function ProductCard({
                 target="_blank"
                 rel="noopener noreferrer"
                 title={current.label}
-                className={`flex flex-1 min-w-0 ${current.buttonColor} px-2 py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
-                transition-all duration-300 text-center text-[10px] sm:text-xs whitespace-nowrap`}
+                className={`flex flex-1 min-w-0 ${current.buttonColor} px-1.5 sm:px-2.5 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+                transition-all duration-300 text-center text-[9px] sm:text-xs whitespace-nowrap`}
               >
-                <WhatsAppIcon size={14} className="shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                <span className="truncate">WhatsApp</span>
+                <WhatsAppIcon size={13} className="shrink-0 group-hover:translate-x-0.5 transition-transform sm:w-3.5 sm:h-3.5" />
+                <span>WhatsApp</span>
               </a>
               <Link
                 href="/"
                 title="Pesan via Website"
-                className={`flex flex-1 min-w-0 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md px-2 py-2 sm:py-2.5 rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
-                transition-all duration-300 text-center text-[10px] sm:text-xs whitespace-nowrap`}
+                className={`flex flex-1 min-w-0 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm px-1.5 sm:px-2.5 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-bold items-center justify-center gap-1 sm:gap-1.5 
+                transition-all duration-300 text-center text-[9px] sm:text-xs whitespace-nowrap`}
               >
-                <ShoppingCart size={14} className="shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                <span className="truncate">Website</span>
+                <ShoppingCart size={13} className="shrink-0 group-hover:translate-x-0.5 transition-transform sm:w-3.5 sm:h-3.5" />
+                <span>Website</span>
               </Link>
             </div>
           )}
