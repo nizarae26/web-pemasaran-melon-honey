@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProductCard from "@/components/ProductCard";
@@ -12,10 +12,9 @@ import { supabase } from "@/lib/supabase";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0; // Disable caching so it always fetches fresh data
+export const revalidate = 0;
 
 export default async function Home() {
-  // Fetch semua data secara paralel agar tidak memblokir render
   const [
     { data: settingsData },
     { data: galleryItems },
