@@ -57,7 +57,7 @@ export default function KatalogHero() {
             </span>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black text-gray-900 tracking-tight leading-tight lg:whitespace-nowrap">
-              Pilih Kualitas <span className="text-poktan-emerald">Terbaik</span> Untuk Keluarga Anda
+              Pilih Kualitas <span className="text-poktan-leaf">Terbaik</span><br/> Untuk Keluarga Anda
             </h1>
           </div>
 

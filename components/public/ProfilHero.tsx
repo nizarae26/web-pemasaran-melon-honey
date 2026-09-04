@@ -12,6 +12,7 @@ export default function ProfilHero() {
   ];
 
   return (
+    <>
     <section className="relative bg-gradient-to-b from-poktan-accent/40 via-poktan-accent/10 to-slate-50/50 py-14 md:py-20 lg:py-28 px-4 sm:px-6 md:px-12 overflow-hidden">
       {/* Decorative Background Blob */}
       <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-poktan-accent/15 rounded-full blur-[120px] -z-10"></div>
@@ -64,8 +65,9 @@ export default function ProfilHero() {
             </span>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[2.65rem] font-black text-gray-900 tracking-tight leading-tight lg:whitespace-nowrap">
-              Mengenal Lebih Dekat Kelompok Tani{" "}
-              <span className="text-poktan-emerald">Banyu Urip</span>
+              Mengenal Lebih Dekat <br />
+              Kelompok Tani{" "}
+              <span className="text-poktan-leaf">Banyu Urip</span>
             </h1>
           </div>
 
@@ -74,30 +76,34 @@ export default function ProfilHero() {
             menghadirkan pertanian melon premium yang modern dan berkelanjutan
             di Madura.
           </p>
-
-          {/* Statistik Utama & Visi Misi (2 Baris di Tablet & Mobile, 4 Kolom di Desktop) */}
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 md:gap-4 pt-2 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-6xl">
-            {stats.map((stat, i) => (
-              <div 
-                key={i} 
-                className="bg-white/80 backdrop-blur-xs border border-[#f0f4f1] p-2.5 sm:p-3.5 md:p-4 rounded-xl sm:rounded-2xl shadow-xs hover:shadow-sm transition-all flex items-center gap-2 sm:gap-3 md:gap-3.5 group min-w-0"
-              >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-50/60 border border-emerald-100/50 rounded-lg sm:rounded-xl flex items-center justify-center text-poktan-leaf group-hover:scale-105 transition-transform shrink-0">
-                  {stat.icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold text-[11px] sm:text-xs text-gray-800 leading-tight">
-                    {stat.label}
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 leading-snug font-medium">
-                    {stat.value}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </div>
     </section>
+
+    {/* Garis Hitam Super Tipis */}
+    <div className="w-full h-[1px] bg-black/15 relative z-10 translate-y-[84px] md:translate-y-[100px]"></div>
+
+    {/* Floating Stats Grid */}
+    <div className="relative z-50 -mt-8 sm:-mt-10 md:-mt-14 lg:-mt-16 translate-y-20 px-4 sm:px-6 md:px-12 flex justify-center w-full">
+      <div className="w-full max-w-4xl bg-white border border-gray-100 shadow-[0_12px_40px_rgba(0,0,0,0.08)] p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[32px] grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        {stats.map((stat, i) => (
+          <div 
+            key={i} 
+            className="flex flex-col items-center justify-center text-center group"
+          >
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50/80 border border-emerald-100 rounded-xl sm:rounded-2xl flex items-center justify-center text-poktan-leaf group-hover:scale-110 transition-transform mb-3">
+              {stat.icon}
+            </div>
+            <p className="font-bold text-xs sm:text-sm text-gray-800 leading-tight">
+              {stat.label}
+            </p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-1 font-medium">
+              {stat.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+    </>
   );
 }

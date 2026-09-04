@@ -2,7 +2,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Leaf, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface HeroProps {
@@ -29,7 +28,7 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
         }}
         className="absolute bottom-10 left-[8%] text-poktan-leaf/20 pointer-events-none hidden md:block"
       >
-        <Leaf size={32} />
+        <i className="fa-solid fa-leaf text-[32px]"></i>
       </motion.div>
 
       {/* Floating Organic Leaf 2 in the background */}
@@ -46,7 +45,7 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
         }}
         className="absolute bottom-16 right-[12%] text-poktan-leaf/15 pointer-events-none hidden md:block"
       >
-        <Leaf size={24} />
+        <i className="fa-solid fa-leaf text-[24px]"></i>
       </motion.div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
@@ -64,7 +63,7 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.15]">
               Nikmati Kesegaran <br />
               Melon Premium dari <br />
-              Petani <span className="text-poktan-emerald font-black">Tanggumong</span>
+              Petani <span className="text-poktan-leaf font-black">Tanggumong</span>
             </h1>
             <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-xl">
              Dibudidayakan dengan sistem irigasi tetes pintar dan pemantauan pH tanah untuk menjaga kesuburan lahan, menghasilkan Melon Honey Globe premium yang manis alami, renyah, segar, dan berkualitas tinggi.
@@ -77,7 +76,7 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
               className="flex-1 inline-flex items-center justify-center gap-2 bg-poktan-leaf hover:bg-poktan-green text-white px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-poktan-leaf/25 active:scale-95 transition-all duration-300 hover:scale-102 text-center whitespace-nowrap"
             >
               <span>Pesan Sekarang</span>
-              <ArrowRight size={16} className="shrink-0" />
+              <i className="fa-solid fa-arrow-right shrink-0"></i>
             </Link>
             <Link
               href="/katalog"
@@ -87,21 +86,6 @@ export default function Hero({ waNumber = "6287812345678" }: HeroProps) {
             </Link>
           </div>
 
-          {/* Quick Stats Grid */}
-          <div className="grid grid-cols-3 gap-4 md:gap-6 pt-6 md:pt-8 border-t border-[#f0f4f1] max-w-md">
-            <div>
-              <p className="text-xl sm:text-2xl font-black text-poktan-green">100%</p>
-              <p className="text-[9px] sm:text-[10px] text-gray-400 font-extrabold uppercase mt-0.5 tracking-wider leading-none">Petani Lokal</p>
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-black text-poktan-green">Premium</p>
-              <p className="text-[9px] sm:text-[10px] text-gray-400 font-extrabold uppercase mt-0.5 tracking-wider leading-none">Kualitas Grade-A</p>
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-black text-poktan-green">13-15</p>
-              <p className="text-[9px] sm:text-[10px] text-gray-400 font-extrabold uppercase mt-0.5 tracking-wider leading-none">Brix Kemanisan</p>
-            </div>
-          </div>
         </motion.div>
 
         {/* Right Column (Floating Showcase Image) - Ditampilkan hanya di Tablet & Desktop (md ke atas) */}

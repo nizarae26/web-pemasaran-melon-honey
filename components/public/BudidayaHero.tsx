@@ -57,7 +57,7 @@ export default function BudidayaHero() {
             </span>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black text-gray-900 tracking-tight leading-tight lg:whitespace-nowrap">
-              Budidaya Melon Honey Globe dengan Teknologi <span className="text-poktan-emerald">Modern</span>
+              Budidaya Melon Honey Globe <br/> dengan Teknologi <span className="text-poktan-emerald">Modern</span>
             </h1>
           </div>
 

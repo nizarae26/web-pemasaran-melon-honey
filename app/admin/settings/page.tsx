@@ -10,7 +10,6 @@ import Swal from "sweetalert2";
 export default function SettingsPage() {
   const [waNumber, setWaNumber] = useState("");
   const [savedWaNumber, setSavedWaNumber] = useState("");
-  const [tentangKami, setTentangKami] = useState("");
   const [priceHoneyGlobe, setPriceHoneyGlobe] = useState("20.000");
   const [priceGoldenApollo, setPriceGoldenApollo] = useState("22.000");
   const [loading, setLoading] = useState(true);
@@ -41,7 +40,6 @@ export default function SettingsPage() {
       }
     } else if (data) {
       const wa = data.find((s) => s.key === "wa_number");
-      const tentang = data.find((s) => s.key === "tentang_kami");
       const hg = data.find((s) => s.key === "price_honey_globe");
       const ga = data.find((s) => s.key === "price_golden_apollo");
       
@@ -52,7 +50,6 @@ export default function SettingsPage() {
         setWaNumber(sanitizedWa);
         setSavedWaNumber(sanitizedWa);
       }
-      if (tentang) setTentangKami(tentang.value);
       if (hg) setPriceHoneyGlobe(hg.value);
       if (ga) setPriceGoldenApollo(ga.value);
     }
@@ -329,36 +326,6 @@ export default function SettingsPage() {
     setSavingPrices(false);
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    
-    // Save WA Number
-    const { error: waError } = await supabase
-      .from("settings")
-      .upsert({ key: "wa_number", value: waNumber }, { onConflict: 'key' });
-      
-    // Save Tentang Kami
-    const { error: tentangError } = await supabase
-      .from("settings")
-      .upsert({ key: "tentang_kami", value: tentangKami }, { onConflict: 'key' });
-
-    // Save Harga Varian Melon
-    const { error: hgError } = await supabase
-      .from("settings")
-      .upsert({ key: "price_honey_globe", value: priceHoneyGlobe }, { onConflict: 'key' });
-
-    const { error: gaError } = await supabase
-      .from("settings")
-      .upsert({ key: "price_golden_apollo", value: priceGoldenApollo }, { onConflict: 'key' });
-
-    if (waError || tentangError || hgError || gaError) {
-      toast.error("Gagal menyimpan pengaturan. Pastikan tabel 'settings' sudah dibuat.");
-    } else {
-      setSavedWaNumber(waNumber);
-      toast.success("Pengaturan berhasil disimpan!");
-    }
-    setSaving(false);
-  };
 
   if (loading) {
     return <div className="p-10 text-center text-gray-500 text-xs sm:text-sm"><Loader2 className="animate-spin inline-block mr-2" /> Memuat pengaturan...</div>;
@@ -662,45 +629,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* 3. Profil & Tentang Kami Settings */}
-        <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-100 shadow-2xs space-y-4">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0 border border-emerald-100/50">
-              <Info size={18} />
-            </div>
-            <div>
-              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 leading-tight">Tentang Kami (Profil Kelompok Tani)</h2>
-              <p className="text-[11px] sm:text-xs text-gray-400">Deskripsi singkat visi, komitmen, dan profil kelompok tani di halaman publik</p>
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="block text-xs sm:text-sm font-bold text-gray-700">
-              Deskripsi Singkat Profil
-            </label>
-            <textarea
-              value={tentangKami}
-              onChange={(e) => setTentangKami(e.target.value)}
-              rows={4}
-              className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium text-slate-800 placeholder-gray-400 shadow-2xs resize-none"
-              placeholder="Tulis deskripsi kelompok tani di sini..."
-            />
-          </div>
-
-          <div className="pt-2">
-            <button
-              onClick={handleSave}
-              disabled={saving || isChangingWa}
-              className="w-full justify-center flex items-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-sm active:scale-95 cursor-pointer"
-            >
-              {saving ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                <Save size={16} />
-              )}
-              <span>{saving ? "Menyimpan Pengaturan..." : "Simpan Semua Pengaturan"}</span>
-            </button>
-          </div>
         </div>
       </div>
     </div>

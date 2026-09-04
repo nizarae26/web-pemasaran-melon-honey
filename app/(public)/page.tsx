@@ -73,14 +73,19 @@ export default async function Home() {
       {/* 2. Hero Section */}
       <Hero waNumber={waNumber} />
 
-      {/* 3. Katalog Melon Honey Globe  */}
-      <section className="py-12 px-4 sm:px-6 md:px-12 bg-slate-50/50">
+      {/* 3. Sekilas Tentang Poktan Banyu Urip */}
+      <ScrollReveal>
+        <AboutSection />
+      </ScrollReveal>
+
+      {/* 4. Katalog Melon Honey Globe  */}
+      <section className="py-12 px-4 sm:px-6 md:px-12 bg-slate-50/50 relative z-10">
         <div className="max-w-6xl mx-auto">
           
           <ScrollReveal>
             <div className="text-center mb-16 space-y-3">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
-                Katalog <span className="text-poktan-emerald">Melon Premium</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-poktan-leaf tracking-tight">
+                Katalog Melon Premium
               </h2>
               <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
                 Melon Honey Globe segar dengan tingkat kemanisan brix tinggi, dipanen langsung dari kebun kami.
@@ -89,18 +94,19 @@ export default async function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 md:gap-6 lg:gap-8">
+            <div className="flex flex-wrap justify-center items-stretch gap-3 sm:gap-6 lg:gap-8">
               {featuredProducts.map((product, index) => (
-                <ProductCard 
-                  key={index} 
-                  name={product.name}
-                  grade={product.grade}
-                  price={product.price}
-                  weight={product.weight}
-                  status={product.status}
-                  imageUrl={product.imageUrl}
-                  waNumber={waNumber}
-                />
+                <div key={index} className="w-[calc(50%-6px)] md:w-[calc(33.333%-16px)] xl:w-[calc(25%-24px)] flex justify-center">
+                  <ProductCard 
+                    name={product.name}
+                    grade={product.grade}
+                    price={product.price}
+                    weight={product.weight}
+                    status={product.status}
+                    imageUrl={product.imageUrl}
+                    waNumber={waNumber}
+                  />
+                </div>
               ))}
             </div>
           </ScrollReveal>
@@ -109,23 +115,15 @@ export default async function Home() {
             <div className="text-center mt-16">
               <Link
                 href="/katalog"
-                className="group border border-poktan-emerald text-poktan-emerald px-10 py-3.5 rounded-xl font-bold hover:bg-poktan-emerald hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto active:scale-95 w-fit text-sm"
+                className="group flex items-center justify-center gap-2 mx-auto w-fit bg-poktan-leaf hover:bg-poktan-green text-white px-10 py-3.5 rounded-full font-bold shadow-lg shadow-poktan-leaf/25 transition-all duration-300 hover:scale-102 active:scale-95 text-sm"
               >
                 <span>Lihat Semua Katalog</span>
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
               </Link>
             </div>
           </ScrollReveal>
         </div>
       </section>
-
-      {/* 4. Sekilas Tentang Poktan Banyu Urip */}
-      <ScrollReveal>
-        <AboutSection />
-      </ScrollReveal>
 
       {/* 5. Galeri & Berita (Preview) */}
       <section className="py-12 px-6 md:px-12 bg-slate-50/50">
@@ -229,10 +227,10 @@ export default async function Home() {
 
               <div>
                 <h4 className="font-extrabold text-2xl text-gray-900 tracking-tight mb-1">
-                  Tertarik dengan <span className="text-poktan-emerald">Melon Honey Globe</span> kami?
+                  Tertarik dengan <span className="text-poktan-leaf">Melon Honey Globe</span> kami?
                 </h4>
                 <p className="text-gray-500 text-sm font-medium max-w-md leading-relaxed">
-                  Hubungi kami sekarang untuk pemesanan atau konsultasi produk unggulan dari petani Tanggumong.
+                  Hubungi kami sekarang untuk pemesanan atau konsultasi produk unggulan dari petani Tanggumon.
                 </p>
               </div>
             </div>

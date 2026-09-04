@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import ProductCard, { ProductCardSkeleton } from "@/components/ProductCard";
 import KatalogHero from "@/components/public/KatalogHero";
 import {
   Filter,
@@ -384,7 +384,8 @@ export default function KatalogPage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+              <div className="animate-spin rounded-full h-12 w-12 border-[4px] border-emerald-100 border-t-poktan-leaf mb-4"></div>
               <p className="text-gray-500 font-bold animate-pulse">Memuat Produk...</p>
             </div>
           ) : filteredProducts.length > 0 ? (

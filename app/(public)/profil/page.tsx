@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProfilHero from "@/components/public/ProfilHero";
@@ -89,43 +90,118 @@ export default function ProfilPage() {
     return acc;
   }, {} as Record<string, any[]>);
 
+  const categories = [
+    { title: "Pengurus Inti", members: [ketua, sekretaris, bendahara] },
+    { title: "Seksi Usaha Tani", members: seksiUsahaTani.length > 0 ? seksiUsahaTani : [{name: "SYAMSUL", role: "Bidang Pertanian"}, {name: "MOH FADLI", role: "Bidang Peternakan"}, {name: "SALAWATI", role: "Bidang Kehutanan & Perkebunan"}, {name: "NUR JANNAH", role: "Bidang Perikanan"}] },
+    { title: "Seksi Sarana & Prasarana", members: seksiSarana.length > 0 ? seksiSarana : [{name: "ST AMINATUS ZUHRIYAH", role: "Sarana Produksi"}, {name: "MADRAI", role: "Sarana Alsintan"}, {name: "PUIRI", role: "Sarana Permodalan"}, {name: "YASID", role: "Sarana Pengairan"}] },
+    { title: "Pengendalian Hama & Penyakit", members: seksiHama.length > 0 ? seksiHama : [{name: "MARIHA", role: "Petugas"}] },
+    { title: "Seksi Pengolahan Hasil", members: seksiPengolahan.length > 0 ? seksiPengolahan : [{name: "NUR HAYATI", role: "Petugas"}] },
+    { title: "Seksi Pemasaran", members: seksiPemasaran.length > 0 ? seksiPemasaran : [{name: "SYAFIIH", role: "Petugas"}] },
+  ];
+
+  Object.entries(groupedLainnya).forEach(([title, membersList]) => {
+    categories.push({ title, members: membersList as any[] });
+  });
+
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-slate-50/50 w-full overflow-x-hidden">
         <ProfilHero />
 
-      {/* 1. Sejarah & Latar Belakang - Tren Asymmetric Clean Layout */}
-      <section className="py-28 px-6 md:px-12 lg:px-16 xl:px-24 bg-white relative overflow-hidden">
-        {/* Aksen dekoratif latar belakang modern (subtle mesh glow) */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-poktan-accent/30 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+      {/* 1. Visi & Misi - Asymmetric Card Design */}
+      <section className="py-24 md:py-32 bg-white px-6 md:px-10 lg:px-12 xl:px-16 overflow-hidden">
+        <div className="max-w-[1300px] mx-auto relative pt-16 lg:pr-8 pb-16">
+          
+          {/* Main Container Box */}
+          <div className="bg-poktan-green rounded-[32px] w-full lg:w-[85%] ml-auto relative shadow-2xl z-10 flex flex-col lg:flex-row min-h-[500px]">
+            
+            {/* Decorative Top Right Square */}
+            <motion.div 
+              animate={{ x: [0, 25, 0], y: [0, -10, 0] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-8 -right-4 md:-top-12 md:-right-8 w-24 h-24 md:w-48 md:h-48 bg-poktan-leaf rounded-3xl md:rounded-[40px] z-[-1] opacity-90 shadow-xl"
+            ></motion.div>
+            
+            {/* Decorative Bottom Square */}
+            <motion.div 
+              animate={{ x: [0, -25, 0], y: [0, 10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute -bottom-12 left-[20%] w-24 h-24 md:w-36 md:h-36 bg-poktan-leaf rounded-2xl md:rounded-[32px] z-[-1] hidden lg:block opacity-90 shadow-xl"
+            ></motion.div>
 
-        <div className="max-w-[1440px] mx-auto grid lg:grid-cols-12 gap-12 xl:gap-20 items-center">
-          {/* Teks Sejarah */}
-          <div className="space-y-8 lg:col-span-7">
-            <div className="inline-flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <span className="h-[2px] w-8 bg-poktan-emerald rounded-full"></span>
-                <span className="text-xs font-black uppercase tracking-[0.25em] text-poktan-emerald">
-                  Our Legacy
-                </span>
+            {/* Left side Image (Absolute on Desktop, static on mobile) */}
+            <div className="w-[90%] max-w-[400px] md:max-w-[500px] mx-auto lg:w-[480px] xl:w-[550px] lg:absolute lg:-left-[5%] xl:-left-[8%] lg:top-[50%] lg:-translate-y-[50%] aspect-[4/3] lg:aspect-[4/3] -mt-12 lg:mt-0 z-20 rounded-2xl md:rounded-[32px] overflow-hidden shadow-2xl border-4 lg:border-8 border-white/10">
+              <img 
+                src="/images/profil.jpeg" 
+                alt="Agrowisata Melon Honey Globe Tanggumong" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Right side Text */}
+            <div className="w-full lg:w-[60%] xl:w-[65%] ml-auto py-12 px-8 sm:px-12 lg:pr-12 xl:pr-16 lg:pl-24 xl:pl-24 lg:py-20 z-20 text-white space-y-12 md:space-y-16">
+              
+              <div className="space-y-4 md:space-y-6 relative">
+                <h3 className="text-3xl md:text-5xl font-serif font-black text-white/95 tracking-widest drop-shadow-sm">
+                  VISI
+                </h3>
+                <p className="text-white/80 leading-relaxed font-medium md:text-lg">
+                  Menjadi kelompok tani yang maju, mandiri, dan inovatif dalam menghasilkan produk pertanian berkualitas tinggi yang berdaya saing.
+                </p>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 tracking-tighter uppercase leading-[0.95]">
-                Sejarah & <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-poktan-green to-poktan-emerald">
-                  Latar Belakang
-                </span>
+
+              <div className="space-y-4 md:space-y-6 relative">
+                <h3 className="text-3xl md:text-5xl font-serif font-black text-white/95 tracking-widest drop-shadow-sm">
+                  MISI
+                </h3>
+                <ul className="space-y-4 md:space-y-5 text-white/80 font-medium md:text-lg leading-relaxed">
+                  <li className="flex items-start gap-4">
+                    <span className="mt-1.5 text-poktan-leaf font-black text-sm md:text-base">•</span>
+                    <p>Meningkatkan kualitas dan produktivitas hasil pertanian.</p>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="mt-1.5 text-poktan-leaf font-black text-sm md:text-base">•</span>
+                    <p>Menerapkan inovasi teknologi pertanian modern yang ramah lingkungan.</p>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="mt-1.5 text-poktan-leaf font-black text-sm md:text-base">•</span>
+                    <p>Memberdayakan anggota untuk kesejahteraan bersama.</p>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="mt-1.5 text-poktan-leaf font-black text-sm md:text-base">•</span>
+                    <p>Memperluas jaringan pemasaran produk secara berkelanjutan.</p>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Sejarah & Latar Belakang - Tren Asymmetric Clean Layout */}
+      <section className="py-20 md:py-28 px-6 md:px-12 lg:px-16 xl:px-24 bg-poktan-leaf relative overflow-hidden text-white">
+        {/* Aksen dekoratif latar belakang modern (subtle mesh glow) */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+        <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+          {/* Teks Sejarah */}
+          <div className="space-y-8 w-full px-4 relative z-10">
+            <div className="flex flex-col items-center gap-4 border-b border-white/20 pb-6">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-white tracking-tight">
+                Sejarah & Latar Belakang
               </h2>
             </div>
 
-            <div className="space-y-6 text-gray-600 leading-relaxed text-sm md:text-base font-medium">
+            <div className="space-y-5 text-white/90 leading-relaxed text-sm md:text-base font-medium max-w-2xl mx-auto">
               {tentangKami ? (
-                <p className="whitespace-pre-wrap first-letter:text-4xl first-letter:font-black first-letter:text-poktan-green first-letter:mr-2 first-letter:float-left">
+                <p className="whitespace-pre-wrap">
                   {tentangKami}
                 </p>
               ) : (
                 <>
-                  <p className="first-letter:text-4xl first-letter:font-black first-letter:text-poktan-green first-letter:mr-2 first-letter:float-left">
+                  <p>
                     Kelompok Tani Banyu Urip terbentuk pada tahun 2019 atas
                     inisiatif para petani di Desa Tanggumong, Kecamatan Sampang,
                     Kabupaten Sampang, Madura.
@@ -142,231 +218,72 @@ export default function ProfilPage() {
               )}
             </div>
           </div>
-
-          {/* Sisi Kanan: Premium Image Card & Legalitas Bento Style */}
-          <div className="lg:col-span-5 space-y-8 w-full">
-            {/* Container Gambar Utama dengan Efek Inner Shadow & Scale */}
-            <div className="w-full aspect-[16/10] bg-zinc-50 rounded-2xl overflow-hidden border border-gray-100 shadow-xl shadow-gray-200/40 group relative">
-              <img 
-                src="/images/profil.jpeg"
-                alt="Foto bersama seluruh anggota pengurus Kelompok Tani Banyu Urip di area perkebunan Tanggumong"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none"></div>
-            </div>
-
-
-          </div>
         </div>
       </section>
 
-      {/* 2. Visi & Misi - Bento Grid Split Mode */}
-      <section className="py-28 bg-gradient-to-b from-gray-50/50 to-white px-6 md:px-10 lg:px-12 xl:px-16">
-        <div className="max-w-[1440px] mx-auto grid lg:grid-cols-2 gap-8 xl:gap-12">
-          {/* Box Visi - Premium Deep Glass Contrast */}
-          <div className="bg-gradient-to-br from-poktan-leaf to-poktan-green p-8 md:p-14 rounded-[40px] text-white flex flex-col items-center text-center justify-center space-y-6 shadow-xl shadow-poktan-green/20 relative overflow-hidden group">
-            {/* Decorative gradient overlay inside card */}
-            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-poktan-accent/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
-
-            <div className="w-16 h-16 bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-poktan-accent backdrop-blur-sm shadow-inner">
-              <Rocket size={28} strokeWidth={2} />
-            </div>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-[0.15em] text-poktan-accent">
-              Visi
-            </h3>
-            <div className="relative max-w-md">
-              <span className="text-6xl font-serif text-white/20 absolute -top-8 -left-6 leading-none">
-                “
-              </span>
-              <p className="text-lg md:text-xl xl:text-2xl font-medium leading-relaxed tracking-tight relative z-10 text-white/90">
-                Menjadi kelompok tani yang maju, mandiri, dan inovatif dalam
-                menghasilkan produk pertanian berkualitas tinggi yang berdaya
-                saing.
-              </p>
-              <span className="text-6xl font-serif text-white/20 absolute -bottom-14 -right-4 leading-none">
-                ”
-              </span>
-            </div>
-          </div>
-
-          {/* Box Misi - Clean Minimalist High-Contrast */}
-          <div className="bg-white border border-gray-100 p-8 md:p-14 rounded-[40px] shadow-xl shadow-gray-200/30 flex flex-col justify-center space-y-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-poktan-accent/50 rounded-2xl flex items-center justify-center text-poktan-emerald border border-poktan-accent/30">
-                <Target size={22} />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tight">
-                Misi Kelompok
-              </h3>
-            </div>
-
-            <ul className="space-y-4">
-              {[
-                "Meningkatkan kualitas dan produktivitas hasil pertanian.",
-                "Menerapkan inovasi teknologi pertanian modern yang ramah lingkungan.",
-                "Memberdayakan anggota untuk kesejahteraan bersama.",
-                "Memperluas jaringan pemasaran produk secara berkelanjutan.",
-              ].map((misi, i) => (
-                <li
-                  key={i}
-                  className="flex gap-4 items-start group p-3 rounded-2xl border border-transparent hover:border-gray-50 hover:bg-gray-50/40 transition-all duration-300"
-                >
-                  <div className="w-6 h-6 bg-gradient-to-br from-poktan-accent/50 to-poktan-accent/80 text-poktan-emerald rounded-lg flex items-center justify-center shrink-0 mt-0.5 font-black text-xs border border-poktan-accent/50">
-                    {i + 1}
-                  </div>
-                  <p className="text-gray-600 text-sm md:text-base font-semibold leading-relaxed group-hover:text-gray-900 transition-colors">
-                    {misi}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Struktur Organisasi - Dribbble/Modern Premium Dark UI */}
-      <section className="py-16 md:py-32 px-6 md:px-10 lg:px-12 xl:px-16 bg-poktan-green relative overflow-hidden">
-        {/* Architectural Grid Background (Light pattern) */}
-        <div 
-          className="absolute inset-0 opacity-[0.04] pointer-events-none" 
-          style={{ 
-            backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)`, 
-            backgroundSize: '40px 40px' 
-          }}
-        ></div>
-
-        {/* Ambient Glows */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-poktan-leaf/30 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <div className="max-w-[1440px] mx-auto relative z-10">
-          <div className="text-center mb-12 md:mb-24 space-y-3 md:space-y-5">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-black/20 text-poktan-accent text-[10px] font-black uppercase tracking-[0.3em] border border-white/10 shadow-inner">
-              Management Team
-            </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter uppercase leading-[0.9]">
-              Struktur <span className="text-transparent bg-clip-text bg-gradient-to-r from-poktan-accent to-poktan-emerald">Organisasi</span>
+      {/* 3. Struktur Organisasi - Horizontal Scroll Grid */}
+      <section className="py-20 md:py-32 px-6 md:px-10 lg:px-12 xl:px-16 bg-white relative overflow-hidden">
+        <div className="max-w-[1300px] mx-auto relative z-10">
+          <div className="flex flex-col items-center text-center mb-12 md:mb-16 gap-1 md:gap-2 border-b border-gray-100 pb-6">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-poktan-leaf tracking-tight">
+              Struktur Organisasi
             </h2>
-            <p className="text-white/60 font-medium max-w-2xl mx-auto mt-4 text-sm md:text-base leading-relaxed">
-              Masa Bakti Tahun 2019-2024 <br/> (Berdasarkan Permentan No. 82 Tahun 2013)
+            <p className="text-gray-500 font-medium text-xs md:text-sm">
+              Masa Bakti 2019-2024 (Permentan No. 82 Tahun 2013)
             </p>
           </div>
 
-          <div className="max-w-6xl mx-auto space-y-0">
-            {/* Tingkat 1: Ketua */}
-            <div className="flex justify-center relative z-20">
-              {/* Vertical line down from Ketua */}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 w-[2px] h-20 bg-gradient-to-b from-emerald-700/50 to-emerald-800/50 hidden md:block"></div>
-              
-              <OrgCard
-                name={ketua.name}
-                role={ketua.role}
-                desc={ketua.desc || ketua.description || ""}
-                isPrimary={ketua.isPrimary || ketua.is_primary}
-              />
-            </div>
+          <div className="space-y-16">
+            {/* Top Categories (Scroll Horizontal) */}
+            {categories.slice(0, 3).map((category, idx) => (
+              <div key={idx} className="w-full">
+                <h3 className="text-2xl md:text-3xl font-serif font-bold text-gray-800 mb-8 border-b-2 border-poktan-leaf/20 pb-4 inline-block">
+                  {category.title}
+                </h3>
+                
+                {/* Horizontal Scroll Container */}
+                <div 
+                  className="flex gap-6 md:gap-8 overflow-x-auto pb-8 pt-6 px-4 -mx-4 -mt-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden" 
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {category.members.map((member, mIdx) => (
+                    <motion.div 
+                      key={mIdx} 
+                      className="snap-start shrink-0"
+                      initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 0.5, delay: mIdx * 0.1, ease: "easeOut" }}
+                    >
+                      <ProfileCard name={member.name} role={member.role} />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            ))}
 
-            {/* Tingkat 2: Sekretaris & Bendahara */}
-            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 lg:gap-[320px] pt-6 md:pt-20 relative z-10">
-               {/* Garis Horizontal Penghubung dengan border-radius */}
-              <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-[320px] h-10 border-t-2 border-l-2 border-r-2 border-emerald-800/50 rounded-t-3xl"></div>
-
-              <OrgCard
-                name={sekretaris.name}
-                role={sekretaris.role}
-                desc={sekretaris.desc || sekretaris.description || ""}
-              />
-              <OrgCard
-                name={bendahara.name}
-                role={bendahara.role}
-                desc={bendahara.desc || bendahara.description || ""}
-              />
-            </div>
-
-            {/* Garis vertikal panjang ke Seksi-seksi */}
-            <div className="hidden md:flex justify-center relative -mt-32 -z-10">
-                <div className="w-[2px] h-48 bg-gradient-to-b from-emerald-800/50 to-transparent"></div>
-            </div>
-
-            {/* Tingkat 3: Seksi-Seksi (Modern Masonry/Grid) */}
-            <div className="pt-2 md:pt-0 relative z-20">
-               
-               {/* Baris Pertama: 2 Kotak Besar */}
-               <div className="grid md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mt-4 md:mt-8 items-start">
-                  {/* Seksi Usaha Tani */}
-                  <SeksiCard title="Seksi Usaha Tani" icon={<Target size={24} className="text-poktan-accent" />}>
-                    {seksiUsahaTani.length > 0 ? (
-                      seksiUsahaTani.map((m, i) => <SeksiItem key={i} role={m.role} name={m.name} />)
-                    ) : (
-                      <>
-                        <SeksiItem role="Bidang Pertanian" name="SYAMSUL" />
-                        <SeksiItem role="Bidang Peternakan" name="MOH FADLI" />
-                        <SeksiItem role="Bidang Kehutanan & Perkebunan" name="SALAWATI" />
-                        <SeksiItem role="Bidang Perikanan" name="NUR JANNAH" />
-                      </>
-                    )}
-                  </SeksiCard>
-
-                  {/* Seksi Sarana dan Prasarana */}
-                  <SeksiCard title="Seksi Sarana & Prasarana" icon={<Rocket size={24} className="text-emerald-400" />}>
-                    {seksiSarana.length > 0 ? (
-                      seksiSarana.map((m, i) => <SeksiItem key={i} role={m.role} name={m.name} />)
-                    ) : (
-                      <>
-                        <SeksiItem role="Sarana Produksi" name="ST AMINATUS ZUHRIYAH" />
-                        <SeksiItem role="Sarana Alsintan" name="MADRAI" />
-                        <SeksiItem role="Sarana Permodalan" name="PUIRI" />
-                        <SeksiItem role="Sarana Pengairan" name="YASID" />
-                      </>
-                    )}
-                  </SeksiCard>
-               </div>
-
-               {/* Baris Kedua: 3 Kotak Kecil */}
-               <div className="grid md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mt-4 md:mt-6 lg:mt-8 items-start">
-                  <SeksiCard title="Pengendalian Hama & Penyakit" icon={<CheckCircle2 size={24} className="text-poktan-accent" />}>
-                    {seksiHama.length > 0 ? (
-                      seksiHama.map((m, i) => <SeksiItem key={i} role={m.role} name={m.name} />)
-                    ) : (
-                      <SeksiItem role="Petugas" name="MARIHA" />
-                    )}
-                  </SeksiCard>
-
-                  <SeksiCard title="Seksi Pengolahan Hasil" icon={<FileText size={24} className="text-poktan-accent" />}>
-                    {seksiPengolahan.length > 0 ? (
-                      seksiPengolahan.map((m, i) => <SeksiItem key={i} role={m.role} name={m.name} />)
-                    ) : (
-                      <SeksiItem role="Petugas" name="NUR HAYATI" />
-                    )}
-                  </SeksiCard>
-
-                  <SeksiCard title="Seksi Pemasaran" icon={<Users size={24} className="text-poktan-accent" />}>
-                    {seksiPemasaran.length > 0 ? (
-                      seksiPemasaran.map((m, i) => <SeksiItem key={i} role={m.role} name={m.name} />)
-                    ) : (
-                      <SeksiItem role="Petugas" name="SYAFIIH" />
-                    )}
-                  </SeksiCard>
-               </div>
-
-               {/* Baris Ketiga: Divisi Dinamis (Otomatis muncul jika ada seksi baru) */}
-               {Object.keys(groupedLainnya).length > 0 && (
-                 <div className={`grid gap-4 md:gap-6 lg:gap-8 mt-4 md:mt-6 lg:mt-8 items-start border-t border-white/10 pt-8 w-full ${
-                    Object.keys(groupedLainnya).length === 1 
-                      ? "grid-cols-1" 
-                      : Object.keys(groupedLainnya).length === 2 
-                        ? "grid-cols-1 md:grid-cols-2"
-                        : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                 }`}>
-                   {Object.entries(groupedLainnya).map(([sectionName, membersList]) => (
-                     <SeksiCard key={sectionName} title={sectionName} icon={<Users size={24} className="text-emerald-400" />}>
-                       {(membersList as any[]).map((m: any, i: number) => (
-                         <SeksiItem key={i} role={m.role} name={m.name} />
-                       ))}
-                     </SeksiCard>
-                   ))}
-                 </div>
-               )}
-
+            {/* Bottom Categories (Grid 3 Kolom) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-8 pt-4">
+              {categories.slice(3).map((category, idx) => (
+                <div key={idx} className="w-full flex flex-col">
+                  <h3 className="text-xl md:text-2xl font-serif font-bold text-gray-800 mb-6 border-b-2 border-poktan-leaf/20 pb-3 self-start">
+                    {category.title}
+                  </h3>
+                  <div className="flex flex-wrap gap-6">
+                    {category.members.map((member, mIdx) => (
+                      <motion.div
+                        key={mIdx}
+                        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 0.5, delay: mIdx * 0.1, ease: "easeOut" }}
+                      >
+                        <ProfileCard name={member.name} role={member.role} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -440,78 +357,21 @@ export default function ProfilPage() {
   );
 }
 
-// Sub-Komponen Kartu Pengurus/Organisasi dengan Wadah Foto Ber-Alt
-function OrgCard({ name, role, desc, isPrimary = false }: { name: string, role: string, desc: string, isPrimary?: boolean }) {
+// Sub-Komponen Profile Card Baru (Menggantikan OrgCard dan SeksiCard)
+function ProfileCard({ name, role }: { name: string, role: string }) {
   return (
-    <div className={`w-full md:max-w-[320px] p-8 rounded-[40px] text-center transition-all duration-500 flex flex-col items-center group relative overflow-hidden ${
-      isPrimary 
-        ? 'bg-gradient-to-b from-poktan-leaf to-poktan-green text-white shadow-[0_0_40px_rgba(80,141,78,0.3)] border border-poktan-accent/30' 
-        : 'bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-xl hover:bg-white/10'
-    } hover:-translate-y-2`}>
-      
-      {/* Decorative Glow for Primary */}
-      {isPrimary && (
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 blur-2xl rounded-full pointer-events-none transition-transform group-hover:scale-150"></div>
-      )}
-
-      {/* Avatar Container (Squircle) */}
-      <div className={`w-24 h-24 rounded-[28px] rotate-3 group-hover:rotate-0 mb-6 shrink-0 transition-all duration-500 border-4 p-1 ${
-        isPrimary ? 'border-white/30' : 'border-white/5'
-      }`}>
-        <div className={`w-full h-full rounded-[22px] flex items-center justify-center font-black text-4xl shadow-inner ${
-          isPrimary ? 'bg-white text-poktan-leaf' : 'bg-gradient-to-br from-white/10 to-white/5 text-poktan-accent border border-white/5'
-        }`}>
+    <div className="flex flex-col gap-3 shrink-0">
+      <div className="w-[180px] h-[220px] md:w-[200px] md:h-[240px] bg-gradient-to-br from-poktan-leaf to-poktan-green rounded-[24px] relative overflow-hidden group shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+        {/* Placeholder Icon */}
+        <div className="absolute inset-0 flex items-center justify-center text-7xl text-white/20 group-hover:scale-110 transition-transform duration-500">
           {isFemale(name) ? "🧕" : "🧑‍🌾"}
         </div>
-      </div>
-
-      {/* Role Badge */}
-      <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 ${
-        isPrimary ? 'bg-black/10 text-white border border-white/20' : 'bg-black/20 text-poktan-accent border border-white/10'
-      }`}>
-        {role}
-      </div>
-
-      {/* Name & Desc */}
-      <div className="space-y-3 w-full">
-        <h4 className="font-black text-xl tracking-tight leading-none text-white">
-          {name}
-        </h4>
-        <p className={`text-[13px] leading-relaxed font-medium ${
-          isPrimary ? 'text-white/90' : 'text-white/60'
-        }`}>
-          {desc}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function SeksiCard({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) {
-  return (
-    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-[40px] p-6 md:p-8 shadow-xl hover:bg-white/10 hover:border-poktan-accent/30 transition-all duration-500 group">
-      <div className="flex items-center gap-4 md:gap-5 mb-6 md:mb-8">
-        <div className="w-12 h-12 md:w-14 md:h-14 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-          {icon}
+        
+        {/* Gradient Overlay at Bottom */}
+        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-5">
+          <h4 className="text-white font-bold text-sm md:text-base leading-tight mb-1">{name}</h4>
+          <p className="text-white/80 text-[10px] md:text-xs font-medium">{role}</p>
         </div>
-        <h4 className="font-bold text-white text-base md:text-lg leading-tight tracking-tight">{title}</h4>
-      </div>
-      <div className="space-y-4 md:space-y-5">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function SeksiItem({ role, name }: { role: string, name: string }) {
-  return (
-    <div className="flex flex-col gap-1 md:gap-1.5 group/item">
-      <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{role}</span>
-      <div className="flex items-center gap-2 md:gap-3">
-        <div className="w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-white/5 flex items-center justify-center text-poktan-accent font-black text-sm border border-white/5 group-hover/item:bg-poktan-leaf group-hover/item:text-white transition-colors duration-300">
-          {isFemale(name) ? "🧕" : "🧑‍🌾"}
-        </div>
-        <span className="text-sm font-bold text-white/80 group-hover/item:text-white">{name}</span>
       </div>
     </div>
   );
