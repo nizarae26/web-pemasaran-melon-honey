@@ -33,7 +33,7 @@ async function seed() {
   // Empty existing just in case (will fail if RLS prevents delete, but that's ok we just insert)
   await supabase.from('members').delete().neq('id', 0);
   
-  const { data, error } = await supabase.from('members').insert(initialMembers);
+  const { error } = await supabase.from('members').insert(initialMembers);
   
   if (error) {
     console.error('Error inserting members:', error.message);

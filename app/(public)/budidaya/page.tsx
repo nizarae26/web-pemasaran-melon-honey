@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,6 @@ import Footer from "@/components/Footer";
 import BudidayaHero from "@/components/public/BudidayaHero";
 import {
   Sprout,
-  Settings2,
   Layers,
   Droplets,
   Flower2,
@@ -16,11 +14,8 @@ import {
   Home,
   Trees,
   Leaf,
-  Scissors,
-  Sparkles,
   Activity,
   ChevronDown,
-  LayoutGrid,
 } from "lucide-react";
 
 export default function BudidayaPage() {
@@ -147,18 +142,18 @@ export default function BudidayaPage() {
             {/* Garis Putus-putus Horizontal (Hanya Desktop) */}
             <div className="hidden lg:block absolute top-5 left-0 w-full h-[2px] border-t-2 border-dashed border-gray-200 z-0"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 relative z-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 relative z-10">
               {alurProses.map((step, index) => (
                 <div key={index} className="flex flex-col items-center group">
                   {/* Nomor di Atas Garis */}
-                  <div className="w-10 h-10 bg-[#065f46] text-white rounded-full flex items-center justify-center font-bold text-sm mb-8 shadow-lg z-10">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#065f46] text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm mb-4 sm:mb-8 shadow-md sm:shadow-lg z-10">
                     {step.no}
                   </div>
 
                   {/* Kartu Proses */}
-                  <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 w-full flex flex-col items-center text-center h-full">
+                  <div className="bg-white border border-gray-100 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-xs sm:shadow-sm hover:shadow-xl transition-all duration-300 w-full flex flex-col items-center text-center h-full">
                     {/* Gambar Proses */}
-                    <div className="w-full aspect-[4/3] rounded-2xl bg-gray-100 mb-4 overflow-hidden relative group flex items-center justify-center">
+                    <div className="w-full aspect-[4/3] rounded-xl sm:rounded-2xl bg-gray-100 mb-3 sm:mb-4 overflow-hidden relative group flex items-center justify-center">
                       {step.img ? (
                         <>
                           <div className="absolute inset-0 bg-emerald-900/10 group-hover:bg-transparent transition-colors z-10"></div>
@@ -169,24 +164,24 @@ export default function BudidayaPage() {
                           />
                         </>
                       ) : (
-                        <div className="flex flex-col items-center justify-center text-emerald-600/40 p-4">
-                          <Leaf className="w-10 h-10 mb-1" />
-                          <span className="text-[10px] text-gray-400 font-medium">Dokumentasi Menyusul</span>
+                        <div className="flex flex-col items-center justify-center text-emerald-600/40 p-3 sm:p-4">
+                          <Leaf className="w-8 h-8 sm:w-10 sm:h-10 mb-1" />
+                          <span className="text-[9px] sm:text-[10px] text-gray-400 font-medium">Dokumentasi Menyusul</span>
                         </div>
                       )}
                     </div>
 
                     {/* Ikon dan Judul */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-full border border-emerald-100 flex items-center justify-center text-[#10b981] bg-emerald-50/30 shrink-0">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2.5 sm:mb-3 w-full justify-start">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-emerald-100 flex items-center justify-center text-[#10b981] bg-emerald-50/30 shrink-0">
                         {step.icon}
                       </div>
-                      <h3 className="font-bold text-sm text-gray-800 text-left leading-tight">
+                      <h3 className="font-bold text-xs sm:text-sm text-gray-800 text-left leading-tight">
                         {step.title}
                       </h3>
                     </div>
 
-                    <p className="text-[12px] md:text-xs text-gray-600 leading-relaxed text-justify px-2">
+                    <p className="text-[11px] sm:text-xs text-gray-600 leading-relaxed text-left sm:text-justify px-0 sm:px-1">
                       {step.desc}
                     </p>
                   </div>
@@ -198,20 +193,20 @@ export default function BudidayaPage() {
       </section>
 
       {/* 4. FAQ Akordeon Interaktif */}
-      <section className="py-24 px-6 md:px-12 bg-white border-t border-gray-100">
+      <section className="py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             
-            {/* Left Column (Info) */}
-            <div className="lg:col-span-5 space-y-6">
+            {/* Left Column (Info) - Diposisikan ke tengah di tablet & mobile */}
+            <div className="lg:col-span-5 space-y-4 text-center lg:text-left flex flex-col items-center lg:items-start">
               {/* Title */}
-              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-                Pertanyaan yang <br />
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                Pertanyaan yang <br className="hidden sm:inline" />
                 <span className="text-[#10b981]">Sering Diajukan</span>
               </h2>
 
               {/* Description */}
-              <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-md">
+              <p className="text-gray-500 text-xs sm:text-sm md:text-base leading-relaxed max-w-md mx-auto lg:mx-0">
                 Temukan jawaban atas berbagai pertanyaan umum mengenai teknologi pertanian dan budidaya melon di Poktan Banyu Urip.
               </p>
             </div>

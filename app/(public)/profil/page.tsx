@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -9,14 +8,12 @@ import Footer from "@/components/Footer";
 import ProfilHero from "@/components/public/ProfilHero";
 import {
   FileText,
-  Download,
   Target,
   Rocket,
   MapPin,
   ExternalLink,
   Users,
   CheckCircle2,
-  ArrowRight,
 } from "lucide-react";
 
 const isFemale = (name: string) => {
@@ -29,7 +26,6 @@ const isFemale = (name: string) => {
 export default function ProfilPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [tentangKami, setTentangKami] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -53,21 +49,19 @@ export default function ProfilPage() {
       if (!settingsError && settingsData) {
         setTentangKami(settingsData.value);
       }
-
-      setLoading(false);
     }
     fetchData();
   }, []);
 
   // Filter members based on role/section
   const ketua = members.find(m => m.is_primary) || { name: "MAULIDI RIYANTO", role: "Ketua", desc: "Memimpin dan bertanggung jawab penuh atas seluruh arah kebijakan dan kegiatan kelompok tani.", isPrimary: true };
-  
+
   // Ambil semua anggota yang bukan ketua
   const nonKetua = members.filter(m => m.id !== ketua.id);
-  
+
   const sekretaris = nonKetua.find(m => m.role?.toLowerCase().includes("sekretaris")) || { name: "SYAIFUL QOHHAR", role: "Sekretaris", desc: "Mengelola administrasi, data anggota, dan urusan surat menyurat kelompok." };
   const bendahara = nonKetua.find(m => m.role?.toLowerCase().includes("bendahara")) || { name: "ELIYUN", role: "Bendahara", desc: "Mengatur pengelolaan keuangan, audit, dan pembukuan kelompok tani." };
-  
+
   const seksiUsahaTani = nonKetua.filter(m => m.section?.toLowerCase().includes("usaha tani"));
   const seksiSarana = nonKetua.filter(m => m.section?.toLowerCase().includes("sarana"));
   const seksiHama = nonKetua.filter(m => m.section?.toLowerCase().includes("hama"));
@@ -272,9 +266,9 @@ export default function ProfilPage() {
             </div>
 
             {/* Tingkat 2: Sekretaris & Bendahara */}
-            <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-[280px] lg:gap-[360px] pt-6 md:pt-20 relative z-10">
+            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 lg:gap-[320px] pt-6 md:pt-20 relative z-10">
                {/* Garis Horizontal Penghubung dengan border-radius */}
-              <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-[280px] lg:w-[360px] h-10 border-t-2 border-l-2 border-r-2 border-emerald-800/50 rounded-t-3xl"></div>
+              <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-[320px] h-10 border-t-2 border-l-2 border-r-2 border-emerald-800/50 rounded-t-3xl"></div>
 
               <OrgCard
                 name={sekretaris.name}

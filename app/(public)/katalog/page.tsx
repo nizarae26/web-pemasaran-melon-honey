@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,16 +8,11 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import KatalogHero from "@/components/public/KatalogHero";
 import {
-  Search,
   Filter,
-  Calendar,
   Sparkles,
-  ArrowUpDown,
   CheckCircle2,
   X,
-  SlidersHorizontal,
 } from "lucide-react";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function KatalogPage() {
   // State untuk Filter
@@ -27,14 +23,16 @@ export default function KatalogPage() {
   const [appliedMinPrice, setAppliedMinPrice] = useState<number | null>(null);
   const [appliedMaxPrice, setAppliedMaxPrice] = useState<number | null>(null);
   // Data Melon
-  const [products, setProducts] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [waNumber, setWaNumber] = useState("6287812345678");
+  const [priceHoneyGlobe, setPriceHoneyGlobe] = useState("20.000");
+  const [priceGoldenApollo, setPriceGoldenApollo] = useState("22.000");
   const [loading, setLoading] = useState(true);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   useEffect(() => {
     async function fetchProducts() {
-      // Fetch WhatsApp number from settings
+      // Fetch WhatsApp number & variant prices from settings
       const { data: settingsData } = await supabase.from("settings").select("*");
       if (settingsData) {
         const wa = settingsData.find((s) => s.key === "wa_number");
@@ -43,6 +41,10 @@ export default function KatalogPage() {
           const cleanWa = rawWa.replace(/\D/g, "");
           setWaNumber(cleanWa.startsWith("620") ? "62" + cleanWa.substring(3) : cleanWa);
         }
+        const hg = settingsData.find((s) => s.key === "price_honey_globe");
+        if (hg?.value) setPriceHoneyGlobe(hg.value);
+        const ga = settingsData.find((s) => s.key === "price_golden_apollo");
+        if (ga?.value) setPriceGoldenApollo(ga.value);
       }
 
       // Fetch Melon dari tabel products
@@ -51,7 +53,7 @@ export default function KatalogPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      let combinedData: any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */ = [];
+      let combinedData: any[] = [];
 
       if (melonData) {
         const mappedMelon = melonData.map((item) => ({
@@ -62,7 +64,7 @@ export default function KatalogPage() {
           name: `${item.name} (${item.weight ? (String(item.weight).toLowerCase().includes('kg') ? item.weight : item.weight + ' kg') : "1 kg"})`,
           grade: item.type_melon || "Honey Globe",
           price: `Rp.${Number(item.price).toLocaleString('id-ID')}`,
-          status: item.stock > 0 ? "Tersedia" : "Habis",
+          status: "Tersedia",
           weight: item.weight || "1.0 kg",
           imageUrl: item.image_url,
           date: new Date(item.created_at).getTime(),
@@ -70,17 +72,9 @@ export default function KatalogPage() {
         combinedData = [...combinedData, ...mappedMelon];
       }
 
-      // Urutkan agar produk yang "Tersedia" tampil di atas
-      combinedData.sort((a, b) => {
-        if (a.status === "Tersedia" && b.status === "Habis") return -1;
-        if (a.status === "Habis" && b.status === "Tersedia") return 1;
-        return 0; // Jika sama-sama Tersedia/Habis, biarkan sesuai urutan aslinya (berdasarkan created_at)
-      });
-
       setProducts(combinedData);
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProducts();
   }, []);
 
@@ -114,144 +108,8 @@ export default function KatalogPage() {
       <Navbar />
       <KatalogHero />
 
-      {/* Mobile Filter Toggle Button */}
-      <div className="lg:hidden fixed bottom-6 right-6 z-50">
-        <button
-          onClick={() => setMobileFilterOpen(true)}
-          className="bg-poktan-leaf hover:bg-poktan-green text-white px-5 h-12 rounded-full shadow-lg shadow-poktan-leaf/30 flex items-center justify-center gap-2 transition-all duration-300 active:scale-90 cursor-pointer"
-        >
-          <Filter size={18} />
-          <span className="text-sm font-bold">Filter</span>
-        </button>
-      </div>
-
-      {/* Mobile Filter Overlay */}
-      {mobileFilterOpen && (
-        <div className="lg:hidden fixed inset-0 z-[200] flex items-end">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setMobileFilterOpen(false)}
-          />
-          {/* Panel */}
-          <div className="relative w-full bg-white rounded-t-3xl p-6 pb-8 max-h-[80vh] overflow-y-auto animate-slide-up shadow-2xl">
-            <div className="flex items-center justify-between mb-5">
-              <h4 className="font-black text-base text-gray-800 flex items-center gap-2">
-                <Filter className="text-[#10b981]" size={18} /> FILTER
-              </h4>
-              <button
-                onClick={() => setMobileFilterOpen(false)}
-                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer"
-              >
-                <X size={18} className="text-gray-600" />
-              </button>
-            </div>
-
-            {/* Filter Jenis Melon */}
-            <div className="mb-6">
-              <h5 className="font-bold text-sm text-gray-700 mb-3">Jenis Melon</h5>
-              <div className="flex flex-wrap gap-2">
-                {["Semua", "Honey Globe", "Golden Apollo"].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategory(cat)}
-                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 cursor-pointer ${
-                      category === cat
-                        ? "bg-poktan-leaf text-white shadow-md shadow-poktan-leaf/10"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Filter Berat / Ukuran */}
-            <div className="mb-6 border-t pt-4">
-              <h5 className="font-bold text-sm text-gray-700 mb-3">Berat / Ukuran</h5>
-              <div className="flex flex-wrap gap-2">
-                {["< 2 kg", "2-3 kg", "3-4 kg", "> 4 kg"].map((ukuran, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      if (selectedWeights.includes(ukuran)) {
-                        setSelectedWeights(selectedWeights.filter(w => w !== ukuran));
-                      } else {
-                        setSelectedWeights([...selectedWeights, ukuran]);
-                      }
-                    }}
-                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 cursor-pointer ${
-                      selectedWeights.includes(ukuran)
-                        ? "bg-poktan-leaf text-white shadow-md shadow-poktan-leaf/10"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    {ukuran}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Filter Harga */}
-            <div className="border-t pt-4 mb-6">
-              <h5 className="font-bold text-sm text-gray-700 mb-3">Batas Harga</h5>
-              <div className="flex gap-3">
-                <div className="flex-1 flex items-center gap-2 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                  <span className="text-xs text-gray-500 font-bold">Rp</span>
-                  <input 
-                    type="number" 
-                    placeholder="MIN" 
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                    className="w-full bg-transparent text-sm outline-none font-medium" 
-                  />
-                </div>
-                <div className="flex-1 flex items-center gap-2 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                  <span className="text-xs text-gray-500 font-bold">Rp</span>
-                  <input 
-                    type="number" 
-                    placeholder="MAX" 
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                    className="w-full bg-transparent text-sm outline-none font-medium" 
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <button 
-                onClick={() => {
-                  setCategory("Semua");
-                  setSelectedWeights([]);
-                  setMinPrice("");
-                  setMaxPrice("");
-                  setAppliedMinPrice(null);
-                  setAppliedMaxPrice(null);
-                }}
-                className="w-1/3 bg-slate-100 hover:bg-slate-200 text-gray-600 py-3 rounded-full font-bold text-sm transition-all duration-300 active:scale-95 cursor-pointer"
-              >
-                Hapus
-              </button>
-              <button 
-                onClick={() => {
-                  setAppliedMinPrice(minPrice ? Number(minPrice) : null);
-                  setAppliedMaxPrice(maxPrice ? Number(maxPrice) : null);
-                  setMobileFilterOpen(false);
-                }}
-                className="w-2/3 bg-poktan-leaf hover:bg-poktan-green text-white py-3 rounded-full font-bold text-sm transition-all duration-300 shadow-md shadow-poktan-leaf/10 hover:shadow-lg hover:shadow-poktan-leaf/20 active:scale-95 cursor-pointer"
-              >
-                Terapkan
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Content Grid */}
-      <section className="py-16 px-4 md:px-6 max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-8 items-start relative">
+      <section className="py-12 md:py-16 px-4 md:px-6 max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-8 items-start relative">
         {/* Sidebar Kiri - Filter (Desktop Only) */}
         <aside className="hidden lg:block w-full lg:w-1/5 space-y-8 shrink-0 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto hide-scrollbar pb-4">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
@@ -360,9 +218,171 @@ export default function KatalogPage() {
         </aside>
 
         {/* Product Grid (Tengah) */}
+        <div className="w-full lg:w-3/5 space-y-8 min-w-0">
+          {/* Menu Filter (Tablet & Mobile Only) - Sejajar, Ringkas & Mengambang */}
+          <div className="lg:hidden relative bg-white p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border border-gray-100 shadow-xs flex items-center justify-between gap-2">
+            {/* Kategori Cepat Sejajar */}
+            <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar py-0.5 min-w-0">
+              {["Semua", "Honey Globe", "Golden Apollo"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`px-2.5 sm:px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap cursor-pointer shrink-0 ${
+                    category === cat
+                      ? "bg-poktan-leaf text-white shadow-xs"
+                      : "bg-gray-100/90 text-gray-600 hover:bg-gray-200/90"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-        {/* Product Grid (Tengah) */}
-        <div className="w-full lg:w-3/5 space-y-10 min-w-0">
+            {/* Container Tombol & Popover Filter Mengambang */}
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all cursor-pointer border ${
+                  mobileFilterOpen
+                    ? "bg-poktan-green text-white border-poktan-green shadow-xs"
+                    : "bg-emerald-50 hover:bg-emerald-100 text-poktan-green border-emerald-200/70"
+                }`}
+              >
+                <Filter size={12} className="sm:w-3.5 sm:h-3.5" />
+                <span>Filter</span>
+                {(selectedWeights.length > 0 || appliedMinPrice || appliedMaxPrice) && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-poktan-red"></span>
+                )}
+              </button>
+
+              {/* Panel Filter Mengambang di Bawah Tombol (Floating Popover) */}
+              {mobileFilterOpen && (
+                <>
+                  {/* Backdrop transparan luar */}
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setMobileFilterOpen(false)}
+                  />
+
+                  {/* Panel Popover */}
+                  <div className="absolute top-full right-0 mt-2 z-50 w-[290px] sm:w-[350px] bg-white border border-gray-200 rounded-2xl shadow-2xl p-4 sm:p-5 animate-slide-up">
+                    <div className="flex items-center justify-between mb-3.5 pb-2 border-b border-gray-100">
+                      <h4 className="font-extrabold text-xs sm:text-sm text-gray-800 flex items-center gap-1.5">
+                        <Filter className="text-[#10b981]" size={14} /> Filter Produk
+                      </h4>
+                      <button
+                        onClick={() => setMobileFilterOpen(false)}
+                        className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer text-gray-500 hover:text-gray-800"
+                      >
+                        <X size={13} />
+                      </button>
+                    </div>
+
+                    {/* Filter Jenis Melon */}
+                    <div className="mb-3.5">
+                      <h5 className="font-bold text-[11px] sm:text-xs text-gray-700 mb-1.5">Jenis Melon</h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {["Semua", "Honey Globe", "Golden Apollo"].map((cat) => (
+                          <button
+                            key={cat}
+                            onClick={() => setCategory(cat)}
+                            className={`px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition-all cursor-pointer ${
+                              category === cat
+                                ? "bg-poktan-leaf text-white shadow-xs"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Filter Berat / Ukuran */}
+                    <div className="mb-3.5 border-t border-gray-100 pt-2.5">
+                      <h5 className="font-bold text-[11px] sm:text-xs text-gray-700 mb-1.5">Berat / Ukuran</h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {["< 2 kg", "2-3 kg", "3-4 kg", "> 4 kg"].map((ukuran, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              if (selectedWeights.includes(ukuran)) {
+                                setSelectedWeights(selectedWeights.filter(w => w !== ukuran));
+                              } else {
+                                setSelectedWeights([...selectedWeights, ukuran]);
+                              }
+                            }}
+                            className={`px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition-all cursor-pointer ${
+                              selectedWeights.includes(ukuran)
+                                ? "bg-poktan-leaf text-white shadow-xs"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            {ukuran}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Filter Harga */}
+                    <div className="border-t border-gray-100 pt-2.5 mb-3.5">
+                      <h5 className="font-bold text-[11px] sm:text-xs text-gray-700 mb-1.5">Batas Harga</h5>
+                      <div className="flex gap-2">
+                        <div className="flex-1 flex items-center gap-1 bg-gray-50 px-2 py-1.5 rounded-lg border border-gray-200">
+                          <span className="text-[10px] text-gray-400 font-bold">Rp</span>
+                          <input 
+                            type="number" 
+                            placeholder="MIN" 
+                            value={minPrice}
+                            onChange={(e) => setMinPrice(e.target.value)}
+                            className="w-full bg-transparent text-[11px] sm:text-xs outline-none font-medium" 
+                          />
+                        </div>
+                        <div className="flex-1 flex items-center gap-1 bg-gray-50 px-2 py-1.5 rounded-lg border border-gray-200">
+                          <span className="text-[10px] text-gray-400 font-bold">Rp</span>
+                          <input 
+                            type="number" 
+                            placeholder="MAX" 
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                            className="w-full bg-transparent text-[11px] sm:text-xs outline-none font-medium" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-1">
+                      <button 
+                        onClick={() => {
+                          setCategory("Semua");
+                          setSelectedWeights([]);
+                          setMinPrice("");
+                          setMaxPrice("");
+                          setAppliedMinPrice(null);
+                          setAppliedMaxPrice(null);
+                        }}
+                        className="w-1/3 bg-slate-100 hover:bg-slate-200 text-gray-600 py-1.5 rounded-xl font-bold text-[10px] sm:text-xs transition-all cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setAppliedMinPrice(minPrice ? Number(minPrice) : null);
+                          setAppliedMaxPrice(maxPrice ? Number(maxPrice) : null);
+                          setMobileFilterOpen(false);
+                        }}
+                        className="w-2/3 bg-poktan-leaf hover:bg-poktan-green text-white py-1.5 rounded-xl font-bold text-[10px] sm:text-xs transition-all shadow-md shadow-poktan-leaf/10 active:scale-95 cursor-pointer"
+                      >
+                        Terapkan
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
           {loading ? (
             <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
               <p className="text-gray-500 font-bold animate-pulse">Memuat Produk...</p>
@@ -386,7 +406,7 @@ export default function KatalogPage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-6">
                     {filteredProducts
                       .filter((item) => item.type === "melon")
                       .map((item, index) => (
@@ -426,13 +446,13 @@ export default function KatalogPage() {
               {/* Card 1 */}
               <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3">
                 <h5 className="font-black text-gray-800 text-[11px] mb-1 uppercase tracking-wide">Putih Honeyglobe</h5>
-                <p className="text-[#10b981] font-bold text-xs mb-1">Rp 20.000 <span className="text-gray-400 text-[9px] font-medium">/ kg</span></p>
+                <p className="text-[#10b981] font-bold text-xs mb-1">Rp {priceHoneyGlobe} <span className="text-gray-400 text-[9px] font-medium">/ kg</span></p>
               </div>
 
               {/* Card 2 */}
               <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-3">
                 <h5 className="font-black text-gray-800 text-[11px] mb-1 uppercase tracking-wide">Kuning Golden Appolo</h5>
-                <p className="text-yellow-600 font-bold text-xs mb-1">Rp 22.000 <span className="text-yellow-600/60 text-[9px] font-medium">/ kg</span></p>
+                <p className="text-yellow-600 font-bold text-xs mb-1">Rp {priceGoldenApollo} <span className="text-yellow-600/60 text-[9px] font-medium">/ kg</span></p>
               </div>
             </div>
           </div>

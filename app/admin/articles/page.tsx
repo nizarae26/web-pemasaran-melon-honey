@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Plus, Trash2, Edit, Loader2 } from "lucide-react";
+import { Plus, Trash2, Edit } from "lucide-react";
 import Swal from "sweetalert2";
 
 export default function AdminArticles() {
@@ -27,7 +27,6 @@ export default function AdminArticles() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchItems();
   }, []);
 
@@ -53,7 +52,6 @@ export default function AdminArticles() {
         icon: "success",
         confirmButtonColor: "#10b981",
       });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchItems();
     } else {
       Swal.fire({
@@ -65,66 +63,68 @@ export default function AdminArticles() {
     }
   }
 
-  // Render UI
-
   return (
     <div className="space-y-6 md:space-y-8 relative">
-      <div className="flex flex-row items-center justify-between gap-2 md:gap-4">
+      <div className="flex flex-row items-center justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-base md:text-2xl font-black text-gray-900 leading-tight">Manajemen Artikel</h1>
-          <p className="text-gray-500 mt-0.5 text-[10px] md:text-sm">Kelola berita, artikel, dan tips pertanian.</p>
+          <h1 className="text-lg md:text-2xl font-black text-gray-900 tracking-tight leading-tight">Manajemen Artikel</h1>
+          <p className="text-gray-500 mt-0.5 text-xs md:text-sm">Kelola berita, artikel, dan tips pertanian.</p>
         </div>
         <button
           onClick={() => router.push('/admin/articles/form')}
-          className="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-none font-bold text-[10px] md:text-sm flex items-center gap-1.5 transition-colors shadow-sm active:scale-95"
+          className="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer"
         >
-          <Plus size={14} className="md:w-[18px] md:h-[18px]" />
-          Tulis Artikel
+          <Plus size={16} />
+          <span>Tulis Artikel</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
         {loading ? (
-          <div className="col-span-full py-12 text-center text-xs text-gray-400">Memuat...</div>
+          <div className="col-span-full py-12 text-center text-xs text-gray-400">Memuat artikel...</div>
         ) : items.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-xs text-gray-400 bg-white border border-gray-100">Belum ada artikel.</div>
+          <div className="col-span-full py-12 text-center text-xs text-gray-400 bg-white rounded-2xl border border-gray-100 shadow-2xs">Belum ada artikel terbit.</div>
         ) : (
           items.map((item) => (
-            <div key={item.id} className="bg-white rounded-none border border-gray-100 shadow-sm overflow-hidden flex flex-col justify-between group">
+            <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-2xs hover:shadow-xs overflow-hidden flex flex-col justify-between group transition-all">
               <div>
                 <div className="aspect-video bg-gray-50 relative overflow-hidden group/media">
-                  <div className="w-full h-full">
-                    <img src={item.image_url} alt={item.title} className="w-full h-full object-cover p-0" />
-                  </div>
+                  <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 
-                <div className="flex flex-col min-w-0 p-3 pb-1">
-                  <div className="flex gap-1.5 md:gap-2 mb-2 md:mb-3 items-center">
-                    <span className="bg-white/90 backdrop-blur-md text-[8px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[#064e3b] uppercase tracking-wider">{item.tag}</span>
-                    <span className="text-[8px] md:text-[10px] font-bold text-gray-400">
+                <div className="p-3.5 pb-1">
+                  <div className="flex gap-1.5 md:gap-2 mb-2 items-center">
+                    {item.tag && (
+                      <span className="bg-emerald-50 text-emerald-800 border border-emerald-100/60 text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                        {item.tag}
+                      </span>
+                    )}
+                    <span className="text-[9px] md:text-[10px] font-bold text-gray-400">
                       • {new Date(item.created_at).toLocaleDateString('id-ID')}
                     </span>
                   </div>
-                  <h3 className="font-bold text-sm md:text-base text-gray-800 line-clamp-1">{item.title}</h3>
-                  <p className="text-[10px] md:text-xs text-gray-500 mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>
+                  <h3 className="font-bold text-xs sm:text-sm md:text-base text-gray-800 line-clamp-2 leading-snug">{item.title}</h3>
+                  <p className="text-[10.5px] md:text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">{item.description}</p>
                 </div>
-                  
-                <div className="flex gap-1.5 p-3 pt-2 mt-auto">
-                  <button 
-                    onClick={() => router.push(`/admin/articles/form?id=${item.id}`)}
-                    className="flex-1 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-none text-center flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-                    title="Edit"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" className="md:w-4 md:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(item.id)}
-                    className="flex-1 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-none text-center flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-                    title="Hapus"
-                  >
-                    <Trash2 size={12} className="md:w-4 md:h-4" />
-                  </button>
-                </div>
+              </div>
+                
+              <div className="flex gap-1.5 p-3.5 pt-2 mt-auto">
+                <button 
+                  onClick={() => router.push(`/admin/articles/form?id=${item.id}`)}
+                  className="flex-1 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-pointer active:scale-95 transition-all"
+                  title="Edit Artikel"
+                >
+                  <Edit size={13} />
+                  <span>Edit</span>
+                </button>
+                <button 
+                  onClick={() => handleDelete(item.id)}
+                  className="flex-1 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-pointer active:scale-95 transition-all"
+                  title="Hapus Artikel"
+                >
+                  <Trash2 size={13} />
+                  <span>Hapus</span>
+                </button>
               </div>
             </div>
           ))

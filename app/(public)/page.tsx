@@ -55,7 +55,7 @@ export default async function Home() {
       name: `${item.name} (${item.weight ? (String(item.weight).toLowerCase().includes('kg') ? item.weight : item.weight + ' kg') : "1 kg"})`,
       grade: item.type_melon || "Honey Globe",
       price: `Rp.${Number(item.price).toLocaleString('id-ID')}`,
-      status: item.stock > 0 ? "Tersedia" : "Habis",
+      status: "Tersedia",
       weight: item.weight || "1.0 kg",
       imageUrl: item.image_url,
       date: new Date(item.created_at).getTime(),
@@ -63,14 +63,7 @@ export default async function Home() {
     combinedData = [...combinedData, ...mappedMelon];
   }
 
-  // Urutkan agar produk yang "Tersedia" tampil di atas
-  combinedData.sort((a, b) => {
-    if (a.status === "Tersedia" && b.status === "Habis") return -1;
-    if (a.status === "Habis" && b.status === "Tersedia") return 1;
-    return 0;
-  });
-
-  const featuredProducts = combinedData.slice(0, 4);
+  const featuredProducts = combinedData.slice(0, 6);
 
   return (
     <main className="min-h-screen bg-slate-50/50">
@@ -81,7 +74,7 @@ export default async function Home() {
       <Hero waNumber={waNumber} />
 
       {/* 3. Katalog Melon Honey Globe  */}
-      <section className="py-12 px-6 md:px-12 bg-slate-50/50">
+      <section className="py-12 px-4 sm:px-6 md:px-12 bg-slate-50/50">
         <div className="max-w-6xl mx-auto">
           
           <ScrollReveal>
@@ -96,7 +89,7 @@ export default async function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 md:gap-6 lg:gap-8">
               {featuredProducts.map((product, index) => (
                 <ProductCard 
                   key={index} 
@@ -246,7 +239,7 @@ export default async function Home() {
 
             {/* Tombol WhatsApp Modern */}
             <a 
-              href={`https://wa.me/${waNumber}?text=Halo%2C%20saya%20tertarik%20dengan%20Melon%20Honey%20Globe%20Anda`}
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Halo Admin Poktan Banyu Urip, saya tertarik dengan Melon Honey Globe & Golden Apollo Anda. Boleh minta info katalog dan ketersediaan panen terbaru? Terima kasih!")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full md:w-auto bg-poktan-leaf hover:bg-poktan-green text-white px-8 py-4 rounded-xl font-bold shadow-md shadow-poktan-leaf/10 hover:scale-102 transition-all duration-300 text-sm flex items-center justify-center gap-3 shrink-0"

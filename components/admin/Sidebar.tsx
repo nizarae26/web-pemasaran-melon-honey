@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, Image as ImageIcon, Newspaper, LogOut, Settings, Users, Calendar, Leaf, Menu } from "lucide-react";
+import { LayoutDashboard, Package, Image as ImageIcon, Newspaper, LogOut, Settings, Users, Calendar, Leaf } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Swal from "sweetalert2";
 

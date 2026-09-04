@@ -8,10 +8,10 @@ export default function AboutSection() {
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         {/* Konten Teks */}
         <div>
-          <h2 className="text-sm font-bold text-poktan-leaf uppercase tracking-wider mb-2">
+          <h2 className="text-xs sm:text-sm font-bold text-poktan-leaf uppercase tracking-wider mb-2">
             Sekilas Tentang
           </h2>
-          <h3 className="text-3xl md:text-4xl font-bold text-poktan-green mb-6">
+          <h3 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-extrabold text-poktan-green mb-4 sm:mb-6 tracking-tight">
             Kelompok Tani Banyu Urip
           </h3>
           <div className="space-y-4 text-gray-600 leading-relaxed">

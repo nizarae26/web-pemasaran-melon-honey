@@ -1,18 +1,21 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, Phone, Info, Loader2, Lock, CheckCircle2, XCircle, ArrowRight, KeyRound } from "lucide-react";
+import { Save, Phone, Info, Loader2, Lock, CheckCircle2, XCircle, ArrowRight, KeyRound, Tag } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 export default function SettingsPage() {
   const [waNumber, setWaNumber] = useState("");
   const [savedWaNumber, setSavedWaNumber] = useState("");
   const [tentangKami, setTentangKami] = useState("");
+  const [priceHoneyGlobe, setPriceHoneyGlobe] = useState("20.000");
+  const [priceGoldenApollo, setPriceGoldenApollo] = useState("22.000");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingPrices, setSavingPrices] = useState(false);
 
   // States for 2-step verification + OTP
   const [isChangingWa, setIsChangingWa] = useState(false);
@@ -21,8 +24,8 @@ export default function SettingsPage() {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [otpInput, setOtpInput] = useState("");
   const [otpValues, setOtpValues] = useState<string[]>(["", "", "", "", "", ""]);
-  const [otpTimer, setOtpTimer] = useState(0); // 5 minutes validity
-  const [resendTimer, setResendTimer] = useState(0); // 1 minute resend cooldown
+  const [otpTimer, setOtpTimer] = useState(0);
+  const [resendTimer, setResendTimer] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
   const [newWaInput, setNewWaInput] = useState("");
   const [waError, setWaError] = useState("");
@@ -39,6 +42,8 @@ export default function SettingsPage() {
     } else if (data) {
       const wa = data.find((s) => s.key === "wa_number");
       const tentang = data.find((s) => s.key === "tentang_kami");
+      const hg = data.find((s) => s.key === "price_honey_globe");
+      const ga = data.find((s) => s.key === "price_golden_apollo");
       
       if (wa) {
         const rawWa = wa.value;
@@ -48,15 +53,15 @@ export default function SettingsPage() {
         setSavedWaNumber(sanitizedWa);
       }
       if (tentang) setTentangKami(tentang.value);
+      if (hg) setPriceHoneyGlobe(hg.value);
+      if (ga) setPriceGoldenApollo(ga.value);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSettings();
 
-    // Restore verification state if user refreshed/returned
     if (typeof window !== "undefined") {
       const isRestoredVerified = localStorage.getItem("wa_change_verified");
       if (isRestoredVerified === "true") {
@@ -67,7 +72,6 @@ export default function SettingsPage() {
     }
   }, []);
 
-  // Countdown Timer Effect for OTP & Resend timers
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (isChangingWa && isOtpStep) {
@@ -80,22 +84,19 @@ export default function SettingsPage() {
   }, [isChangingWa, isOtpStep]);
 
   const generateAndSendOtp = async () => {
-    // Generate 6-digit OTP code
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     setGeneratedOtp(otp);
     setOtpInput("");
     setOtpValues(["", "", "", "", "", ""]);
-    setOtpTimer(300); // 5 minutes (300 seconds)
-    setResendTimer(60); // 1 minute (60 seconds)
+    setOtpTimer(300);
+    setResendTimer(60);
 
-    // Output OTP strictly to console for dev environment testing
     console.log("[DEV ONLY] Generated OTP:", otp);
 
     const waMessage = `*Hindari penipuan! Jangan berikan kode OTP ke siapapun.*\n\nKode OTP verifikasi penggantian nomor WhatsApp Anda dari *Poktan Banyu Urip* adalah: *${otp}*. Kode ini rahasia dan hanya berlaku selama 5 menit.`;
     const fonnteToken = process.env.NEXT_PUBLIC_FONNTE_TOKEN;
 
     if (!fonnteToken) {
-      // Warning if token is not configured yet
       toast.error("Gagal mengirim OTP: Token Fonnte belum dikonfigurasi di .env.local!");
       return;
     }
@@ -177,16 +178,14 @@ export default function SettingsPage() {
   };
 
   const handleOtpChange = (value: string, index: number) => {
-    // Only allow digits
     const digit = value.replace(/\D/g, "");
     if (!digit && value !== "") return;
 
     const newValues = [...otpValues];
-    newValues[index] = digit.substring(digit.length - 1); // take only last digit
+    newValues[index] = digit.substring(digit.length - 1);
     setOtpValues(newValues);
     setOtpInput(newValues.join(""));
 
-    // Auto-focus next input box
     if (digit && index < 5) {
       const nextInput = document.getElementById(`otp-input-${index + 1}`);
       if (nextInput) {
@@ -200,7 +199,6 @@ export default function SettingsPage() {
       const newValues = [...otpValues];
       
       if (!otpValues[index] && index > 0) {
-        // if currently empty, clear the previous one and focus it
         newValues[index - 1] = "";
         setOtpValues(newValues);
         setOtpInput(newValues.join(""));
@@ -209,7 +207,6 @@ export default function SettingsPage() {
           (prevInput as HTMLInputElement).focus();
         }
       } else {
-        // clear current box
         newValues[index] = "";
         setOtpValues(newValues);
         setOtpInput(newValues.join(""));
@@ -225,7 +222,6 @@ export default function SettingsPage() {
       setOtpValues(chars);
       setOtpInput(pastedData);
       
-      // Focus last input box
       const lastInput = document.getElementById("otp-input-5");
       if (lastInput) {
         (lastInput as HTMLInputElement).focus();
@@ -268,7 +264,6 @@ export default function SettingsPage() {
     const newNumber = newWaInput.trim();
     setSaving(true);
 
-    // Save WA Number immediately to database
     const { error } = await supabase
       .from("settings")
       .upsert({ key: "wa_number", value: newNumber }, { onConflict: 'key' });
@@ -285,7 +280,7 @@ export default function SettingsPage() {
       toast.success("Nomor WhatsApp baru berhasil diperbarui dan disimpan secara permanen!");
     }
     setSaving(false);
-    cancelChangingWa(); // resets everything including states
+    cancelChangingWa();
   };
 
   const cancelChangingWa = () => {
@@ -305,6 +300,35 @@ export default function SettingsPage() {
     }
   };
 
+  // Dedicated Save Function for Melon Variant Prices
+  const handleSavePrices = async () => {
+    setSavingPrices(true);
+    const { error: hgError } = await supabase
+      .from("settings")
+      .upsert({ key: "price_honey_globe", value: priceHoneyGlobe }, { onConflict: 'key' });
+
+    const { error: gaError } = await supabase
+      .from("settings")
+      .upsert({ key: "price_golden_apollo", value: priceGoldenApollo }, { onConflict: 'key' });
+
+    if (hgError || gaError) {
+      Swal.fire({
+        title: "Gagal!",
+        text: "Gagal menyimpan harga varian melon ke database.",
+        icon: "error",
+        confirmButtonColor: "#10b981",
+      });
+    } else {
+      Swal.fire({
+        title: "Berhasil Disimpan!",
+        text: "Harga varian melon berhasil diperbarui dan langsung diterapkan ke halaman katalog!",
+        icon: "success",
+        confirmButtonColor: "#10b981",
+      });
+    }
+    setSavingPrices(false);
+  };
+
   const handleSave = async () => {
     setSaving(true);
     
@@ -318,167 +342,178 @@ export default function SettingsPage() {
       .from("settings")
       .upsert({ key: "tentang_kami", value: tentangKami }, { onConflict: 'key' });
 
-    if (waError || tentangError) {
+    // Save Harga Varian Melon
+    const { error: hgError } = await supabase
+      .from("settings")
+      .upsert({ key: "price_honey_globe", value: priceHoneyGlobe }, { onConflict: 'key' });
+
+    const { error: gaError } = await supabase
+      .from("settings")
+      .upsert({ key: "price_golden_apollo", value: priceGoldenApollo }, { onConflict: 'key' });
+
+    if (waError || tentangError || hgError || gaError) {
       toast.error("Gagal menyimpan pengaturan. Pastikan tabel 'settings' sudah dibuat.");
     } else {
-      setSavedWaNumber(waNumber); // Update reference to saved number
+      setSavedWaNumber(waNumber);
       toast.success("Pengaturan berhasil disimpan!");
     }
     setSaving(false);
   };
 
   if (loading) {
-    return <div className="p-10 text-center"><Loader2 className="animate-spin inline-block mr-2" /> Memuat pengaturan...</div>;
+    return <div className="p-10 text-center text-gray-500 text-xs sm:text-sm"><Loader2 className="animate-spin inline-block mr-2" /> Memuat pengaturan...</div>;
   }
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-4xl space-y-6 md:space-y-8 relative">
       <div>
-        <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">
-          Pengaturan <span className="text-[#10b981]">Website</span>
+        <h1 className="text-lg md:text-2xl font-black text-gray-900 tracking-tight leading-tight">
+          Pengaturan Website
         </h1>
-        <p className="text-gray-500 mt-1 text-xs md:text-sm">
-          Kelola informasi kontak WhatsApp dan Profil Kelompok Tani (Tentang Kami).
+        <p className="text-gray-500 mt-0.5 text-xs md:text-sm">
+          Kelola kontak WhatsApp, harga varian melon di katalog, dan profil kelompok tani.
         </p>
       </div>
 
-      <div className="space-y-6 md:space-y-8">
-        {/* WA Settings */}
-        <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-4 md:mb-6">
-            <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center shrink-0">
-              <Phone size={18} className="md:w-5 md:h-5" />
+      <div className="space-y-4 sm:space-y-6">
+        {/* 1. WA Settings */}
+        <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-100 shadow-2xs">
+          <div className="flex items-center gap-3 mb-4 md:mb-5">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0 border border-emerald-100/50">
+              <Phone size={18} />
             </div>
-            <h2 className="text-base md:text-xl font-bold text-gray-800">Nomor WhatsApp Admin</h2>
+            <div>
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 leading-tight">Nomor WhatsApp Admin</h2>
+              <p className="text-[11px] sm:text-xs text-gray-400">Digunakan sebagai tujuan tombol pesan & pemesanan produk</p>
+            </div>
           </div>
           
           {!isChangingWa ? (
             <div className="space-y-4">
               <div>
-                <label className="block text-xs md:text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
                   Nomor WhatsApp Aktif
                 </label>
-                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center">
                   <div className="relative flex-grow">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs sm:text-sm">
                       +
                     </span>
                     <input
                       type="text"
                       readOnly
                       value={waNumber || "Belum diatur"}
-                      className="w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-500 rounded-xl text-sm font-bold cursor-not-allowed select-none"
+                      className="w-full pl-7 pr-4 py-2.5 sm:py-3 bg-slate-50 border border-gray-200 text-gray-600 rounded-xl text-xs sm:text-sm font-bold cursor-not-allowed select-none"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={() => {
                       setIsChangingWa(true);
-                      // If there is no old number set, bypass Step 1 verification and go directly to Step 2
                       if (!savedWaNumber) {
                         setIsVerified(true);
                       }
                     }}
-                    className="px-5 py-3 bg-emerald-50 text-[#10b981] hover:bg-emerald-100 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 border border-emerald-100 hover:border-emerald-200 active:scale-95 shrink-0 cursor-pointer"
+                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center gap-2 border border-emerald-100 active:scale-95 shrink-0 cursor-pointer"
                   >
-                    <KeyRound size={16} />
+                    <KeyRound size={15} />
                     <span>Ubah Nomor</span>
                   </button>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="space-y-5 border border-emerald-100 bg-emerald-50/10 p-5 rounded-[20px] transition-all duration-300">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                  <Lock size={16} className="text-[#10b981]" />
+            <div className="space-y-4 border border-emerald-100 bg-emerald-50/20 p-4 sm:p-5 rounded-2xl transition-all">
+              <div className="flex items-center justify-between border-b border-emerald-100/60 pb-3">
+                <h3 className="text-xs sm:text-sm font-bold text-emerald-950 flex items-center gap-1.5">
+                  <Lock size={15} className="text-emerald-600" />
                   Proses Ubah Nomor WhatsApp
                 </h3>
                 {!isVerified && (
                   <button
                     type="button"
                     onClick={cancelChangingWa}
-                    className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-[10px] md:text-xs font-bold hover:bg-red-600 transition-colors cursor-pointer shadow-sm shadow-red-500/20 flex items-center gap-1.5"
+                    className="px-2.5 py-1 bg-red-50 text-red-600 border border-red-100 rounded-lg text-[10px] sm:text-xs font-bold hover:bg-red-100 transition-colors cursor-pointer flex items-center gap-1"
                   >
-                    <XCircle size={14} />
+                    <XCircle size={13} />
                     Batalkan
                   </button>
                 )}
               </div>
 
               {/* Indikator Langkah */}
-              <div className="grid grid-cols-3 gap-2 text-center text-[10px] md:text-xs">
-                <div className={`py-2 px-1 rounded-lg font-bold transition-all ${
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center text-[9px] sm:text-xs">
+                <div className={`py-1.5 sm:py-2 px-1 rounded-xl font-bold transition-all ${
                   !isOtpStep && !isVerified 
-                    ? "bg-emerald-100 text-emerald-800 border border-emerald-200" 
-                    : "bg-emerald-50 text-emerald-600/70"
+                    ? "bg-emerald-600 text-white shadow-2xs" 
+                    : "bg-emerald-50 text-emerald-700"
                 }`}>
-                  Langkah 1: Verifikasi
+                  1. Verifikasi
                 </div>
-                <div className={`py-2 px-1 rounded-lg font-bold transition-all ${
+                <div className={`py-1.5 sm:py-2 px-1 rounded-xl font-bold transition-all ${
                   isOtpStep 
-                    ? "bg-emerald-100 text-emerald-800 border border-emerald-200" 
+                    ? "bg-emerald-600 text-white shadow-2xs" 
                     : isVerified 
-                      ? "bg-emerald-50 text-emerald-600/70" 
+                      ? "bg-emerald-50 text-emerald-700" 
                       : "bg-gray-100 text-gray-400"
                 }`}>
-                  Langkah 1.5: Kode OTP
+                  2. Kode OTP
                 </div>
-                <div className={`py-2 px-1 rounded-lg font-bold transition-all ${
+                <div className={`py-1.5 sm:py-2 px-1 rounded-xl font-bold transition-all ${
                   isVerified 
-                    ? "bg-emerald-100 text-emerald-800 border border-emerald-200" 
+                    ? "bg-emerald-600 text-white shadow-2xs" 
                     : "bg-gray-100 text-gray-400"
                 }`}>
-                  Langkah 2: Nomor Baru
+                  3. Nomor Baru
                 </div>
               </div>
 
               {!isOtpStep && !isVerified ? (
                 /* STEP 1: INPUT NOMOR LAMA */
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                      Masukkan Nomor WhatsApp Lama Anda
+                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                      Masukkan Nomor WhatsApp Lama
                     </label>
-                    <p className="text-xs text-gray-500 mb-3">
-                      Guna memverifikasi identitas Anda, silakan ketik nomor WhatsApp yang sedang terdaftar sekarang secara tepat.
+                    <p className="text-[11px] text-gray-500 mb-2">
+                      Ketik nomor WhatsApp yang sedang terdaftar sekarang secara tepat untuk verifikasi.
                     </p>
                     <input
                       type="text"
                       value={oldWaInput}
                       onChange={(e) => setOldWaInput(e.target.value)}
-                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium"
                       placeholder="Contoh: 6281234567890"
                     />
                   </div>
-                  <div className="flex gap-2 justify-end">
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={handleVerifyOldNumber}
-                      className="px-4 py-2 bg-[#10b981] text-white rounded-lg text-xs font-bold hover:bg-[#059669] transition-colors flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
                     >
-                      Kirim Kode OTP
+                      <span>Kirim Kode OTP</span>
                       <ArrowRight size={14} />
                     </button>
                   </div>
                 </div>
               ) : isOtpStep ? (
                 /* STEP 1.5: INPUT OTP & TIMERS */
-                <div className="space-y-4">
-                  <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl space-y-2">
+                <div className="space-y-3">
+                  <div className="bg-emerald-50 border border-emerald-100 p-3 rounded-xl space-y-1">
                     <p className="text-xs text-emerald-800 font-medium">
-                      Kode OTP dari Poktan Banyu Urip telah dikirim secara otomatis ke nomor WhatsApp <strong>+{savedWaNumber}</strong>.
+                      Kode OTP telah dikirim ke nomor WhatsApp <strong>+{savedWaNumber}</strong>.
                     </p>
-                    <div className="flex items-center gap-4 text-xs font-bold text-gray-600">
+                    <div className="flex items-center gap-3 text-[11px] font-bold text-gray-600">
                       <span>Masa Berlaku OTP: <span className="text-red-500">{Math.floor(otpTimer / 60)}:{(otpTimer % 60).toString().padStart(2, '0')}</span></span>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <label className="block text-xs font-bold text-gray-700">
                       Masukkan 6-Digit Kode OTP
                     </label>
-                    <div className="flex justify-center gap-2 md:gap-3 py-2">
+                    <div className="flex justify-center gap-2 sm:gap-2.5 py-1">
                       {otpValues.map((val, idx) => (
                         <input
                           key={idx}
@@ -489,44 +524,42 @@ export default function SettingsPage() {
                           onChange={(e) => handleOtpChange(e.target.value, idx)}
                           onKeyDown={(e) => handleKeyDown(e, idx)}
                           onPaste={handlePaste}
-                          className="w-10 h-12 md:w-12 md:h-14 border border-gray-200 focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20 rounded-xl text-center text-lg md:text-xl font-extrabold focus:outline-none transition-all bg-white shadow-sm"
+                          className="w-10 h-11 sm:w-11 sm:h-12 border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl text-center text-base sm:text-lg font-extrabold focus:outline-none transition-all bg-white shadow-2xs"
                         />
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex gap-2 justify-between items-center">
+                  <div className="flex justify-between items-center pt-1">
                     <button
                       type="button"
                       onClick={handleResendOtp}
                       disabled={resendTimer > 0}
-                      className="text-xs font-bold text-[#10b981] hover:text-emerald-700 disabled:text-gray-400 transition-colors cursor-pointer disabled:cursor-not-allowed"
+                      className="text-xs font-bold text-emerald-700 hover:text-emerald-800 disabled:text-gray-400 transition-colors cursor-pointer disabled:cursor-not-allowed"
                     >
-                      {resendTimer > 0 ? `Kirim Ulang OTP (${resendTimer}s)` : "Kirim Ulang OTP"}
+                      {resendTimer > 0 ? `Kirim Ulang (${resendTimer}s)` : "Kirim Ulang OTP"}
                     </button>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={handleVerifyOtp}
-                        className="px-4 py-2 bg-[#10b981] text-white rounded-lg text-xs font-bold hover:bg-[#059669] transition-colors flex items-center gap-1.5 cursor-pointer"
-                      >
-                        Verifikasi OTP
-                        <ArrowRight size={14} />
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={handleVerifyOtp}
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                    >
+                      <span>Verifikasi OTP</span>
+                      <ArrowRight size={14} />
+                    </button>
                   </div>
                 </div>
               ) : (
                 /* STEP 2: INPUT NOMOR BARU */
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-100 p-3 rounded-lg">
-                    <CheckCircle2 size={16} className="text-[#10b981] shrink-0" />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl">
+                    <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
                     <span>Verifikasi OTP berhasil. Silakan masukkan nomor baru.</span>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                      Nomor WhatsApp Baru (Gunakan format 62...)
+                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                      Nomor WhatsApp Baru (Awali dengan 62...)
                     </label>
                     <input
                       type="text"
@@ -535,27 +568,27 @@ export default function SettingsPage() {
                         setNewWaInput(e.target.value);
                         validateNewWa(e.target.value);
                       }}
-                      className={`w-full px-4 py-3 bg-white border rounded-xl text-sm focus:outline-none transition-all font-medium ${
+                      className={`w-full px-3.5 py-2.5 bg-white border rounded-xl text-xs sm:text-sm focus:outline-none transition-all font-medium ${
                         waError 
                           ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20" 
-                          : "border-gray-200 focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20"
+                          : "border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                       }`}
                       placeholder="Contoh: 6281234567890"
                     />
                     {waError && (
-                      <p className="text-xs text-red-500 font-medium mt-1.5 flex items-center gap-1">
+                      <p className="text-xs text-red-500 font-medium mt-1 flex items-center gap-1">
                         <XCircle size={12} />
                         {waError}
                       </p>
                     )}
                   </div>
 
-                  <div className="flex gap-2 justify-end">
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={handleApplyNewNumber}
                       disabled={!!waError || !newWaInput}
-                      className="px-4 py-2 bg-[#10b981] text-white rounded-lg text-xs font-bold hover:bg-[#059669] transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
                     >
                       Simpan Nomor Baru
                     </button>
@@ -566,44 +599,108 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* Profil & Tentang Kami Settings */}
-        <div className="bg-white p-4 md:p-6 rounded-[24px] border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-4 md:mb-6">
-            <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-50 text-[#10b981] rounded-xl flex items-center justify-center shrink-0">
-              <Info size={18} className="md:w-5 md:h-5" />
+        {/* 2. Melon Variant Prices Settings */}
+        <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-100 shadow-2xs space-y-4">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center shrink-0 border border-amber-100/50">
+              <Tag size={18} />
             </div>
-            <h2 className="text-base md:text-xl font-bold text-gray-800">Tentang Kami (Profil)</h2>
-          </div>
-          <div className="space-y-4">
             <div>
-              <label className="block text-xs md:text-sm font-bold text-gray-700 mb-2">
-                Deskripsi Singkat Profil
-              </label>
-              <textarea
-                value={tentangKami}
-                onChange={(e) => setTentangKami(e.target.value)}
-                rows={4}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium"
-                placeholder="Tulis deskripsi kelompok tani di sini..."
-              />
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 leading-tight">Harga Varian Melon</h2>
+              <p className="text-[11px] sm:text-xs text-gray-400">Atur patokan harga per kilogram untuk masing-masing varietas melon di halaman katalog</p>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-1.5 bg-emerald-50/40 p-3.5 rounded-xl border border-emerald-100/60">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px] font-black uppercase text-emerald-800 tracking-wider">Putih Honey Globe</span>
+                <span className="text-[10px] text-gray-400 font-bold">/ kg</span>
+              </div>
+              <label className="block text-xs font-bold text-slate-700">Harga Honey Globe</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">Rp</span>
+                <input
+                  type="text"
+                  value={priceHoneyGlobe}
+                  onChange={(e) => setPriceHoneyGlobe(e.target.value)}
+                  className="w-full pl-9 pr-3.5 py-2 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all font-bold text-slate-800 shadow-2xs"
+                  placeholder="20.000"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5 bg-amber-50/40 p-3.5 rounded-xl border border-amber-100/60">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px] font-black uppercase text-amber-800 tracking-wider">Kuning Golden Apollo</span>
+                <span className="text-[10px] text-gray-400 font-bold">/ kg</span>
+              </div>
+              <label className="block text-xs font-bold text-slate-700">Harga Golden Apollo</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">Rp</span>
+                <input
+                  type="text"
+                  value={priceGoldenApollo}
+                  onChange={(e) => setPriceGoldenApollo(e.target.value)}
+                  className="w-full pl-9 pr-3.5 py-2 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-bold text-slate-800 shadow-2xs"
+                  placeholder="22.000"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 flex justify-center">
+            <button
+              type="button"
+              onClick={handleSavePrices}
+              disabled={savingPrices}
+              className="w-full sm:w-auto px-6 py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95 cursor-pointer disabled:opacity-50"
+            >
+              {savingPrices ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              <span>{savingPrices ? "Menyimpan ke Katalog..." : "Simpan Perubahan Harga Katalog"}</span>
+            </button>
           </div>
         </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end pt-2">
-          <button
-            onClick={handleSave}
-            disabled={saving || isChangingWa}
-            className="w-full md:w-auto justify-center flex items-center gap-2 px-6 py-2.5 bg-[#10b981] text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors disabled:opacity-50 shadow-md shadow-emerald-500/20 active:scale-95 text-xs md:text-sm cursor-pointer"
-          >
-            {saving ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Save size={16} />
-            )}
-            <span>{saving ? "Menyimpan..." : "Simpan Pengaturan"}</span>
-          </button>
+        {/* 3. Profil & Tentang Kami Settings */}
+        <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-100 shadow-2xs space-y-4">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0 border border-emerald-100/50">
+              <Info size={18} />
+            </div>
+            <div>
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 leading-tight">Tentang Kami (Profil Kelompok Tani)</h2>
+              <p className="text-[11px] sm:text-xs text-gray-400">Deskripsi singkat visi, komitmen, dan profil kelompok tani di halaman publik</p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs sm:text-sm font-bold text-gray-700">
+              Deskripsi Singkat Profil
+            </label>
+            <textarea
+              value={tentangKami}
+              onChange={(e) => setTentangKami(e.target.value)}
+              rows={4}
+              className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium text-slate-800 placeholder-gray-400 shadow-2xs resize-none"
+              placeholder="Tulis deskripsi kelompok tani di sini..."
+            />
+          </div>
+
+          <div className="pt-2">
+            <button
+              onClick={handleSave}
+              disabled={saving || isChangingWa}
+              className="w-full justify-center flex items-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-sm active:scale-95 cursor-pointer"
+            >
+              {saving ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Save size={16} />
+              )}
+              <span>{saving ? "Menyimpan Pengaturan..." : "Simpan Semua Pengaturan"}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

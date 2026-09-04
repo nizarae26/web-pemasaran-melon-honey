@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -98,111 +97,115 @@ function MemberFormContent() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4 md:space-y-6">
-      <div className="flex items-center gap-3 border-b border-gray-200 pb-4">
+    <div className="max-w-3xl mx-auto space-y-5 md:space-y-6">
+      <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
         <button 
           onClick={() => router.push('/admin/members')}
-          className="p-1.5 hover:bg-gray-100 rounded-none transition-colors"
+          className="p-2 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
         >
           <ArrowLeft size={18} className="text-gray-600" />
         </button>
         <div>
-          <h1 className="text-base md:text-xl font-black text-gray-900 leading-tight">
+          <h1 className="text-lg md:text-xl font-black text-gray-900 tracking-tight leading-tight">
             {editingId ? "Edit Anggota" : "Tambah Anggota Baru"}
           </h1>
-          <p className="text-gray-500 mt-0.5 text-[10px] md:text-xs">Isi detail form di bawah ini</p>
+          <p className="text-gray-500 mt-0.5 text-xs">Isi detail form anggota pengurus di bawah ini</p>
         </div>
       </div>
 
-      <div className="">
-        <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-100 shadow-2xs">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-800">Nama Lengkap</label>
+          {/* Row 1: 2 Kolom Input (Nama & Jabatan) */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs sm:text-sm font-bold text-slate-800">Nama Lengkap</label>
               <input
                 type="text"
                 required
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm text-slate-700"
+                placeholder="Contoh: Maulidi Riyanto"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-xs sm:text-sm text-slate-700 placeholder-gray-400"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-800">Jabatan / Peran</label>
+            <div className="space-y-1.5">
+              <label className="text-xs sm:text-sm font-bold text-slate-800">Jabatan / Peran</label>
               <input
                 type="text"
                 required
-                placeholder="Contoh: Ketua, Sekretaris, Anggota"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm text-slate-700 placeholder-gray-400"
+                placeholder="Contoh: Ketua / Sekretaris"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-xs sm:text-sm text-slate-700 placeholder-gray-400"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-800">Seksi / Bidang (Opsional)</label>
+          {/* Row 2: 2 Kolom Input (Seksi/Bidang & Urutan) */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs sm:text-sm font-bold text-slate-800">Seksi / Bidang</label>
               <input
                 type="text"
                 placeholder="Contoh: Seksi Pemasaran"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm text-slate-700 placeholder-gray-400"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-xs sm:text-sm text-slate-700 placeholder-gray-400"
                 value={formData.section}
                 onChange={(e) => setFormData({ ...formData, section: e.target.value })}
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-800">Urutan Tampil (Angka)</label>
+            <div className="space-y-1.5">
+              <label className="text-xs sm:text-sm font-bold text-slate-800">Urutan Tampil (No)</label>
               <input
                 type="number"
                 required
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm text-slate-700"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-xs sm:text-sm text-slate-700"
                 value={formData.sort_order}
                 onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-800">Deskripsi Tugas (Opsional)</label>
+          <div className="space-y-1.5">
+            <label className="text-xs sm:text-sm font-bold text-slate-800">Deskripsi Tugas (Opsional)</label>
             <textarea
               rows={3}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm resize-none text-slate-700"
+              placeholder="Jelaskan peran atau lingkup tanggung jawab..."
+              className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-xs sm:text-sm resize-none text-slate-700 placeholder-gray-400"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
           </div>
 
-          <div className="flex items-center gap-3 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+          <div className="flex items-center gap-3 p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100">
             <input
               type="checkbox"
               id="is_primary"
               checked={formData.is_primary}
               onChange={(e) => setFormData({ ...formData, is_primary: e.target.checked })}
-              className="w-5 h-5 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+              className="w-4 h-4 text-emerald-600 rounded-md border-gray-300 focus:ring-emerald-500 cursor-pointer"
             />
-            <label htmlFor="is_primary" className="text-sm font-bold text-emerald-900 select-none cursor-pointer">
+            <label htmlFor="is_primary" className="text-xs sm:text-sm font-bold text-emerald-900 select-none cursor-pointer">
               Tandai sebagai Pengurus Inti / Ketua
-              <p className="text-xs font-normal text-emerald-700 mt-0.5">Akan ditampilkan menonjol di halaman Profil (Kartu Hijau Besar).</p>
+              <p className="text-[11px] font-normal text-emerald-700 mt-0.5">Akan ditampilkan menonjol di halaman Profil (Kartu Hijau Besar).</p>
             </label>
           </div>
 
-          <div className="pt-2 flex gap-4">
+          <div className="pt-3 grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => router.push('/admin/members')}
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white px-5 py-3.5 rounded-none font-bold text-sm transition-colors shadow-sm"
+              className="py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-2xs cursor-pointer active:scale-95 text-center"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-[#10b981] hover:bg-emerald-600 disabled:bg-emerald-300 text-white px-5 py-3.5 rounded-none font-bold text-sm transition-colors shadow-sm flex items-center justify-center gap-2"
+              className="py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95 text-center"
             >
               {saving ? <Loader2 size={16} className="animate-spin" /> : null}
-              {editingId ? "Perbarui Data" : "Simpan Data"}
+              <span>{editingId ? "Perbarui Data" : "Simpan Data"}</span>
             </button>
           </div>
 
