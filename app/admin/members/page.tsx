@@ -78,6 +78,9 @@ export default function MembersPage() {
 
     if (!result.isConfirmed) return;
 
+    const memberToDelete = members.find(m => m.id === id);
+    if (!memberToDelete) return;
+
     const { error } = await supabase.from("members").delete().eq("id", id);
     if (error) {
       Swal.fire({
@@ -87,6 +90,14 @@ export default function MembersPage() {
         confirmButtonColor: "#10b981",
       });
     } else {
+      // Majukan nomor urut anggota setelahnya
+      const membersToShift = members.filter(m => m.sort_order > memberToDelete.sort_order);
+      if (membersToShift.length > 0) {
+        await Promise.all(membersToShift.map(m => 
+          supabase.from("members").update({ sort_order: m.sort_order - 1 }).eq("id", m.id)
+        ));
+      }
+
       Swal.fire({
         title: "Terhapus!",
         text: "Anggota berhasil dihapus.",

@@ -58,6 +58,48 @@ function MemberFormContent() {
 
     try {
       if (editingId) {
+        // Ambil data asli untuk mengecek perubahan sort_order
+        const { data: originalMember } = await supabase
+          .from("members")
+          .select("sort_order")
+          .eq("id", editingId)
+          .single();
+
+        if (originalMember) {
+          const oldOrder = originalMember.sort_order;
+          const newOrder = formData.sort_order;
+
+          if (oldOrder !== newOrder) {
+            if (newOrder < oldOrder) {
+              // Pindah ke atas, anggota di antaranya harus turun
+              const { data: membersToShift } = await supabase
+                .from("members")
+                .select("id, sort_order")
+                .gte("sort_order", newOrder)
+                .lt("sort_order", oldOrder);
+              
+              if (membersToShift && membersToShift.length > 0) {
+                await Promise.all(membersToShift.map(m => 
+                  supabase.from("members").update({ sort_order: m.sort_order + 1 }).eq("id", m.id)
+                ));
+              }
+            } else if (newOrder > oldOrder) {
+              // Pindah ke bawah, anggota di antaranya harus naik
+              const { data: membersToShift } = await supabase
+                .from("members")
+                .select("id, sort_order")
+                .gt("sort_order", oldOrder)
+                .lte("sort_order", newOrder);
+                
+              if (membersToShift && membersToShift.length > 0) {
+                await Promise.all(membersToShift.map(m => 
+                  supabase.from("members").update({ sort_order: m.sort_order - 1 }).eq("id", m.id)
+                ));
+              }
+            }
+          }
+        }
+
         const { error } = await supabase.from("members").update(formData).eq("id", editingId);
         if (error) throw error;
         
@@ -68,6 +110,18 @@ function MemberFormContent() {
           confirmButtonColor: "#10b981",
         });
       } else {
+        // Tambah baru, anggota mulai dari nomor urut ini ke atas harus turun (mundur)
+        const { data: membersToShift } = await supabase
+          .from("members")
+          .select("id, sort_order")
+          .gte("sort_order", formData.sort_order);
+
+        if (membersToShift && membersToShift.length > 0) {
+          await Promise.all(membersToShift.map(m => 
+            supabase.from("members").update({ sort_order: m.sort_order + 1 }).eq("id", m.id)
+          ));
+        }
+
         const { error } = await supabase.from("members").insert([formData]);
         if (error) throw error;
 
