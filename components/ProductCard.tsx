@@ -171,7 +171,7 @@ export default function ProductCard({
                 <span>WhatsApp</span>
               </a>
               <Link
-                href="/"
+                href="https://order.melonmadura.my.id/"
                 title="Pesan via Website"
                 className={`flex-1 flex items-center justify-center bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm px-2 py-2 sm:py-2.5 rounded-md font-bold gap-1.5 min-[1506px]:gap-2 
                 transition-all duration-300 text-center text-[11px] min-[1506px]:text-xs whitespace-nowrap`}
